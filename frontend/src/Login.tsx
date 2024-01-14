@@ -2,14 +2,14 @@
 import { Link } from "react-router-dom";
 
     const Login: React.FC = () => {
-        const handlechange=()=>{
-            alert ("Hii")
-        }
+        // const handlechange=()=>{
+        //     alert ("Hii")
+        // }
   return (
     <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
-      <button onClick={(e)=>handlechange(e)}className="ml-auto border-2 bg-emerald-950 rounded-lg text-neutral-50 py-1 px-2">
+      {/* <button onClick={(e)=>handlechange(e)}className="ml-auto border-2 bg-emerald-950 rounded-lg text-neutral-50 py-1 px-2">
         Dark
-      </button>
+      </button> */}
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-2xl lg:max-w-xl">
         <h1 className="text-3xl font-semibold text-center text-purple-700 underline">
           Log in
