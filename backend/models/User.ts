@@ -6,3 +6,5 @@ const UserSchema = new Schema({
         password : String,
         gender : String
 })
+
+module.exports = UserSchema
