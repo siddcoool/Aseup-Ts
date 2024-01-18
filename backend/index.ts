@@ -2,6 +2,7 @@ import express, {Express, Request, Response} from 'express';
 import dotenv from 'dotenv';
 import './config/database';
 import userRouter from './routes/user';
+import skillRouter from './routes/skill';
 
 
 dotenv.config()
@@ -14,6 +15,7 @@ app.get('/', (req : Request, res: Response)=>{
 })
 
 app.use('/user', userRouter)
+app.use('/skill', skillRouter)
 
 app.listen(port, ()=>{
     console.log(`Server is running on port ${port}`)
