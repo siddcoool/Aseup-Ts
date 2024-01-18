@@ -5,7 +5,8 @@ const UserSchema = new Schema({
         name : String,
         email : String,
         password : String,
-        gender : String
+        gender : String,
+        isDeleted : Boolean
 })
 
 UserSchema.methods.comparePassword = function(candidatePassword: string){
