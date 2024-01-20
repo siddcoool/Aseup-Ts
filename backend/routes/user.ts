@@ -8,42 +8,56 @@ userRouter.get('/', async (req : Request , res: Response)=> {
 })
 
 userRouter.post('/login', async (req : Request, res : Response)=>{
-    const body = req.body
-    const user = await User.findOne({email : body.email})
-
-    if(!user){
-        return res.status(404).json({message: 'user not found '})
+    const user = await User.findOne({email : req.body?.email})
+    // const user = await User.findById(req.params.id)
+    console.log(req.body)
+    try {
+        if(!user){
+            return res.status(404).json({message: 'user not found '})
+        }
+        else{
+            res.json({
+                message: 'login success',
+                user
+            })
+        }
+    } catch (error) {
+        console.log(error)
     }
-
-    // const isValid = await user.comparePassword(body.password)
-    // if(!isValid){
-    //     res.status(401).json({message : 'login failed'})
-    // }
-    res.json({
-        message: 'login success',
-        user
-    })
+    
 
 })
 
-userRouter.post('/register', async(req : Request, res : Response)=>{
-     const body = req.body
-     const existingUser = await User.findOne({email: body.email})
-     if(!existingUser){
-        const user = await User.create(body)
-        res.status(200).json({
-            message : 'user created successfully',
-            user : {
-                id : user._id,
-                name : user.name,
-                email : user.email
-            }
-        })
-     }
-     else{
-         res.status(400).json({message:"user already exists"})
-     }
-})
+userRouter.post('/register', async (req: Request, res: Response) => {
+    const body = req.body;
+    try {
+        // Check if the user with the given email already exists
+        const existingUser = await User.findOne({ email: body?.email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
+        // Create a new user
+        const user = await User.create(body);
+
+        // Send a success response
+        return res.status(201).json({
+            message: 'User created successfully',
+            user: {
+                name: user.name,
+                email: user.email,
+                password: user.password,
+            },
+        });
+    } catch (error) {
+        // Log the error for debugging purposes
+        console.error(error);
+
+        // Send an error response
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 
 // userRouter.get('/me', async (req : Request, res : Response)=>{
 //     res.json(req.context.user)

@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import './config/database';
 import userRouter from './routes/user';
 import skillRouter from './routes/skill';
+import bodyParser from 'body-parser';
 
 
 dotenv.config()
@@ -10,6 +11,7 @@ dotenv.config()
 const app: Express = express()
 const port = process.env.PORT || 5000
 
+app.use(bodyParser.json());
 app.get('/', (req : Request, res: Response)=>{
     res.send("Typescript server")
 })
