@@ -11,7 +11,6 @@ userRouter.get('/', async (req : Request , res: Response)=> {
 userRouter.post('/login', async (req : Request, res : Response)=>{
     const user = await User.findOne({email : req.body.email})
     // const user = await User.findById(req.params.id)
-    console.log(user)
     try {
         if(!user){
             return res.status(404).json({message: 'user not found '})
@@ -26,6 +25,7 @@ userRouter.post('/login', async (req : Request, res : Response)=>{
 
             res.json({
                 message: 'login success',
+                token,
                 user
             })
         }
