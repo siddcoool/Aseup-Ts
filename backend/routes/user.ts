@@ -1,6 +1,7 @@
 import {Router, Request, Response} from 'express'
 const userRouter = Router()
 import User from '../models/User'
+import TokenManagement from '../lib/Token'
 
 userRouter.get('/', async (req : Request , res: Response)=> {
     const users = await User.find()
@@ -10,12 +11,19 @@ userRouter.get('/', async (req : Request , res: Response)=> {
 userRouter.post('/login', async (req : Request, res : Response)=>{
     const user = await User.findOne({email : req.body.email})
     // const user = await User.findById(req.params.id)
-    console.log(req.body)
+    console.log(user)
     try {
         if(!user){
             return res.status(404).json({message: 'user not found '})
         }
         else{
+            const isValid = await user.comparePassword(req.body.password)
+            if(!isValid){
+                return res.status(401).json({message:"login failed"})
+            }
+
+            const token = TokenManagement.createToken(user.toJSON())
+
             res.json({
                 message: 'login success',
                 user
