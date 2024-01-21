@@ -1,5 +1,7 @@
-import { Document, Model, model, Types, Schema, Query } from "mongoose"
+import { Document, Model, model, Types, Schema, Query, HydratedArraySubdocument, HydratedDocument } from "mongoose"
 import bcrypt from "bcrypt";
+
+
 
 const UserSchema = new Schema({
         name : String,
