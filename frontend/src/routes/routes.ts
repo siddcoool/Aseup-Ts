@@ -1,27 +1,35 @@
-import React from 'react'
-import Login from '../pages/Login'
-import SignUp from '../pages/SignUp'
-import Home from '../pages/Home'
+import React from 'react';
+import Login from '../pages/Login';
+import SignUp from '../pages/SignUp';
+import Home from '../pages/Home';
+
+// interface Route {
+//     path: string;
+//     component: React.ComponentType; // Specify the type of the component property
+// }
 
 const routes = [
     {
         path: '/',
-        component : Home
-    },{
+        component: Home
+    },
+    {
         path: '/login',
-        component : Login
-    },{
+        component: Login
+    },
+    {
         path: '/signup',
-        component : SignUp
+        component: SignUp
     }
-]
+];
 
-export const createRoutes = () =>{
-    const newRoutes = routes.map((route)=>{
-        const component = route.component
+export const createRoutes = () => {
+    const newRoutes = routes.map((route) => {
+        const Component = route.component;
         return {
-            path : route.path
-        }
-    })
-return newRoutes
-}
+            path: route.path,
+            element: React.createElement(Component)
+        };
+    });
+    return newRoutes;
+};

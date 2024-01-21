@@ -8,7 +8,7 @@ userRouter.get('/', async (req : Request , res: Response)=> {
 })
 
 userRouter.post('/login', async (req : Request, res : Response)=>{
-    const user = await User.findOne({email : req.body?.email})
+    const user = await User.findOne({email : req.body.email})
     // const user = await User.findById(req.params.id)
     console.log(req.body)
     try {
