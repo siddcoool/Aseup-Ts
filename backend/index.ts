@@ -5,6 +5,7 @@ import userRouter from './routes/user';
 import skillRouter from './routes/skill';
 import bodyParser from 'body-parser';
 import tokenRouter from './routes/token'
+import cors from 'cors'
 
 
 
@@ -14,6 +15,7 @@ const app: Express = express()
 const port = process.env.PORT || 5000
 
 app.use(bodyParser.json());
+app.use(cors())
 app.get('/', (req : Request, res: Response)=>{
     res.send("Typescript server")
 })

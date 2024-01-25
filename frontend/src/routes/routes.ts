@@ -10,7 +10,7 @@ import Home from '../pages/Home';
 
 const routes = [
     {
-        path: '/',
+        path: '/home',
         component: Home
     },
     {
