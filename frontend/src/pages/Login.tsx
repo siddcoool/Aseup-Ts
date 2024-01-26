@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginSuccess, setLoginSucess] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleEmail = (event: ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +26,7 @@ const Login: React.FC = () => {
 
       if (status === 200) {
         toast.success(data.message);
-        setLoginSucess(true);
+        setLoginSuccess(true);
       } else {
         toast.warn("Login Failed");
       }
