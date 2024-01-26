@@ -11,7 +11,7 @@ import  {Dashboard} from '../pages/Dashboard';
 
 const routes = [
     {
-        path: '/',
+        path: '/home',
         component: Home
     },
     {
