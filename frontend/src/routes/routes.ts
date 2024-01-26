@@ -2,6 +2,7 @@ import React from 'react';
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
 import Home from '../pages/Home';
+import  {Dashboard} from '../pages/Dashboard';
 
 // interface Route {
 //     path: string;
@@ -20,7 +21,11 @@ const routes = [
     {
         path: '/signup',
         component: SignUp
-    }
+    },
+    {
+        path: '/Dashboard',
+        component:Dashboard
+    },
 ];
 
 export const createRoutes = () => {
