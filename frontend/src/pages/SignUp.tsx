@@ -1,13 +1,15 @@
 import axios from "axios";
-import { ChangeEvent, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { ChangeEvent, MouseEvent, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import useIsAuthentication from "../hooks/useIsAuthentication";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [registerSuccess, setRegisterSuccess] = useState(false);
-  const navigate = useNavigate();
+  const [fullName, setFullName] = useState('')
+
+  const {setAuthenticate} = useIsAuthentication()
 
   const handleEmail = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -17,16 +19,23 @@ export default function SignUp() {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleFullName = (event: ChangeEvent<HTMLInputElement>) => {
+    setFullName(event.target.value)
+  }
+
+  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       const { data, status } = await axios.post("/user/register", {
         email,
         password,
+        fullName
       });
       if (status === 201) {
         toast.success(data.message);
-        setRegisterSuccess(true);
+        setAuthenticate(data.user,data.token)
+        
+        
       } else {
         toast.warn(data.message);
       }
@@ -34,11 +43,7 @@ export default function SignUp() {
       toast.error((error as Error).message);
     }
   };
-  useEffect(() => {
-    if (registerSuccess) {
-      navigate("/home");
-    }
-  }, [registerSuccess, navigate]);
+ 
 
   return (
     <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
@@ -58,6 +63,7 @@ export default function SignUp() {
             <input
               type="text"
               id="Name"
+              onChange={handleFullName}
               placeholder="Enter Your Full Name"
               className="block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
             />

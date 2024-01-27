@@ -18,7 +18,7 @@ userRouter.post('/login', async (req : Request, res : Response)=>{
         else{
             const isValid = await user.comparePassword(req.body.password)
             if(!isValid){
-                return res.status(401).json({message:"login failed"})
+                return res.status(401).json({message:"Password Incorrect"})
             }
 
             const token = TokenManagement.createToken(user.toJSON())
@@ -26,14 +26,16 @@ userRouter.post('/login', async (req : Request, res : Response)=>{
             res.json({
                 message: 'login success',
                 token,
-                user
+                user: {
+                    name: user.name,
+                    email: user.email,
+                    gender: user.gender
+                }
             })
         }
     } catch (error) {
         console.log(error)
     }
-    
-
 })
 
 userRouter.post('/register', async (req: Request, res: Response) => {
@@ -46,6 +48,7 @@ userRouter.post('/register', async (req: Request, res: Response) => {
         }
 
         const user = await User.create(body);
+        const token = TokenManagement.createToken(user.toJSON())    
 
         return res.status(201).json({
             message: 'User created successfully',
@@ -89,8 +92,5 @@ userRouter.delete('/:id', async(req: Request, res: Response)=>{
     const user = await User.findByIdAndUpdate(newEntry)
     res.json(User)
 })
-
-
-
 
 export default userRouter

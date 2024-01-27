@@ -28,6 +28,7 @@ app.get('/', (req : Request, res: Response)=>{
     res.send("Typescript server")
 })
 
+app.use(cors())
 app.use('/token', tokenRouter)
 app.use('/user', userRouter)
 app.use('/skill', skillRouter)

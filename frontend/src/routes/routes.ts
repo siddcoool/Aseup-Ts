@@ -20,7 +20,7 @@ const routes = [
         component: Login
     },
     {
-        path: '/signup',
+        path: '/register',
         component: SignUp
     },
     {
@@ -34,6 +34,7 @@ const routes = [
 
 export const createRoutes = () => {
     const newRoutes = routes.map((route) => {
+        const Layout=route.layout
         const Component = route.component;
         return {
             path: route.path,

@@ -1,13 +1,13 @@
-import axios from "axios";
-import { ChangeEvent, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import axios, { Axios, AxiosError } from "axios";
+import { ChangeEvent, MouseEvent, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import useIsAuthentication from "../hooks/useIsAuthentication";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginSuccess, setLoginSuccess] = useState(false);
-  const navigate = useNavigate();
+  const { setAuthenticate } = useIsAuthentication();
 
   const handleEmail = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -16,7 +16,7 @@ const Login: React.FC = () => {
   const handlePassword = (event: ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       const { data, status } = await axios.post("/user/login", {
@@ -26,22 +26,23 @@ const Login: React.FC = () => {
 
       if (status === 200) {
         toast.success(data.message);
-        setLoginSuccess(true);
+        setAuthenticate(data.user, data.token);
       } else {
         toast.warn("Login Failed");
       }
       console.log({ data, status });
-    } catch (error) {
-      toast.error("Internal sever error");
+    } catch (unknownError) {
+      const error = unknownError as Error | AxiosError;
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data?.message ?? "Internal server error");
+      }
+      else{
+        toast.error('internal server error')
+      }
     }
     console.log(email, password);
   };
 
-  useEffect(() => {
-    if (loginSuccess) {
-      navigate("/home");
-    }
-  }, [loginSuccess, navigate]);
   return (
     <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-2xl lg:max-w-xl">
@@ -96,7 +97,7 @@ const Login: React.FC = () => {
           Don't have an account?{""}
           {/*  */}
           <Link
-            to="/signup"
+            to="/register"
             className="font-medium text-base text-purple-600 hover:underline"
           >
             Sign up
