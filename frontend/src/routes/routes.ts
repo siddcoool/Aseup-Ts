@@ -4,6 +4,8 @@ import SignUp from '../pages/SignUp';
 import {Home} from '../pages/Home';
 import  {Dashboard} from '../pages/Dashboard';
 import EmployeeForm from '../pages/EmployeeForm';
+import VerticalLayout from '../Layout/SideBarLayout';
+import BlankLayout from '../Layout/BlankLayout';
 
 // interface Route {
 //     path: string;
@@ -13,22 +15,32 @@ import EmployeeForm from '../pages/EmployeeForm';
 const routes = [
     {
         path: '/home',
-        component: Home
+        component: Home,
+        layout: VerticalLayout
     },
     {
         path: '/login',
-        component: Login
+        component: Login,
+        layout: BlankLayout
     },
     {
         path: '/register',
-        component: SignUp
+        component: SignUp,
+        layout: BlankLayout
+
     },
     {
         path: '/Dashboard',
-        component :Dashboard
+        component :Dashboard,
+        layout: VerticalLayout
+
     },{
         path: '/employeeForm',
-        component: EmployeeForm
+        component: EmployeeForm,
+        layout: VerticalLayout
+
+
+        
     }
 ];
 

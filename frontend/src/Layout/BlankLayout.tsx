@@ -1,4 +1,6 @@
-const BlankLayout = ({children: JSX.Element}) => {
+import { ReactNode } from "react";
+
+const BlankLayout = (children: ReactNode) => {
   return children
 }
 
