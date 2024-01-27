@@ -1,8 +1,9 @@
 import React from 'react';
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
-import Home from '../pages/Home';
+import {Home} from '../pages/Home';
 import  {Dashboard} from '../pages/Dashboard';
+import EmployeeForm from '../pages/EmployeeForm';
 
 // interface Route {
 //     path: string;
@@ -24,8 +25,11 @@ const routes = [
     },
     {
         path: '/Dashboard',
-        component:Dashboard
-    },
+        component :Dashboard
+    },{
+        path: '/employeeForm',
+        component: EmployeeForm
+    }
 ];
 
 export const createRoutes = () => {

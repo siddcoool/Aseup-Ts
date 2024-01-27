@@ -1,11 +1,12 @@
-import React from 'react'
+import Card from '../common/Card'
+import EmployeeForm from './EmployeeForm'
 
-const Home = () => {
+export const Home = () => {
   return (
     
-    <div>Home</div>
-    
-  )
-}
-
-export default Home
+    <div>Home
+      <Card/>
+      <EmployeeForm/>
+      </div>
+      )
+  }

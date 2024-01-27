@@ -15,7 +15,7 @@ export const Dashboard: FC = ()=> {
           };
         });
       };
-      const handleOnSubmit=(e)=>{
+      const handleOnSubmit=(e:any)=>{
         e.preventDefault();
     }
   return (
