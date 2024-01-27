@@ -15,7 +15,15 @@ const app: Express = express()
 const port = process.env.PORT || 5000
 
 app.use(bodyParser.json());
-app.use(cors())
+
+process
+  .on('unhandledRejection', (reason, p) => {
+    console.error(reason, 'Unhandled Rejection at Promise', p);
+  })
+  .on('uncaughtException', err => {
+    console.error(err, 'Uncaught Exception thrown');
+    process.exit(1);
+  });
 app.get('/', (req : Request, res: Response)=>{
     res.send("Typescript server")
 })
