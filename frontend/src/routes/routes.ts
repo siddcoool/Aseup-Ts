@@ -1,7 +1,9 @@
 import React from 'react';
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
-import Home from '../pages/Home';
+import {Home} from '../pages/Home';
+import  {Dashboard} from '../pages/Dashboard';
+import EmployeeForm from '../pages/EmployeeForm';
 
 // interface Route {
 //     path: string;
@@ -10,7 +12,7 @@ import Home from '../pages/Home';
 
 const routes = [
     {
-        path: '/',
+        path: '/home',
         component: Home
     },
     {
@@ -20,6 +22,13 @@ const routes = [
     {
         path: '/signup',
         component: SignUp
+    },
+    {
+        path: '/Dashboard',
+        component :Dashboard
+    },{
+        path: '/employeeForm',
+        component: EmployeeForm
     }
 ];
 

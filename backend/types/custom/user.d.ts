@@ -6,7 +6,8 @@ interface IUser {
     email: string;
     password: string;
     gender: string;
-    isDeleted: boolean
+    isDeleted: boolean;
+    approvalStatus: "approved" | "rejected" | "pending"
 }
 
 
