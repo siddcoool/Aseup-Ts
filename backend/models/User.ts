@@ -18,10 +18,10 @@ const UserSchema = new Schema<IUser, IUserModel>({
   password: String,
   gender: String,
   isDeleted: Boolean,
-  approvalStatus: {
-    enum: ["approved", "rejected", "pending"],
-    default: "pending",
-  },
+  // approvalStatus: {
+  //   enum: ["approved", "rejected", "pending"],
+  //   default: "pending",
+  // },
 });
 
 UserSchema.pre("save", function (next) {
