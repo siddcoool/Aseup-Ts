@@ -1,5 +1,5 @@
 export const AuthenticationStatus = {
-    notAvailabe : 1,
+    notAvailable : 1,
     loading : 2,
-    availabe : 3
+    available : 3
 }

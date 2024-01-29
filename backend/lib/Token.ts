@@ -8,7 +8,7 @@ class Token {
     constructor(){}
 
     createToken(payload : any){
-        return jwt.sign(payload, secret,{expiresIn: 1200})
+        return jwt.sign(payload, secret,{expiresIn: '2h'})
     }
 
     verify(token:string){

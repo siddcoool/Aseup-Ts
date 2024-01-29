@@ -1,14 +1,16 @@
 import axios from "axios"
-import { useState, useEffect } from "react"
+import { useState, useEffect, ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
 import Loader from "../component/loader/Loader"
 import { AuthenticationStatus } from "../../constant/app"
 import useIsAuthentication from "../../hooks/useIsAuthentication"
 
+interface IAuthenticationProvider{
+    children : ReactNode
+  }
 
 
-
-const AuthenticationProvider = ({children}) => {
+const AuthenticationProvider = ({children}:IAuthenticationProvider ) => {
 
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
@@ -16,11 +18,17 @@ const AuthenticationProvider = ({children}) => {
 
     const refreshToken = async() => {
          try {
+            const token = localStorage.getItem('Token')
+            if(!token){
+                navigate('/login')
+                return
+            }
             setLoading(true)
             const {status, data} = await axios.get('/token')
             if(status === 200){
-                localStorage.setItem('Token', data.token)
+                localStorage.setItem('Token', data)
                 axios.defaults.headers.common.access_token = localStorage.getItem('Token')
+                
             }
             else{
                 navigate('/login')
@@ -41,16 +49,15 @@ const AuthenticationProvider = ({children}) => {
     if(authenticationStatus === AuthenticationStatus.loading){
         return <></>
     }
+    if(authenticationStatus === AuthenticationStatus.notAvailable){
+        return <></>
+    }
 
     if(loading){
         return <Loader/>
     }
     
-  return (
-    <div>
-
-    </div>
-  )
+  return children
 }
 
 export default AuthenticationProvider

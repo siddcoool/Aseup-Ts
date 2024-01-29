@@ -1,6 +1,10 @@
 import { ReactNode } from "react";
 
-const BlankLayout = (children: ReactNode) => {
+interface IBlankLayout{
+  children : ReactNode
+}
+
+const BlankLayout = ({children}: IBlankLayout) => {
   return children
 }
 
