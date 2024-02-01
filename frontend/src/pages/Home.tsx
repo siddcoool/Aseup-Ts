@@ -4,9 +4,9 @@ import EmployeeForm from './EmployeeForm'
 export const Home = () => {
   return (
     
-    <div>Home
+    <div className='flex justify-center mt-36'  >
       <Card/>
-      <EmployeeForm/>
+      
       </div>
       )
   }

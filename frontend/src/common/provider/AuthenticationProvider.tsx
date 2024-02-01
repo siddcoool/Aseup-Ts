@@ -41,7 +41,7 @@ const AuthenticationProvider = ({children}:IAuthenticationProvider ) => {
             setLoading(false)
          }
     }
-
+    console.log( authenticationStatus)
     useEffect(()=> {
         refreshToken()
     },[])
@@ -49,9 +49,7 @@ const AuthenticationProvider = ({children}:IAuthenticationProvider ) => {
     if(authenticationStatus === AuthenticationStatus.loading){
         return <></>
     }
-    if(authenticationStatus === AuthenticationStatus.notAvailable){
-        return <></>
-    }
+    
 
     if(loading){
         return <Loader/>

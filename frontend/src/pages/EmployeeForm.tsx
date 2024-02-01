@@ -1,22 +1,58 @@
+import axios from "axios";
 import { useFormik } from "formik";
+import { useEffect, useState } from "react";
+import RadioGroup from "../common/component/RadioButton";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeForm = () => {
+  const [selectedGender, setSelectedGender] = useState("");
+  const [isEmployeeCreated, setIsEmployeeCreated] = useState(false);
+  const navigate = useNavigate();
+
   const { handleChange, handleSubmit, values } = useFormik({
     initialValues: {
       name: "",
       email: "",
       phone: "",
-      gender: "",
+      gender: 0,
       DOB: "",
       currentCTC: "",
       expectedCTC: "",
       noticePeriod: "",
       Skills: [],
     },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      const { status, data } = await axios.post("/employee/", {
+        ...values,
+        gender: selectedGender,
+      });
+
+      if (status === 201) {
+        toast.success(data.message);
+        setIsEmployeeCreated(true);
+      } else {
+        toast.warn("Failed");
+      }
     },
   });
+
+  const handleRadioChange = (selectedValue: string) => {
+    console.log("Selected Value:", selectedValue);
+    setSelectedGender(selectedValue);
+  };
+
+  const radioOptions = [
+    { label: "Male", value: "male" },
+    { label: "Female", value: "female" },
+  ];
+
+  useEffect(() => {
+    if (isEmployeeCreated) {
+      navigate("/home");
+    }
+  }, [isEmployeeCreated]);
+
   return (
     <div>
       <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
@@ -72,24 +108,11 @@ const EmployeeForm = () => {
               placeholder="Enter your phone number"
             />
           </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="service"
-            >
-              Gender
-            </label>
-            <select
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="service"
-              onChange={handleChange}
-              value={values.gender}
-              name="service"
-            >
-              <option value="">Select gender</option>
-              <option value="haircut">Male</option>
-              <option value="coloring">Female</option>
-            </select>
+          <div className="">
+            <div className="font-bold">Gender</div>
+            <div className="mb-4 mt-4  space-x-4">
+              <RadioGroup options={radioOptions} onChange={handleRadioChange} />
+            </div>
           </div>
           <div className="mb-4">
             <label
@@ -100,7 +123,7 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="date"
+              id="DOB"
               onChange={handleChange}
               value={values.DOB}
               type="date"
@@ -116,7 +139,7 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="currentCtc"
+              id="currentCTC"
               onChange={handleChange}
               value={values.currentCTC}
               placeholder="Enter your Current CTC"
@@ -131,7 +154,7 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="expectedCtc"
+              id="expectedCTC"
               onChange={handleChange}
               value={values.expectedCTC}
               placeholder="Enter your Expected CTC "
@@ -146,7 +169,7 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="phone"
+              id="noticePeriod"
               onChange={handleChange}
               value={values.noticePeriod}
               placeholder="Enter your Notice Period in days "
@@ -161,10 +184,10 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="phone"
+              id="Skills"
               type="tel"
               onChange={handleChange}
-              value={values.noticePeriod}
+              value={values.Skills}
               placeholder="Enter your Skills "
             />
           </div>
@@ -173,7 +196,7 @@ const EmployeeForm = () => {
             <button
               className="bg-gray-900 text-white py-2 px-4 rounded hover:bg-gray-800 focus:outline-none focus:shadow-outline"
               type="submit"
-              onClick={handleSubmit}
+              onClick={(e:any) => handleSubmit(e)}
             >
               Add Employee
             </button>

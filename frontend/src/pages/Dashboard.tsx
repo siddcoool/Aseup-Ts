@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 
-export const Dashboard: FC = ()=> {
+export const Dashboard = ()=> {
     const [content, setContent] = useState({
         name: "",
         contact: "",

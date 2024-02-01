@@ -16,6 +16,11 @@ interface Route {
 
 const routes: Route[] = [
   {
+    path: '/',
+    component: Login,
+    layout: BlankLayout,
+  },
+  {
     path: "/home",
     component: Home,
     layout: VerticalLayout,
