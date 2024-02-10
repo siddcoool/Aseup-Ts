@@ -22,6 +22,13 @@ const EmployeeForm = () => {
       currentCTC: "",
       expectedCTC: "",
       noticePeriod: "",
+      title: "",
+      field: "",
+      institue: "",
+      startYear: "",
+      endYear: "",
+
+      
       Skills: [],
     },
     validationSchema: Yup.object({
@@ -140,10 +147,10 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="name"
+              id="title"
               type="text"
               onChange={handleChange}
-              value={values.name}
+              value={values.title}
               placeholder="Enter your name"
             />
             {errors ? errors.name : ""}
@@ -157,10 +164,10 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="name"
+              id="field"
               type="text"
               onChange={handleChange}
-              value={values.name}
+              value={values.field}
               placeholder="Enter your name"
             />
             {errors ? errors.name : ""}
@@ -174,10 +181,10 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="name"
+              id="institue"
               type="text"
               onChange={handleChange}
-              value={values.name}
+              value={values.institue}
               placeholder="Enter your name"
             />
             {errors ? errors.name : ""}
@@ -191,9 +198,9 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="DOB"
+              id="startYear"
               onChange={handleChange}
-              value={values.DOB}
+              value={values.startYear}
               type="date"
               placeholder="Select a date"
             />
@@ -209,9 +216,9 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="DOB"
+              id="endYear"
               onChange={handleChange}
-              value={values.DOB}
+              value={values.endYear}
               type="date"
               placeholder="Select a date"
             />
