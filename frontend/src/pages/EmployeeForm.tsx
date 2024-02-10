@@ -54,7 +54,6 @@ const EmployeeForm = () => {
     //   // Skills: Yup.string(),
     // }),
     onSubmit: async (values) => {
-      // alert(JSON.stringify(values, null, 2));
       console.log(values)
       const { status, data } = await axios.post("/employee/", {
         ...values,
@@ -119,6 +118,21 @@ const EmployeeForm = () => {
           />
           {errors ? errors.name : ""}
         </div>
+        <div className="mb-4">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="date"
+            >
+              Date of Birth
+              Start Year
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="date"
+              placeholder="Select a date"
+            />
+            {errors ? errors.DOB : ""}
+          </div>
         <div className="mb-4">
           <label className="block text-gray-700 font-bold mb-2" htmlFor="email">
             Email
@@ -199,11 +213,11 @@ const EmployeeForm = () => {
                     className="block text-gray-700 font-bold mb-2"
                     htmlFor="name"
                   >
-                    institue
+                    institute
                   </label>
                   <input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="institue"
+                    id="institute"
                     type="text"
                     onChange={handleChange}
                     value={values.institute}
@@ -401,8 +415,7 @@ const EmployeeForm = () => {
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="Skills"
-            type="tel"
+            id="skills"
             onChange={handleChange}
             value={values.skills}
             placeholder="Enter your Skills "
