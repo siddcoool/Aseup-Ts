@@ -27,9 +27,9 @@ export default function Sidebar() {
         </div>
       </div>
       {/* Sign Out */}
-      <div className="text-white flex justify-items px-4 gap-4 pt-[340px]">
+      <div className="text-white flex justify-items px-4 gap-4 pt-[340px] ">
         <PiSignOutBold fontSize={28}/>
-        <span className="text-xl">Sign Out</span>
+        <div className="text-xl cursor-pointer">Sign Out</div>
       </div>
     </div>
   );
