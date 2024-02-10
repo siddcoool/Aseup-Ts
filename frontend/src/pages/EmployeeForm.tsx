@@ -97,7 +97,7 @@ const EmployeeForm = () => {
   }, [isEmployeeCreated]);
 
   return (
-    <div>
+    <div className="max-h-[75%] overflow-y-scroll">
       <form onSubmit={handleSubmit}>
       <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
