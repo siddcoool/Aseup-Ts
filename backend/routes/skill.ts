@@ -7,12 +7,12 @@ skillRouter.get('/', async(req: Request, res: Response)=>{
     res.json(listOfSkills)
 })
 
-skillRouter.post('/create', async(req: Request, res: Response)=>{
-    const {skills} = req.body
+skillRouter.post('/', async(req: Request, res: Response)=>{
+    const {name} = req.body
     const newEntry = {
-        skills
+        name
     }
-    await Skill.create(skills)
+    await Skill.create(newEntry)
     res.json({message:"skill added"})
 })
 
