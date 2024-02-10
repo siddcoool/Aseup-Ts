@@ -5,7 +5,17 @@ const employeeRouter = Router();
 import Employee from "../models/Employee";
 
 employeeRouter.get('/', async (req: Request, res : Response)=> {
-    res.json({message:"hello"})
+  try {
+    const employee = await Employee.find()
+    res.status(200).json({
+      message: 'list of employee',
+      data : employee
+    })
+    
+  } catch (error) {
+    console.log(error)
+  }
+ 
 })
 
 employeeRouter.get("/:id", async (req: Request, res: Response) => {

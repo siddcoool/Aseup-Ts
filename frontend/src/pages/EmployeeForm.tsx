@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import RadioGroup from "../common/component/RadioButton";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import { LineItemRepeater } from "../common/component/LineItemRepeater";
 
 const EmployeeForm = () => {
   const [selectedGender, setSelectedGender] = useState("");
   const [isEmployeeCreated, setIsEmployeeCreated] = useState(false);
   const navigate = useNavigate();
 
-  const { handleChange, handleSubmit, values } = useFormik({
+  const {handleChange, handleSubmit, values, errors }= useFormik({
     initialValues: {
       name: "",
       email: "",
@@ -22,6 +24,23 @@ const EmployeeForm = () => {
       noticePeriod: "",
       Skills: [],
     },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .matches(/^[a-zA-Z]+$/, "Only letters are allowed")
+        .required("This is a required field"),
+      email: Yup.string()
+        .email("Must be a valid Email")
+        .required("This is a required field"),
+      phone: Yup.string()
+      .matches(/^[0-9]+$/, 'Must contain only numeric characters')
+      .required('input must be a number'),
+      gender: Yup.string().required("This is a required field"),
+      DOB: Yup.date().required("This is a required field") ,
+      currentCTC: Yup.number().required("This is a required field"),
+      expectedCTC: Yup.number().required("This is a required field"),
+      noticePeriod: Yup.number().required("This is a required field"),
+      Skills: Yup.string()
+    }),
     onSubmit: async (values) => {
       const { status, data } = await axios.post("/employee/", {
         ...values,
@@ -59,7 +78,7 @@ const EmployeeForm = () => {
         <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
           Add Employee
         </div>
-        <form className="py-4 px-6" action="" method="POST">
+        {/* <form className="py-4 px-6" action="" method="POST"> */}
           <div className="mb-4">
             <label
               className="block text-gray-700 font-bold mb-2"
@@ -73,8 +92,10 @@ const EmployeeForm = () => {
               type="text"
               onChange={handleChange}
               value={values.name}
+             
               placeholder="Enter your name"
             />
+            {errors? errors.name: ''}
           </div>
           <div className="mb-4">
             <label
@@ -196,12 +217,34 @@ const EmployeeForm = () => {
             <button
               className="bg-gray-900 text-white py-2 px-4 rounded hover:bg-gray-800 focus:outline-none focus:shadow-outline"
               type="submit"
-              onClick={(e:any) => handleSubmit(e)}
+              onClick={(e: any) => handleSubmit(e)}
             >
               Add Employee
             </button>
           </div>
-        </form>
+          {/* <div>
+            <LineItemRepeater>
+              <div>
+              <div className="mb-4">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="name"
+            >
+              Name
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="title"
+              type="text"
+              onChange={handleChange}
+              value={values.name}
+              placeholder="Enter your name"
+            />
+
+              </div>
+            </LineItemRepeater>
+          </div> */}
+        {/* </form> */}
       </div>
     </div>
   );
