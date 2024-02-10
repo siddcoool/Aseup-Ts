@@ -2,13 +2,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const ViewEmployeedetails = () => {
-  const [employees, setEmployees] = useState({});
+  const [employees, setEmployees] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/ /");
-        setEmployees(response.data);
+        const response = await axios.get("/employee/");
+        setEmployees(response.data.data);
       } catch (error) {
         console.error("Error fetching employee data:", error);
       }

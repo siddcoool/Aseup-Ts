@@ -34,7 +34,7 @@ const EmployeeForm = () => {
       roleDescription:'',
       startDate:'',
       endDate:'',
-      skills: [],
+      skills: '',
     },
     // validationSchema: Yup.object({
     //   name: Yup.string()
