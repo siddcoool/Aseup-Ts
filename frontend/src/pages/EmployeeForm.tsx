@@ -9,6 +9,8 @@ import { LineItemRepeater } from "../common/component/LineItemRepeater";
 
 const EmployeeForm = () => {
   const [selectedGender, setSelectedGender] = useState("");
+  const [selectedEmployeeType, setSelectedEmployeeType] = useState("");
+
   const [isEmployeeCreated, setIsEmployeeCreated] = useState(false);
   const navigate = useNavigate();
 
@@ -24,34 +26,40 @@ const EmployeeForm = () => {
       noticePeriod: "",
       title: "",
       field: "",
-      institue: "",
+      institute: "",
       startYear: "",
       endYear: "",
-
-      
-      Skills: [],
+      companyName: '',
+      positionHeld:'',
+      roleDescription:'',
+      startDate:'',
+      endDate:'',
+      skills: [],
     },
-    validationSchema: Yup.object({
-      name: Yup.string()
-        .matches(/^[a-zA-Z]+$/, "Only letters are allowed")
-        .required("This is a required field"),
-      email: Yup.string()
-        .email("Must be a valid Email")
-        .required("This is a required field"),
-      phone: Yup.string()
-        .matches(/^[0-9]+$/, "Must contain only numeric characters")
-        .required("input must be a number"),
-      gender: Yup.string().required("This is a required field"),
-      DOB: Yup.date().required("This is a required field"),
-      currentCTC: Yup.number().required("This is a required field"),
-      expectedCTC: Yup.number().required("This is a required field"),
-      noticePeriod: Yup.number().required("This is a required field"),
-      Skills: Yup.string(),
-    }),
+    // validationSchema: Yup.object({
+    //   name: Yup.string()
+    //     .matches(/^[a-zA-Z]+$/, "Only letters are allowed")
+    //     .required("This is a required field"),
+    //   email: Yup.string()
+    //     .email("Must be a valid Email")
+    //     .required("This is a required field"),
+    //   phone: Yup.string()
+    //     .matches(/^[0-9]+$/, "Must contain only numeric characters")
+    //     .required("input must be a number"),
+    //   gender: Yup.string().required("This is a required field"),
+    //   // DOB: Yup.date().required("This is a required field"),
+    //   // currentCTC: Yup.number().required("This is a required field"),
+    //   // expectedCTC: Yup.number().required("This is a required field"),
+    //   // noticePeriod: Yup.number().required("This is a required field"),
+    //   // Skills: Yup.string(),
+    // }),
     onSubmit: async (values) => {
+      // alert(JSON.stringify(values, null, 2));
+      console.log(values)
       const { status, data } = await axios.post("/employee/", {
         ...values,
         gender: selectedGender,
+        employmentType: selectedEmployeeType
       });
 
       if (status === 201) {
@@ -68,9 +76,19 @@ const EmployeeForm = () => {
     setSelectedGender(selectedValue);
   };
 
+  const handleRadioChange2 = (selectedValue: string) => {
+    console.log("Selected Value:", selectedValue);
+    setSelectedEmployeeType(selectedValue);
+  };
   const radioOptions = [
     { label: "Male", value: "male" },
     { label: "Female", value: "female" },
+  ];
+
+  const radioOptions2 = [
+    { label: "Contract", value: "Contract" },
+    { label: "Full-Time", value: "Full-Time" },
+    { label: "Part-Time", value: "Part-Time" },
   ];
 
   useEffect(() => {
@@ -81,6 +99,7 @@ const EmployeeForm = () => {
 
   return (
     <div>
+      <form onSubmit={handleSubmit}>
       <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
           Add Employee
@@ -134,96 +153,208 @@ const EmployeeForm = () => {
             <RadioGroup options={radioOptions} onChange={handleRadioChange} />
           </div>
         </div>
-        <div >
+        <div>
           <div className="font-bold text-black text-center text-xl">
-          Enter Education Details
+            Enter Education Details
           </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="name"
-            >
-              title
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="title"
-              type="text"
-              onChange={handleChange}
-              value={values.title}
-              placeholder="Enter your name"
-            />
-            {errors ? errors.name : ""}
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="name"
-            >
-              field
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="field"
-              type="text"
-              onChange={handleChange}
-              value={values.field}
-              placeholder="Enter your name"
-            />
-            {errors ? errors.name : ""}
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="name"
-            >
-              institue
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="institue"
-              type="text"
-              onChange={handleChange}
-              value={values.institue}
-              placeholder="Enter your name"
-            />
-            {errors ? errors.name : ""}
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="date"
-            >
-              Start Year
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="startYear"
-              onChange={handleChange}
-              value={values.startYear}
-              type="date"
-              placeholder="Select a date"
-            />
-            {errors ? errors.DOB : ""}
-          </div>
+          <LineItemRepeater>
+            {() => (
+              <div>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="name"
+                  >
+                    title
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="title"
+                    type="text"
+                    onChange={handleChange}
+                    value={values.title}
+                    placeholder="Enter your name"
+                  />
+                  {errors ? errors.name : ""}
+                </div>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="name"
+                  >
+                    field
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="field"
+                    type="text"
+                    onChange={handleChange}
+                    value={values.field}
+                    placeholder="Enter your name"
+                  />
+                  {errors ? errors.name : ""}
+                </div>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="name"
+                  >
+                    institue
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="institue"
+                    type="text"
+                    onChange={handleChange}
+                    value={values.institute}
+                    placeholder="Enter your name"
+                  />
+                  {errors ? errors.name : ""}
+                </div>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="date"
+                  >
+                    Start Year
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="startYear"
+                    onChange={handleChange}
+                    value={values.startYear}
+                    type="date"
+                    placeholder="Select a date"
+                  />
+                  {errors ? errors.startYear : ""}
+                </div>
 
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="date"
-            >
-              End Year
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="endYear"
-              onChange={handleChange}
-              value={values.endYear}
-              type="date"
-              placeholder="Select a date"
-            />
-            {errors ? errors.DOB : ""}
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="date"
+                  >
+                    End Year
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="endYear"
+                    onChange={handleChange}
+                    value={values.endYear}
+                    type="date"
+                    placeholder="Select a date"
+                  />
+                  {errors ? errors.endYear : ""}
+                </div>
+              </div>
+            )}
+          </LineItemRepeater>
+        </div>
+        <div>
+        <div className="font-bold text-black text-center text-xl">
+            Enter Experience Details
           </div>
+          <LineItemRepeater>
+            {() => (
+              <div>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="name"
+                  >
+                    Company Name
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="companyName"
+                    type="text"
+                    onChange={handleChange}
+                    value={values.companyName}
+                    placeholder="Enter your name"
+                  />
+                  {errors ? errors.companyName : ""}
+                </div>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="name"
+                  >
+                    Position Held
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="positionHeld"
+                    type="text"
+                    onChange={handleChange}
+                    value={values.positionHeld}
+                    placeholder="Enter your name"
+                  />
+                  {errors ? errors.positionHeld : ""}
+                </div>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="name"
+                  >
+                    Role Description
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="roleDescription"
+                    type="text"
+                    onChange={handleChange}
+                    value={values.roleDescription}
+                    placeholder="Enter your name"
+                  />
+                  {errors ? errors.roleDescription : ""}
+                </div>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="date"
+                  >
+                    Start Year
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="startDate"
+                    onChange={handleChange}
+                    value={values.startDate}
+                    type="date"
+                    placeholder="Select a date"
+                  />
+                  {errors ? errors.startDate : ""}
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="date"
+                  >
+                    End Year
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="endDate"
+                    onChange={handleChange}
+                    value={values.endDate}
+                    type="date"
+                    placeholder="Select a date"
+                  />
+                  {errors ? errors.endDate : ""}
+                </div>
+                <div className="">
+                  <div className="font-bold">Employment Type</div>
+                  <div className="mb-4 mt-4  space-x-4">
+                    <RadioGroup
+                      options={radioOptions2}
+                      onChange={handleRadioChange2}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </LineItemRepeater>
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 font-bold mb-2" htmlFor="phone">
@@ -273,44 +404,24 @@ const EmployeeForm = () => {
             id="Skills"
             type="tel"
             onChange={handleChange}
-            value={values.Skills}
+            value={values.skills}
             placeholder="Enter your Skills "
           />
-          {errors ? errors.Skills : ""}
+          {errors ? errors.skills : ""}
         </div>
 
         <div className="flex items-center justify-center mb-4">
           <button
             className="bg-gray-900 text-white py-2 px-4 rounded hover:bg-gray-800 focus:outline-none focus:shadow-outline"
-            type="submit"
-            onClick={(e: any) => handleSubmit(e)}
+            type='submit'
           >
             Add Employee
           </button>
         </div>
         <div>
-          {/* <LineItemRepeater>
-            <div>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 font-bold mb-2"
-                  htmlFor="name"
-                >
-                  Name
-                </label>
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="title"
-                  type="text"
-                  onChange={handleChange}
-                  value={values.name}
-                  placeholder="Enter your name"
-                />
-              </div>
-            </div>
-          </LineItemRepeater> */}
         </div>
       </div>
+      </form>
     </div>
   );
 };
