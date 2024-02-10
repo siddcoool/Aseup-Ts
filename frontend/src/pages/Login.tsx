@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { ChangeEvent, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";

@@ -16,7 +16,7 @@ export default function Sidebar() {
       <div className="text-white py-8 px-4">
         <div className="text-xl flex justify-items py-4 gap-3">
           <RxDashboard fontSize={28} />
-          DashBaord
+          DashBoard
         </div>
         <div className="text-xl flex justify-items py-4 gap-3">
           <BsPersonFill fontSize={28} />

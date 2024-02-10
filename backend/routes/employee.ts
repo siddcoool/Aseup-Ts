@@ -4,19 +4,17 @@ const employeeRouter = Router();
 
 import Employee from "../models/Employee";
 
-employeeRouter.get('/', async (req: Request, res : Response)=> {
+employeeRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const employee = await Employee.find()
+    const employee = await Employee.find();
     res.status(200).json({
-      message: 'list of employee',
-      data : employee
-    })
-    
+      message: "list of employee",
+      data: employee,
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
- 
-})
+});
 
 employeeRouter.get("/:id", async (req: Request, res: Response) => {
   const employee = await Employee.findById(req.params.id);
@@ -27,10 +25,10 @@ employeeRouter.post("/", async (req: Request, res: Response) => {
   const employeeDetails = req.body;
   try {
     await Employee.create(employeeDetails);
-    res.status(201).json({message:"Employee Created Successfully"})
+    res.status(201).json({ message: "Employee Created Successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).send(error)
+    res.status(500).send(error);
   }
 });
 
@@ -55,5 +53,4 @@ employeeRouter.put("/edit/:id", async (req: Request, res: Response) => {
   };
 });
 
-
-export default employeeRouter
+export default employeeRouter;
