@@ -13,10 +13,10 @@ const ViewEmployeedetails = () => {
         console.error("Error fetching employee data:", error);
       }
     };
-
+    
     fetchData();
   }, []);
-
+  console.log(employees)
   return (
     <div>
       <h1 className="text-center text-3xl mt-3 font-medium text-violet-600">
@@ -38,7 +38,7 @@ const ViewEmployeedetails = () => {
             </tr>
           </thead>
           <tbody>
-            { employees && employees.map((employee, index) => (
+            { employees.map((employee, index) => (
               <tr key={index} className="border-2 border-violet-900">
                 <td className="px-6 py-3 border-2 border-violet-900"key={index}>{employee.name}</td>
                 <td className="px-6 py-3 border-2 border-violet-900">{employee.email}</td>
