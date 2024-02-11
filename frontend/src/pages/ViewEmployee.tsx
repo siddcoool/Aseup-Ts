@@ -16,7 +16,6 @@ const ViewEmployeedetails = () => {
     
     fetchData();
   }, []);
-  console.log(employees)
   return (
     <div>
       <h1 className="text-center text-3xl mt-3 font-medium text-violet-600">
