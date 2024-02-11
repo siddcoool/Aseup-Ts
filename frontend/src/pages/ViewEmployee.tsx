@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ViewEmployeedetails = () => {
   const [employees, setEmployees] = useState<any[]>([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,10 +19,18 @@ const ViewEmployeedetails = () => {
     fetchData();
   }, []);
   return (
-    <div>
+    <div className="">
       <h1 className="text-center text-3xl mt-3 font-medium text-violet-600">
         Employee Details
       </h1>
+      <div className="flex justify-end mr-4">
+      <button
+            onClick={()=>navigate('/employeeForm')}
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Add Employee
+          </button>
+      </div>
       <div className="m-3 border-2 border-violet-900">
         <table className="border-collapse border border-violet-900 w-full">
           <thead>
