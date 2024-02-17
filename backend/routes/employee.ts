@@ -31,6 +31,20 @@ employeeRouter.post("/", async (req: Request, res: Response) => {
     res.status(500).send(error);
   }
 });
+// Delete an employee by ID
+employeeRouter.delete("/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const deletedEmployee = await Employee.findByIdAndDelete(id);
+    if (!deletedEmployee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+    res.status(200).json({ message: "Employee deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 employeeRouter.put("/edit/:id", async (req: Request, res: Response) => {
   const employeeid = req.params.id;
