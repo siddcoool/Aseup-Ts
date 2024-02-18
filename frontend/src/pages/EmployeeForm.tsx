@@ -3,42 +3,57 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import RadioGroup from "../common/component/RadioButton";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { LineItemRepeater } from "../common/component/LineItemRepeater";
-import DropdownButton from "../common/component/DropDown";
-import Dropdown from "../common/component/DropDown";
+import { Employee } from "./ViewEmployee";
+import dayjs from "dayjs";
 
 const EmployeeForm = () => {
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedEmployeeType, setSelectedEmployeeType] = useState("");
-  const [skills, setSkills] = useState([])
+  const [skills, setSkills] = useState([]);
+  const [formDetails, setFormDetails] = useState<Employee>();
+  const params = useParams();
+
+  const ID = params.employeeId;
 
   const [isEmployeeCreated, setIsEmployeeCreated] = useState(false);
   const navigate = useNavigate();
 
   const { handleChange, handleSubmit, values, errors } = useFormik({
-    initialValues: {
+    initialValues: formDetails ?? {
       name: "",
       email: "",
-      phone: "",
-      gender: 0,
-      DOB: "",
+      phoneNumber: "",
+      DOB: dayjs().format("YYYY-MM-DD"),
+      gender: "",
+      educations: [
+        {
+          title: "",
+          field: "",
+          institute: "",
+          startYear: dayjs().format("YYYY"),
+          endYear: dayjs().format("YYYY"),
+          grade: "",
+        },
+      ],
+      experience: [
+        {
+          companyName: "",
+          positionHeld: "",
+          roleDescription: "",
+          startDate: dayjs().format("YYYY-MM-DD"),
+          endDate: dayjs().format("YYYY-MM-DD"),
+          employmentType: "",
+        },
+      ],
       currentCTC: "",
       expectedCTC: "",
       noticePeriod: "",
-      title: "",
-      field: "",
-      institute: "",
-      startYear: "",
-      endYear: "",
-      companyName: "",
-      positionHeld: "",
-      roleDescription: "",
-      startDate: "",
-      endDate: "",
-      skills: "",
+      skills: [],
     },
+    enableReinitialize: true,
     // validationSchema: Yup.object({
     //   name: Yup.string()
     //     .matches(/^[a-zA-Z]+$/, "Only letters are allowed")
@@ -57,18 +72,34 @@ const EmployeeForm = () => {
     //   // Skills: Yup.string(),
     // }),
     onSubmit: async (values) => {
-      console.log(values);
-      const { status, data } = await axios.post("/employee/", {
-        ...values,
-        gender: selectedGender,
-        employmentType: selectedEmployeeType,
-      });
+      console.log(values, ID);
 
-      if (status === 201) {
-        toast.success(data.message);
-        setIsEmployeeCreated(true);
+      if (ID) {
+        try {
+          const { status } = await axios.put(`/employee/edit/${ID}` , {
+            ...values,
+            gender: selectedGender,
+            employmentType: selectedEmployeeType,
+          });
+          if (status === 204) {
+            toast.success("Successfully updated employee details");
+            navigate('/viewEmployee')
+          }
+        } catch (error) {
+          toast.error("an error occured during updating");
+        }
       } else {
-        toast.warn("Failed");
+        const { status, data } = await axios.post("/employee/", {
+          ...values,
+          gender: selectedGender,
+          employmentType: selectedEmployeeType,
+        });
+        if (status === 201) {
+          toast.success(data.message);
+          setIsEmployeeCreated(true);
+        } else {
+          toast.warn("Failed");
+        }
       }
     },
   });
@@ -99,21 +130,38 @@ const EmployeeForm = () => {
     }
   }, [isEmployeeCreated]);
 
-  useEffect(()=>{
-    const getSkills = async () => {
-      const response = await axios.get("/skill/")
-      setSkills(response.data )
-    }
-    getSkills()
-  },[])
+  const getSkills = async () => {
+    const response = await axios.get("/skill/");
+    setSkills(response.data);
+  };
+  console.log({ ID });
 
-  console.log(skills)
+  const getEmployeeDetails = async () => {
+    if (ID) {
+      try {
+        const { status, data } = await axios.get(`/employee/${ID}`);
+        console.log({ data });
+        if (status === 200) {
+          setFormDetails(data);
+          toast.success("Employee Data fetch successfully");
+        }
+      } catch (error) {
+        toast.error("error fetching employee data");
+      }
+    }
+  };
+
+  useEffect(() => {
+    getEmployeeDetails();
+    getSkills();
+  }, []);
+
   return (
     <div className="max-h-[70%] overflow-y-scroll">
       <form onSubmit={handleSubmit}>
         <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
-            Add Employee
+            {`${ID ? `Update` : `Add`} Employee`}
           </div>
           {/* <form className="py-4 px-6" action="" method="POST"> */}
           <div className="mb-4">
@@ -173,13 +221,12 @@ const EmployeeForm = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="phone"
-              type="tel"
+              id="phoneNumber"
               onChange={handleChange}
-              value={values.phone}
+              value={values.phoneNumber}
               placeholder="Enter your phone number"
             />
-            {errors ? errors.phone : ""}
+            {errors ? errors.phoneNumber : ""}
           </div>
           <div className="">
             <div className="font-bold">Gender</div>
@@ -192,7 +239,7 @@ const EmployeeForm = () => {
               Enter Education Details
             </div>
             <LineItemRepeater>
-              {() => (
+              {(index) => (
                 <div>
                   <div className="mb-4">
                     <label
@@ -203,10 +250,10 @@ const EmployeeForm = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="title"
+                      id={`educations[${index}]title`}
                       type="text"
                       onChange={handleChange}
-                      value={values.title}
+                      value={values.educations[0].title}
                       placeholder="Enter your name"
                     />
                     {errors ? errors.name : ""}
@@ -220,10 +267,10 @@ const EmployeeForm = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="field"
+                      id={`educations[${index}]field`}
                       type="text"
                       onChange={handleChange}
-                      value={values.field}
+                      value={values.educations[0].field}
                       placeholder="Enter your name"
                     />
                     {errors ? errors.name : ""}
@@ -237,10 +284,10 @@ const EmployeeForm = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="institute"
+                      id={`educations[${index}]institute`}
                       type="text"
                       onChange={handleChange}
-                      value={values.institute}
+                      value={values.educations[0].institute}
                       placeholder="Enter your name"
                     />
                     {errors ? errors.name : ""}
@@ -254,13 +301,13 @@ const EmployeeForm = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="startYear"
+                      id={`educations[${index}]startYear`}
                       onChange={handleChange}
-                      value={values.startYear}
+                      value={values.educations[0].startYear}
                       type="date"
                       placeholder="Select a date"
                     />
-                    {errors ? errors.startYear : ""}
+                    {errors ? errors.name : ""}
                   </div>
 
                   <div className="mb-4">
@@ -272,13 +319,13 @@ const EmployeeForm = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="endYear"
+                      id={`educations[${index}]endYear`}
                       onChange={handleChange}
-                      value={values.endYear}
+                      value={values.educations[0].endYear}
                       type="date"
                       placeholder="Select a date"
                     />
-                    {errors ? errors.endYear : ""}
+                    {errors ? errors.name : ""}
                   </div>
                 </div>
               )}
@@ -289,7 +336,7 @@ const EmployeeForm = () => {
               Enter Experience Details
             </div>
             <LineItemRepeater>
-              {() => (
+              {(index) => (
                 <div>
                   <div className="mb-4">
                     <label
@@ -300,13 +347,13 @@ const EmployeeForm = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="companyName"
+                      id={`experience[${index}]companyName`}
                       type="text"
                       onChange={handleChange}
-                      value={values.companyName}
+                      value={values.experience[0].companyName}
                       placeholder="Enter your name"
                     />
-                    {errors ? errors.companyName : ""}
+                    {/* {errors ? errors.experience?[0].companyName : ""} */}
                   </div>
                   <div className="mb-4">
                     <label
@@ -317,13 +364,13 @@ const EmployeeForm = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="positionHeld"
+                      id={`experience[${index}]positionHeld`}
                       type="text"
                       onChange={handleChange}
-                      value={values.positionHeld}
+                      value={values.experience[0].positionHeld}
                       placeholder="Enter your name"
                     />
-                    {errors ? errors.positionHeld : ""}
+                    {errors ? errors.name : ""}
                   </div>
                   <div className="mb-4">
                     <label
@@ -334,13 +381,13 @@ const EmployeeForm = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="roleDescription"
+                      id={`experience[${index}]roleDescription`}
                       type="text"
                       onChange={handleChange}
-                      value={values.roleDescription}
+                      value={values.experience[0].roleDescription}
                       placeholder="Enter your name"
                     />
-                    {errors ? errors.roleDescription : ""}
+                    {/* {errors ? errors.roleDescription : ""} */}
                   </div>
                   <div className="mb-4">
                     <label
@@ -351,13 +398,13 @@ const EmployeeForm = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="startDate"
+                      id={`experience[${index}]startDate`}
                       onChange={handleChange}
-                      value={values.startDate}
+                      value={values.experience[0].startDate}
                       type="date"
                       placeholder="Select a date"
                     />
-                    {errors ? errors.startDate : ""}
+                    {/* {errors ? errors.startDate : ""} */}
                   </div>
 
                   <div className="mb-4">
@@ -369,13 +416,13 @@ const EmployeeForm = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="endDate"
+                      id={`experience[${index}]endDate`}
                       onChange={handleChange}
-                      value={values.endDate}
+                      value={values.experience[0].endDate}
                       type="date"
                       placeholder="Select a date"
                     />
-                    {errors ? errors.endDate : ""}
+                    {/* {errors ? errors.endDate : ""} */}
                   </div>
                   <div className="">
                     <div className="font-bold">Employment Type</div>
@@ -446,14 +493,14 @@ const EmployeeForm = () => {
               Skills
             </label>
             <div>
-            <label htmlFor="objectDropdown">Select an object:</label>
-      <select id="objectDropdown" onChange={}>
-        {skills.map((object, index) => (
-          <option key={index} value={object.id}>
-            {object.name}
-          </option>
-        ))}
-      </select>
+              <label htmlFor="objectDropdown">Select an object:</label>
+              <select id="objectDropdown">
+                {skills.map((object, index) => (
+                  <option key={index} value={object.id}>
+                    {object.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="flex items-center justify-center mb-4">
@@ -461,7 +508,7 @@ const EmployeeForm = () => {
                 className="bg-gray-900 text-white py-2 px-4 rounded hover:bg-gray-800 focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Add Employee
+                {`${ID ? `Update` : `Add`} Employee`}
               </button>
             </div>
             <div></div>

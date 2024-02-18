@@ -2,8 +2,58 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+enum Grade {
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D',
+  E = 'E',
+  F = 'F'
+}
+
+enum EmploymentType {
+  Contract = 'Contract',
+  FullTime = 'Full-Time',
+  PartTime = 'Part-Time'
+}
+
+interface Education {
+  title: string;
+  field: string;
+  institute: string;
+  startYear: number;
+  endYear: number;
+  grade: Grade;
+}
+
+interface Experience {
+  companyName: string;
+  positionHeld: string;
+  roleDescription: string;
+  startDate: string; // Start date of employment in format yyyy-mm
+  endDate: string; // End date of employment or null if current employee
+  employmentType: EmploymentType;
+}
+
+export interface Employee {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  DOB: string;
+  gender: string;
+  educations: Education[];
+  experience: Experience[];
+  currentCTC: string;
+  expectedCTC: string;
+  noticePeriod: string;
+  skills: string[]; // Assuming skill IDs are strings
+}
+
+
+
 const ViewEmployeedetails = () => {
-  const [employees, setEmployees] = useState<any[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const navigate = useNavigate();
   const fetchData = async () => {
     try {
@@ -20,7 +70,7 @@ const ViewEmployeedetails = () => {
   const deleteEmployee = async (id: string) => {
     try {
       await axios.delete(`/employee/${id}`);
-      setEmployees(employees.filter((employee) => employee.id !== id)); // Assuming each employee object has an "id" field
+      setEmployees(employees.filter((employee) => employee._id !== id)); // Assuming each employee object has an "id" field
     } catch (error) {
       console.error("Error deleting employee:", error);
     }
@@ -75,10 +125,10 @@ const ViewEmployeedetails = () => {
                   {employee.email}
                 </td>
                 <td className="px-6 py-3 border-2 border-violet-900">
-                  {employee.contact}
+                  {employee.phoneNumber}
                 </td>
                 <td className="px-6 py-3 border-2 border-violet-900">
-                  {employee.dob}
+                  {employee.DOB}
                 </td>
                 <td className="px-6 py-3 border-2 border-violet-900">
                   {employee.gender}
@@ -96,7 +146,9 @@ const ViewEmployeedetails = () => {
                   {employee.skills}
                 </td>
                 <td className="px-6 py-3 border-2 border-violet-900">
-                  <button className="text-white bg-blue-700 px-2 py-2 rounded-lg hover:text-slate-950 hover:bg-indigo-500 mb-2">
+                  <button 
+                  onClick={()=>navigate(`/employeeForm/${employee._id}`)}
+                  className="text-white bg-blue-700 px-2 py-2 rounded-lg hover:text-slate-950 hover:bg-indigo-500 mb-2">
                     Update
                   </button>
                   <button

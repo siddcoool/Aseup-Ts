@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/toastify-js": "^1.12.3",
     "axios": "^1.6.5",
+    "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
     "formik": "^2.4.5",
     "joi": "^17.12.1",

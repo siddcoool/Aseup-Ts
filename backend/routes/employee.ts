@@ -43,28 +43,23 @@ employeeRouter.delete("/:id", async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
-  }
+  } 
 });
 
 employeeRouter.put("/edit/:id", async (req: Request, res: Response) => {
-  const employeeid = req.params.id;
-  const {
-    Name,
-    email,
-    phoneNumber,
-    DOB,
-    gender,
-    currentCTC,
-    expectedCTC,
-    noticePeriod,
-  } = req.body;
-  // need to add skills and education and experience
-  const newDetails = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    role: req.body.role,
-  };
+  const ID = req.params.id; 
+  try { 
+    const result = await Employee.findByIdAndUpdate(ID, req.body);
+
+    if (!result) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+ 
+    res.status(204).json({ message: "Employee details updated successfully" });
+  } catch (error) {
+    console.error("Error in updating employee:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 export default employeeRouter;

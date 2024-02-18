@@ -42,9 +42,14 @@ const routes: Route[] = [
     layout: VerticalLayout,
   },
   {
-    path: "/employeeForm",
+    path: "/employeeForm/",
     component: EmployeeForm,
     layout:VerticalLayout ,
+  },
+  {
+    path: "/employeeForm/:employeeId",
+    component: EmployeeForm,
+    layout: VerticalLayout,
   },{
     path: "/viewEmployee",
     component: ViewEmployee,
