@@ -12,7 +12,14 @@ import dayjs from "dayjs";
 const EmployeeForm = () => {
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedEmployeeType, setSelectedEmployeeType] = useState("");
-  const [skills, setSkills] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+
+  const [skills, setSkills] = useState([
+    {
+      name: "",
+      _id: "",
+    },
+  ]);
   const [formDetails, setFormDetails] = useState<Employee>();
   const params = useParams();
 
@@ -76,14 +83,14 @@ const EmployeeForm = () => {
 
       if (ID) {
         try {
-          const { status } = await axios.put(`/employee/edit/${ID}` , {
+          const { status } = await axios.put(`/employee/edit/${ID}`, {
             ...values,
             gender: selectedGender,
             employmentType: selectedEmployeeType,
           });
           if (status === 204) {
             toast.success("Successfully updated employee details");
-            navigate('/viewEmployee')
+            navigate("/viewEmployee");
           }
         } catch (error) {
           toast.error("an error occured during updating");
@@ -103,6 +110,14 @@ const EmployeeForm = () => {
       }
     },
   });
+
+  const handleSkillChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedOptions = Array.from(
+      event.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedSkills(selectedOptions);
+  };
 
   const handleRadioChange = (selectedValue: string) => {
     console.log("Selected Value:", selectedValue);
@@ -131,8 +146,9 @@ const EmployeeForm = () => {
   }, [isEmployeeCreated]);
 
   const getSkills = async () => {
-    const response = await axios.get("/skill/");
+    const response = await axios.get("/skill");
     setSkills(response.data);
+    console.log({ skills });
   };
   console.log({ ID });
 
@@ -493,14 +509,21 @@ const EmployeeForm = () => {
               Skills
             </label>
             <div>
-              <label htmlFor="objectDropdown">Select an object:</label>
-              <select id="objectDropdown">
-                {skills.map((object, index) => (
-                  <option key={index} value={object.id}>
-                    {object.name}
+              <label htmlFor="objectDropdown">Select skills:</label>
+              <select
+                id="objectDropdown"
+                multiple
+                onChange={handleSkillChange}
+                value={selectedSkills}
+              >
+                {skills.map((skill) => (
+                  <option key={skill._id} value={skill._id}>
+                    {skill.name}
                   </option>
                 ))}
               </select>
+              
+              <button type="submit">Submit</button>
             </div>
 
             <div className="flex items-center justify-center mb-4">

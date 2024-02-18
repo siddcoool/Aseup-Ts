@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Loader from "../common/component/Loader";
 
 enum Grade {
   A = 'A',
@@ -54,19 +55,25 @@ export interface Employee {
 
 const ViewEmployeedetails = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
   const fetchData = async () => {
     try {
+      setLoading(true)
       const response = await axios.get("/employee/");
       setEmployees(response.data.data);
+      setLoading(false)
+
       console.log({ response });
     } catch (error) {
       console.error("Error fetching employee data:", error);
     }
   };
   useEffect(() => {
+    setLoading(true)
     fetchData();
-  }, [employees]);
+    setLoading(false)
+  }, []);
   const deleteEmployee = async (id: string) => {
     try {
       await axios.delete(`/employee/${id}`);
@@ -75,7 +82,10 @@ const ViewEmployeedetails = () => {
       console.error("Error deleting employee:", error);
     }
   };
-  return (
+  if(loading){
+    return <Loader/>
+  }
+  else return (
     <div className="">
       <h1 className="text-center text-3xl mt-3 font-medium text-violet-600">
         Employee Details
@@ -88,7 +98,7 @@ const ViewEmployeedetails = () => {
           Add Employee
         </button>
       </div>
-      <div className="m-3 border-2 border-violet-900">
+      {loading?<Loader/>: <div className="m-3 border-2 border-violet-900">
         <table className="border-collapse border border-violet-900 w-full">
           <thead>
             <tr className="border-2 border-violet-900">
@@ -164,7 +174,8 @@ const ViewEmployeedetails = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div>}
+      
     </div>
   );
 };
