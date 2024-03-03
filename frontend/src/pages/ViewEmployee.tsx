@@ -2,20 +2,34 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
+import dayjs from "dayjs";
 
 enum Grade {
-  A = 'A',
-  B = 'B',
-  C = 'C',
-  D = 'D',
-  E = 'E',
-  F = 'F'
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+  E = "E",
+  F = "F",
 }
 
 enum EmploymentType {
-  Contract = 'Contract',
-  FullTime = 'Full-Time',
-  PartTime = 'Part-Time'
+  Contract = "Contract",
+  FullTime = "Full-Time",
+  PartTime = "Part-Time",
 }
 
 interface Education {
@@ -51,28 +65,29 @@ export interface Employee {
   skills: string[]; // Assuming skill IDs are strings
 }
 
-
-
 const ViewEmployeedetails = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast()
   const fetchData = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await axios.get("/employee/");
       setEmployees(response.data.data);
-      setLoading(false)
+      setLoading(false);
 
       console.log({ response });
     } catch (error) {
       console.error("Error fetching employee data:", error);
     }
   };
+
+  console.log({ employees });
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     fetchData();
-    setLoading(false)
+    setLoading(false);
   }, []);
   const deleteEmployee = async (id: string) => {
     try {
@@ -82,102 +97,83 @@ const ViewEmployeedetails = () => {
       console.error("Error deleting employee:", error);
     }
   };
-  if(loading){
-    return <Loader/>
-  }
-  else return (
-    <div className="">
-      <h1 className="text-center text-3xl mt-3 font-medium text-violet-600">
-        Employee Details
-      </h1>
-      <div className="flex justify-end mr-4">
-        <button
-          onClick={() => navigate("/employeeForm")}
-          className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Add Employee
-        </button>
+  if (loading) {
+    return <Loader />;
+  } else
+    return (
+      <div className="">
+        <h1 className="text-center text-3xl mt-3 font-medium text-violet-600">
+          Employee Details
+        </h1>
+        <div className="flex justify-end mr-4">
+          <button
+            onClick={() => navigate("/employeeForm")}
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Add Employee
+          </button>
+        </div>
+        {loading ? (
+          <Loader />
+        ) : (
+          <div className="m-3 border-2 border-gray-300">
+            <TableContainer>
+              <Table variant="striped" colorScheme="teal">
+                <Thead>
+                  <Tr>
+                    <Th>Name</Th>
+                    <Th>Email</Th>
+                    <Th>Contact NO</Th>
+                    <Th>DOB</Th>
+                    <Th>Gender</Th>
+                    <Th>Current CTC</Th>
+                    <Th>Expected CTC</Th>
+                    <Th>Notice Period(days)</Th>
+                    <Th>Skills</Th>
+                    <Th>Action</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {employees.map((employee, index) => (
+                    <Tr key={index}>
+                      <Td>{employee.name}</Td>
+                      <Td>{employee.email}</Td>
+                      <Td>{employee.phoneNumber}</Td>
+                      <Td>{dayjs(employee.DOB).format("DD-MM-YYYY")}</Td>
+                      <Td>{employee.gender}</Td>
+                      <Td>{employee.currentCTC}</Td>
+                      <Td>{employee.expectedCTC}</Td>
+                      <Td>{employee.noticePeriod}</Td>
+                      <Td>
+                        {employee.skills.map((skill, index) => (
+                          <div key={index}>{skill.name}</div>
+                        ))}
+                      </Td>
+                      <Td className="flex gap-x-4">
+                        <Button
+                          colorScheme="blue"
+                          onClick={() =>
+                            navigate(`/employeeForm/${employee._id}`)
+                          }
+                        >
+                          Update
+                        </Button>
+                        <Button
+                          colorScheme="red"
+                          onClick={() => deleteEmployee(employee._id)}
+                        >
+                          Delete
+                        </Button>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          </div>
+        )}
       </div>
-      {loading?<Loader/>: <div className="m-3 border-2 border-violet-900">
-        <table className="border-collapse border border-violet-900 w-full">
-          <thead>
-            <tr className="border-2 border-violet-900">
-              <th className="px-4 py-3 border-2 border-violet-900">Name</th>
-              <th className="px-4 py-3 border-2 border-violet-900">Email</th>
-              <th className="px-4 py-3 border-2 border-violet-900">
-                Contact NO
-              </th>
-              <th className="px-4 py-3 border-2 border-violet-900">DOB</th>
-              <th className="px-4 py-3 border-2 border-violet-900">Gender</th>
-              <th className="px-4 py-3 border-2 border-violet-900">
-                Current CTC
-              </th>
-              <th className="px-4 py-3 border-2 border-violet-900">
-                Expected CTC
-              </th>
-              <th className="px-4 py-3 border-2 border-violet-900">
-                Notice Period(days)
-              </th>
-              <th className="px-4 py-3 border-2 border-violet-900">Skills</th>
-              <th className="px-4 py-3 border-2 border-violet-900">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {employees.map((employee, index) => (
-              <tr key={index} className="border-2 border-violet-900">
-                <td
-                  className="px-6 py-3 border-2 border-violet-900"
-                  key={index}
-                >
-                  {employee.name}
-                </td>
-                <td className="px-6 py-3 border-2 border-violet-900">
-                  {employee.email}
-                </td>
-                <td className="px-6 py-3 border-2 border-violet-900">
-                  {employee.phoneNumber}
-                </td>
-                <td className="px-6 py-3 border-2 border-violet-900">
-                  {employee.DOB}
-                </td>
-                <td className="px-6 py-3 border-2 border-violet-900">
-                  {employee.gender}
-                </td>
-                <td className="px-6 py-3 border-2 border-violet-900">
-                  {employee.currentCTC}
-                </td>
-                <td className="px-6 py-3 border-2 border-violet-900">
-                  {employee.expectedCTC}
-                </td>
-                <td className="px-6 py-3 border-2 border-violet-900">
-                  {employee.noticePeriod}
-                </td>
-                <td className="px-6 py-3 border-2 border-violet-900">
-                  {employee.skills}
-                </td>
-                <td className="px-6 py-3 border-2 border-violet-900">
-                  <button 
-                  onClick={()=>navigate(`/employeeForm/${employee._id}`)}
-                  className="text-white bg-blue-700 px-2 py-2 rounded-lg hover:text-slate-950 hover:bg-indigo-500 mb-2">
-                    Update
-                  </button>
-                  <button
-                    onClick={() => {
-                      deleteEmployee(employee._id);
-                    }}
-                    className="text-white bg-red-600 px-2 py-2 rounded-lg hover:text-slate-950 hover:bg-red-400"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>}
-      
-    </div>
-  );
+    );
 };
 
 export default ViewEmployeedetails;

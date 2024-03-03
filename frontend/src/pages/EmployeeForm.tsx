@@ -8,6 +8,8 @@ import * as Yup from "yup";
 import { LineItemRepeater } from "../common/component/LineItemRepeater";
 import { Employee } from "./ViewEmployee";
 import dayjs from "dayjs";
+import { Select } from "@chakra-ui/react";
+import { MultiSelect } from "chakra-multiselect";
 
 const EmployeeForm = () => {
   const [selectedGender, setSelectedGender] = useState("");
@@ -24,6 +26,23 @@ const EmployeeForm = () => {
   const params = useParams();
 
   const ID = params.employeeId;
+
+  // const [selectedSkills, setSelectedSkills] = useState([]);
+
+// Handle skill selection
+const handleSkillSelection = (event) => {
+  const selectedSkillId = event.target.value;
+  const selectedSkill = skills.find(skill => skill._id === selectedSkillId);
+
+  // Add or remove the selected skill based on whether it's already selected
+  if (selectedSkills.some(skill => skill._id === selectedSkillId)) {
+    setSelectedSkills(selectedSkills.filter(skill => skill._id !== selectedSkillId));
+  } else {
+    if (selectedSkill) {
+      setSelectedSkills([...selectedSkills, selectedSkill]);
+    }
+  }
+};
 
   const [isEmployeeCreated, setIsEmployeeCreated] = useState(false);
   const navigate = useNavigate();
@@ -100,6 +119,7 @@ const EmployeeForm = () => {
           ...values,
           gender: selectedGender,
           employmentType: selectedEmployeeType,
+          skills: selectedSkills.map((skill) => skill._id),
         });
         if (status === 201) {
           toast.success(data.message);
@@ -148,9 +168,8 @@ const EmployeeForm = () => {
   const getSkills = async () => {
     const response = await axios.get("/skill");
     setSkills(response.data);
-    console.log({ skills });
   };
-  console.log({ ID });
+  console.log({ ID, skills });
 
   const getEmployeeDetails = async () => {
     if (ID) {
@@ -510,26 +529,22 @@ const EmployeeForm = () => {
             </label>
             <div>
               <label htmlFor="objectDropdown">Select skills:</label>
-              <select
-                id="objectDropdown"
-                multiple
-                onChange={handleSkillChange}
-                value={selectedSkills}
+              <Select
+                placeholder="Select Skills"
+                onChange={handleSkillSelection}
+                value={selectedSkills.map((skill) => skill._id)}
               >
-                {skills.map((skill) => (
-                  <option key={skill._id} value={skill._id}>
-                    {skill.name}
-                  </option>
-                ))}
-              </select>
-              
-              <button type="submit">Submit</button>
+                {skills.map((skill) => {
+                  return <option value={ID? values.skills[0]: `${skill._id}`}>{skill.name}</option>;
+                })}
+              </Select>
             </div>
 
             <div className="flex items-center justify-center mb-4">
               <button
                 className="bg-gray-900 text-white py-2 px-4 rounded hover:bg-gray-800 focus:outline-none focus:shadow-outline"
-                type="submit"
+                type="button"
+                onClick={() => handleSubmit()}
               >
                 {`${ID ? `Update` : `Add`} Employee`}
               </button>

@@ -6,7 +6,7 @@ import Employee from "../models/Employee";
 
 employeeRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const employee = await Employee.find();
+    const employee = await Employee.find().populate('skills');
     res.status(200).json({
       message: "list of employee",
       data: employee,
@@ -17,8 +17,12 @@ employeeRouter.get("/", async (req: Request, res: Response) => {
 });
 
 employeeRouter.get("/:id", async (req: Request, res: Response) => {
-  const employee = await Employee.findById(req.params.id);
-  res.json(employee);
+  try {
+    const employee = await Employee.findById(req.params.id).populate("skill");
+    res.json(employee);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 employeeRouter.post("/", async (req: Request, res: Response) => {
@@ -43,18 +47,18 @@ employeeRouter.delete("/:id", async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
-  } 
+  }
 });
 
 employeeRouter.put("/edit/:id", async (req: Request, res: Response) => {
-  const ID = req.params.id; 
-  try { 
+  const ID = req.params.id;
+  try {
     const result = await Employee.findByIdAndUpdate(ID, req.body);
 
     if (!result) {
       return res.status(404).json({ error: "Employee not found" });
     }
- 
+
     res.status(204).json({ message: "Employee details updated successfully" });
   } catch (error) {
     console.error("Error in updating employee:", error);
