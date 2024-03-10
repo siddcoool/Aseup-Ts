@@ -8,6 +8,8 @@ import BlankLayout from "../Layout/BlankLayout";
 import AuthenticationProvider from "../common/provider/AuthenticationProvider";
 import React from "react";
 import ViewEmployee from "../pages/ViewEmployee";
+import EmployerForm from "../pages/Employer";
+import ViewEmployer from "../pages/ViewEmployer";
 
 interface Route {
   path: string;
@@ -54,6 +56,14 @@ const routes: Route[] = [
     path: "/viewEmployee",
     component: ViewEmployee,
     layout:VerticalLayout ,
+  },{
+    path: '/employer/add',
+    component: EmployerForm,
+    layout: VerticalLayout
+  },{
+    path: '/employer/view',
+    component: ViewEmployer,
+    layout: VerticalLayout
   }
 ];
 

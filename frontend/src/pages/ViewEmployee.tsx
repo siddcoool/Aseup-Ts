@@ -1,19 +1,16 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
   Button,
-  useToast,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 
@@ -69,7 +66,6 @@ const ViewEmployeedetails = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const toast = useToast()
   const fetchData = async () => {
     try {
       setLoading(true);

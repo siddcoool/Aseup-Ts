@@ -26,7 +26,7 @@ export default function VerticalLayout({ children }: any) {
             <BsPersonFill fontSize={28} />
             Employee
           </div>
-          <div className="text-xl flex justify-items py-4 gap-3">
+          <div className="text-xl flex justify-items py-4 gap-3" onClick={()=>navigate('/employer/view')}>
             <BsBriefcaseFill fontSize={28} /> Employeer
           </div>
         </div>

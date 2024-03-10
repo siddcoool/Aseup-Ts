@@ -29,20 +29,22 @@ const EmployeeForm = () => {
 
   // const [selectedSkills, setSelectedSkills] = useState([]);
 
-// Handle skill selection
-const handleSkillSelection = (event) => {
-  const selectedSkillId = event.target.value;
-  const selectedSkill = skills.find(skill => skill._id === selectedSkillId);
+  // Handle skill selection
+  const handleSkillSelection = (event) => {
+    const selectedSkillId = event.target.value;
+    const selectedSkill = skills.find((skill) => skill._id === selectedSkillId);
 
-  // Add or remove the selected skill based on whether it's already selected
-  if (selectedSkills.some(skill => skill._id === selectedSkillId)) {
-    setSelectedSkills(selectedSkills.filter(skill => skill._id !== selectedSkillId));
-  } else {
-    if (selectedSkill) {
-      setSelectedSkills([...selectedSkills, selectedSkill]);
+    // Add or remove the selected skill based on whether it's already selected
+    if (selectedSkills.some((skill) => skill._id === selectedSkillId)) {
+      setSelectedSkills(
+        selectedSkills.filter((skill) => skill._id !== selectedSkillId)
+      );
+    } else {
+      if (selectedSkill) {
+        setSelectedSkills([...selectedSkills, selectedSkill]);
+      }
     }
-  }
-};
+  };
 
   const [isEmployeeCreated, setIsEmployeeCreated] = useState(false);
   const navigate = useNavigate();
@@ -192,9 +194,9 @@ const handleSkillSelection = (event) => {
   }, []);
 
   return (
-    <div className="max-h-[70%] overflow-y-scroll">
+    <div className="max-h-[70%] overflow-y-scroll w-[100%] px-16">
       <form onSubmit={handleSubmit}>
-        <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="w-[60%] mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
             {`${ID ? `Update` : `Add`} Employee`}
           </div>
@@ -535,7 +537,11 @@ const handleSkillSelection = (event) => {
                 value={selectedSkills.map((skill) => skill._id)}
               >
                 {skills.map((skill) => {
-                  return <option value={ID? values.skills[0]: `${skill._id}`}>{skill.name}</option>;
+                  return (
+                    <option value={ID ? values.skills[0] : `${skill._id}`}>
+                      {skill.name}
+                    </option>
+                  );
                 })}
               </Select>
             </div>
