@@ -20,14 +20,14 @@ export default function VerticalLayout({ children }: any) {
         <div className="text-white py-8 px-4">
           <div className="text-xl flex justify-items py-4 gap-3">
             <RxDashboard fontSize={28} />
-            DashBaord
+            DashBoard
           </div>
           <div className="text-xl flex justify-items py-4 gap-3" onClick={()=>navigate('/viewEmployee')}>
             <BsPersonFill fontSize={28} />
             Employee
           </div>
           <div className="text-xl flex justify-items py-4 gap-3" onClick={()=>navigate('/employer/view')}>
-            <BsBriefcaseFill fontSize={28} /> Employeer
+            <BsBriefcaseFill fontSize={28} /> Employer
           </div>
         </div>
         {/* Sign Out */}

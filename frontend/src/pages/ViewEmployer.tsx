@@ -76,7 +76,7 @@ const ViewEmployer = () => {
           </Button>
         </div>
         <TableContainer>
-          <Table variant="simple">
+          <Table variant="striped" colorScheme="teal">
             <Thead>
               <Tr>
                 <Th>companyName</Th>
