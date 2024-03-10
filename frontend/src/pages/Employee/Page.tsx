@@ -5,9 +5,6 @@ import EducationForm from "./Education";
 import ExperienceForm from "./Experience";
 import { EmployeeDocument } from "../../types/employee";
 
-
-
-
 const Page = () => {
   const [employeeFormData, setEmployeeFormData] = useState<EmployeeDocument>();
 
@@ -17,8 +14,11 @@ const Page = () => {
       title: "Personal Details",
       description: "basic",
       component: ({ goToNext }) => (
-        <PersonalDetails onSubmit={() => {goToNext()
-        }} />
+        <PersonalDetails
+          onSubmit={() => {
+            goToNext();
+          }}
+        />
       ),
     },
     {
