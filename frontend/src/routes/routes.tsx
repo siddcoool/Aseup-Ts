@@ -2,14 +2,16 @@ import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
 import { Home } from "../pages/Home";
 import { Dashboard } from "../pages/Dashboard";
-import EmployeeForm from "../pages/EmployeeForm";
+import EmployeeForm1 from "../pages/EmployeeForm1";
 import VerticalLayout from "../Layout/SideBarLayout";
 import BlankLayout from "../Layout/BlankLayout";
 import AuthenticationProvider from "../common/provider/AuthenticationProvider";
 import React from "react";
 import ViewEmployee from "../pages/ViewEmployee";
-import EmployerForm from "../pages/EmployerForm";
 import ViewEmployer from "../pages/ViewEmployer";
+import EmployerForm from "../pages/EmployerForm";
+import EmployeeForm from "../pages/EmployeeForm";
+import Page from "../pages/Employee/Page";
 
 interface Route {
   path: string;
@@ -45,7 +47,7 @@ const routes: Route[] = [
   },
   {
     path: "/employeeForm/",
-    component: EmployeeForm,
+    component: Page,
     layout:VerticalLayout ,
   },
   {

@@ -23,8 +23,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
 
+interface IEmployers {
+  companyName: string;
+  employees: string;
+  industry: string;
+  location: string;
+  _id: string;
+}
+
 const ViewEmployer = () => {
-  const [employers, setEmployers] = useState([]);
+  const [employers, setEmployers] = useState<IEmployers[]>([]);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const [id, setId] = useState();
@@ -80,7 +88,7 @@ const ViewEmployer = () => {
             </Thead>
             <Tbody>
               {employers &&
-                employers.map((employer, index) => {
+                employers.map((employer: IEmployers, index: number) => {
                   return (
                     <Tr key={index}>
                       <Td>{employer.companyName}</Td>
@@ -98,8 +106,7 @@ const ViewEmployer = () => {
                                 handleDelete(employer._id);
                                 toast({
                                   title: "Employer deleted.",
-                                  description:
-                                    "We've deleted your account ",
+                                  description: "We've deleted your account ",
                                   status: "error",
                                   duration: 9000,
                                   isClosable: true,

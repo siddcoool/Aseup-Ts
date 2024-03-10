@@ -75,7 +75,7 @@ const EmployerForm = () => {
     <div className="p-8 w-[70%] m-auto">
       <form onSubmit={handleSubmit}>
         <VStack spacing={4}>
-          <FormControl isRequired>
+          <FormControl>
             <FormLabel>Company Name</FormLabel>
             <Input
               type="text"
@@ -85,7 +85,7 @@ const EmployerForm = () => {
             />
           </FormControl>
 
-          <FormControl isRequired>
+          <FormControl>
             <FormLabel>Industry</FormLabel>
             <Input
               type="text"
@@ -95,7 +95,7 @@ const EmployerForm = () => {
             />
           </FormControl>
 
-          <FormControl isRequired>
+          <FormControl>
             <FormLabel>Location</FormLabel>
             <Input
               type="text"
@@ -105,7 +105,7 @@ const EmployerForm = () => {
             />
           </FormControl>
 
-          <FormControl isRequired>
+          <FormControl>
             <FormLabel>Number of Employees</FormLabel>
             <Input
               type="number"
@@ -117,7 +117,7 @@ const EmployerForm = () => {
 
           <>
             <Button colorScheme="teal" onClick={onOpen}>
-              {id? 'Update': 'Add'} employer
+              {id ? "Update" : "Add"} employer
             </Button>
 
             <AlertDialog
@@ -128,7 +128,7 @@ const EmployerForm = () => {
               <AlertDialogOverlay>
                 <AlertDialogContent>
                   <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                  {id? 'Update': 'Add'} Employer
+                    {id ? "Update" : "Add"} Employer
                   </AlertDialogHeader>
 
                   <AlertDialogBody>Are you sure?</AlertDialogBody>

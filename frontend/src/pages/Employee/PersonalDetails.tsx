@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -8,32 +8,24 @@ import {
   Select,
 } from "@chakra-ui/react";
 
-interface FormData {
+interface EmployeeFormData {
   name: string;
   email: string;
   phoneNumber: string;
   DOB: string;
   gender: string;
-  currentCTC: string;
-  expectedCTC: string;
-  noticePeriod: string;
 }
-
-const EmployeeForm = () => {
-  const [formData, setFormData] = useState<FormData>({
+// 
+const PersonalDetails = ({onSubmit}:{onSubmit:()=>void}) => {
+  const [formData, setFormData] = useState<EmployeeFormData>({
     name: "",
     email: "",
     phoneNumber: "",
     DOB: "",
     gender: "",
-    currentCTC: "",
-    expectedCTC: "",
-    noticePeriod: "",
   });
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -41,9 +33,9 @@ const EmployeeForm = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData); // Do something with form data like sending it to server
+    console.log(formData); // Handle form submission
   };
 
   return (
@@ -103,38 +95,8 @@ const EmployeeForm = () => {
             </Select>
           </FormControl>
 
-          <FormControl isRequired>
-            <FormLabel>Current CTC</FormLabel>
-            <Input
-              type="text"
-              name="currentCTC"
-              value={formData.currentCTC}
-              onChange={handleChange}
-            />
-          </FormControl>
-
-          <FormControl isRequired>
-            <FormLabel>Expected CTC</FormLabel>
-            <Input
-              type="text"
-              name="expectedCTC"
-              value={formData.expectedCTC}
-              onChange={handleChange}
-            />
-          </FormControl>
-
-          <FormControl isRequired>
-            <FormLabel>Notice Period</FormLabel>
-            <Input
-              type="text"
-              name="noticePeriod"
-              value={formData.noticePeriod}
-              onChange={handleChange}
-            />
-          </FormControl>
-
-          <Button colorScheme="teal" type="submit">
-            Submit
+          <Button colorScheme="teal" type="submit" onClick={onSubmit} >
+            Next
           </Button>
         </VStack>
       </form>
@@ -142,4 +104,4 @@ const EmployeeForm = () => {
   );
 };
 
-export default EmployeeForm;
+export default PersonalDetails;
