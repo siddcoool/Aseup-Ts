@@ -2,7 +2,7 @@ import TokenManagement from "../lib/Token"
 import { NextFunction, Request, Response } from 'express'
 import User from '../models/User'
 
-class Authentication{
+export class Authentication{
     constructor(){}
 
     static async Admin(req:Request, res:Response, next:NextFunction){
@@ -23,6 +23,8 @@ class Authentication{
         }
     }
 }
-module.exports = Authentication
+
+
+
 
 

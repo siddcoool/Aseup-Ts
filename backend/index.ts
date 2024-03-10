@@ -7,6 +7,7 @@ import tokenRouter from "./routes/token";
 import cors from "cors";
 import employeeRouter from "./routes/employee";
 import employerRouter from "./routes/employer";
+import { Authentication } from "./middlewares/Authentication";
 
 dotenv.config();
 
@@ -23,8 +24,8 @@ app.use(cors());
 app.use("/token", tokenRouter);
 app.use("/user", userRouter);
 app.use("/skill", skillRouter);
-app.use("/employee", employeeRouter);
-app.use("/employer", employerRouter);
+app.use("/employee", Authentication.Admin, employeeRouter);
+app.use("/employer", Authentication.Admin, employerRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
