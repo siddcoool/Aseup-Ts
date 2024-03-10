@@ -81,9 +81,7 @@ const ViewEmployeedetails = () => {
 
   console.log({ employees });
   useEffect(() => {
-    setLoading(true);
     fetchData();
-    setLoading(false);
   }, []);
   const deleteEmployee = async (id: string) => {
     try {
@@ -94,7 +92,7 @@ const ViewEmployeedetails = () => {
     }
   };
   if (loading) {
-    return <Loader />;
+    return <div className="flex  justify-center mt-36 "><Loader /></div>;
   } else
     return (
       <div className="">

@@ -5,9 +5,18 @@ const employerRouter = Router();
 
 employerRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const employer = await Employer.find();
+    const employer = await Employer.find({isDeleted:false});
     res.send(employer);
   } catch (error: any) {
+    res.send(error.message);
+  }
+});
+
+employerRouter.get("/:id", async (req: Request, res: Response) => {
+  try {
+    const employer = await Employer.findById(req.params.id);
+    res.send(employer);
+  } catch (error : any) {
     res.send(error.message);
   }
 });
@@ -53,4 +62,4 @@ employerRouter.delete("/:id", async (req: Request, res: Response) => {
   }
 });
 
-export default employerRouter
+export default employerRouter;

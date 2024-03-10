@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent, useRef } from "react";
+import { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
 import {
   FormControl,
   FormLabel,
@@ -12,9 +12,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  Toast,
 } from "@chakra-ui/react";
 import axios from "axios";
-
+import { useToast } from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
 interface FormData {
   companyName: string;
   industry: string;
@@ -30,9 +32,12 @@ const EmployerForm = () => {
     employees: "",
   });
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const toast = useToast();
+  const [employerDetails, setEmployerDetails] = useState();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
+  const { id } = useParams();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,11 +49,27 @@ const EmployerForm = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitting(true);
-    const res = axios.post("/employer", formData);
-    console.log({ res });
-    setSubmitting(false);
+    if (id) {
+      const res = await axios.put(`/employer/${id}`, employerDetails);
+    } else {
+      setSubmitting(true);
+      const res = await axios.post("/employer", formData);
+      console.log({ res });
+      setSubmitting(false);
+    }
   };
+
+  const getEmployer = async () => {
+    if (id) {
+      const employer = await axios.get(`/employer/${id}`);
+      setEmployerDetails(employer.data);
+      setFormData(employer.data);
+    }
+  };
+
+  useEffect(() => {
+    getEmployer();
+  }, []);
 
   return (
     <div className="p-8 w-[70%] m-auto">
@@ -96,7 +117,7 @@ const EmployerForm = () => {
 
           <>
             <Button colorScheme="teal" onClick={onOpen}>
-              Add employer
+              {id? 'Update': 'Add'} employer
             </Button>
 
             <AlertDialog
@@ -107,19 +128,24 @@ const EmployerForm = () => {
               <AlertDialogOverlay>
                 <AlertDialogContent>
                   <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                    Add Employer
+                  {id? 'Update': 'Add'} Employer
                   </AlertDialogHeader>
 
                   <AlertDialogBody>Are you sure?</AlertDialogBody>
 
                   <AlertDialogFooter>
-                    <Button  onClick={onClose}>
-                      Cancel
-                    </Button>
+                    <Button onClick={onClose}>Cancel</Button>
                     <Button
                       colorScheme="blue"
                       onClick={(e) => {
                         handleSubmit(e);
+                        toast({
+                          title: "Account created.",
+                          description: "We've created your account for you.",
+                          status: "success",
+                          duration: 9000,
+                          isClosable: true,
+                        });
                         onClose();
                       }}
                       ml={3}

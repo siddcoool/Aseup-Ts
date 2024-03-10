@@ -14,7 +14,10 @@ const EmployerSchema = new Schema({
     required: true,
   },
   employees: String,
-  isDeleted: Boolean
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Employer = model("employer", EmployerSchema);
