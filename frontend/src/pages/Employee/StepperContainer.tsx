@@ -41,7 +41,7 @@ const StepperContainer = ({ steps }: IStepperContainer) => {
 
   return (
     <div className="p-8">
-      <div className="px-8">
+      <div className="px-44">
         <Stepper index={currentStep}>
           {steps.map((step, index) => (
             <Step key={index}>

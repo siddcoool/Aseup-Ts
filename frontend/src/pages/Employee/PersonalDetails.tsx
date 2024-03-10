@@ -15,8 +15,8 @@ interface EmployeeFormData {
   DOB: string;
   gender: string;
 }
-// 
-const PersonalDetails = ({onSubmit}:{onSubmit:()=>void}) => {
+//
+const PersonalDetails = ({ onSubmit }: { onSubmit: () => void }) => {
   const [formData, setFormData] = useState<EmployeeFormData>({
     name: "",
     email: "",
@@ -25,7 +25,9 @@ const PersonalDetails = ({onSubmit}:{onSubmit:()=>void}) => {
     gender: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -95,7 +97,7 @@ const PersonalDetails = ({onSubmit}:{onSubmit:()=>void}) => {
             </Select>
           </FormControl>
 
-          <Button colorScheme="teal" type="submit" onClick={onSubmit} >
+          <Button colorScheme="teal" type="submit" onClick={onSubmit}>
             Next
           </Button>
         </VStack>

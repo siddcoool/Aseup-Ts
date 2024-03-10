@@ -17,6 +17,7 @@ import {
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
+
 interface FormData {
   companyName: string;
   industry: string;
@@ -33,24 +34,20 @@ const EmployerForm = () => {
   });
   const [submitting, setSubmitting] = useState<boolean>(false);
   const toast = useToast();
-  const [employerDetails, setEmployerDetails] = useState();
+  const [employerDetails, setEmployerDetails] = useState<any>(); // Update this line to correct type
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const { id } = useParams();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleInputChange = (fieldName: string, value: string) => {
+    setFormData({ ...employerDetails, [fieldName]: value });
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (id) {
-      const res = await axios.put(`/employer/${id}`, employerDetails);
+      const res = await axios.put(`/employer/${id}`, formData);
     } else {
       setSubmitting(true);
       const res = await axios.post("/employer", formData);
@@ -67,6 +64,7 @@ const EmployerForm = () => {
     }
   };
 
+  console.log({ formData });
   useEffect(() => {
     getEmployer();
   }, []);
@@ -81,7 +79,7 @@ const EmployerForm = () => {
               type="text"
               name="companyName"
               value={formData.companyName}
-              onChange={handleChange}
+              onChange={(e) => handleInputChange("companyName", e.target.value)}
             />
           </FormControl>
 
@@ -91,7 +89,7 @@ const EmployerForm = () => {
               type="text"
               name="industry"
               value={formData.industry}
-              onChange={handleChange}
+              onChange={(e) => handleInputChange("industry", e.target.value)}
             />
           </FormControl>
 
@@ -101,7 +99,7 @@ const EmployerForm = () => {
               type="text"
               name="location"
               value={formData.location}
-              onChange={handleChange}
+              onChange={(e) => handleInputChange("location", e.target.value)}
             />
           </FormControl>
 
@@ -111,7 +109,7 @@ const EmployerForm = () => {
               type="number"
               name="employees"
               value={formData.employees}
-              onChange={handleChange}
+              onChange={(e) => handleInputChange("employees", e.target.value)}
             />
           </FormControl>
 

@@ -26,3 +26,7 @@ export interface IUserModel extends Model<
 > {
     // findAllUsers(): Promise<HydratedDocument<IApplicationUser, IApplicationUserMethods>>
 }
+
+
+
+
