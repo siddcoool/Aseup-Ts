@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -7,23 +7,27 @@ import {
   VStack,
   Select,
 } from "@chakra-ui/react";
+import { EmployeeDocument } from "../../types/employee";
+import CreatableSelect from "react-select/creatable";
+import axios from "axios";
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
-interface EmployeeFormData {
-  name: string;
-  email: string;
-  phoneNumber: string;
-  DOB: string;
-  gender: string;
+interface IPersonalDetails {
+  onSubmit: (input: Partial<EmployeeDocument>) => void;
+  employeeData: EmployeeDocument;
 }
-//
-const PersonalDetails = ({ onSubmit }: { onSubmit: () => void }) => {
-  const [formData, setFormData] = useState<EmployeeFormData>({
+
+const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
+  const [formData, setFormData] = useState<Partial<EmployeeDocument>>({
     name: "",
     email: "",
     phoneNumber: "",
     DOB: "",
     gender: "",
+    skills: [],
   });
+  const [skillsOptions, setSkillsOptions] = useState<any[]>([]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -35,11 +39,58 @@ const PersonalDetails = ({ onSubmit }: { onSubmit: () => void }) => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(formData); // Handle form submission
+  const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
+    if (actionMeta.action === "create-option") {
+      const newSkill = selectedValues[selectedValues.length - 1];
+
+      addSkillToDatabase(newSkill).then(() => {
+        getSkills();
+      });
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        skills: selectedValues,
+      }));
+    }
   };
 
+  const addSkillToDatabase = async (newSkill: any) => {
+    try {
+      await axios.post("/skill", { name: newSkill.label });
+
+      return newSkill;
+    } catch (error) {
+      console.error('Error adding skill to the database', error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+
+  const getSkills = async () => {
+    try {
+      const { data: skills } = await axios.get("/skill");
+      const options = skills.map((skill: any) => ({
+        value: skill._id,
+        label: skill.name,
+      }));
+
+      setSkillsOptions(options);
+      console.log({ skills });
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (employeeData) {
+      setFormData({ ...employeeData });
+    }
+    getSkills();
+  }, [employeeData]);
   return (
     <div className="p-8 w-[70%] m-auto">
       <form onSubmit={handleSubmit}>
@@ -79,7 +130,7 @@ const PersonalDetails = ({ onSubmit }: { onSubmit: () => void }) => {
             <Input
               type="date"
               name="DOB"
-              value={formData.DOB}
+              value={dayjs(formData.DOB).format('YYYY-MM-DD')}
               onChange={handleChange}
             />
           </FormControl>
@@ -96,8 +147,21 @@ const PersonalDetails = ({ onSubmit }: { onSubmit: () => void }) => {
               <option value="other">Other</option>
             </Select>
           </FormControl>
+          <FormControl>
+            <CreatableSelect
+              isClearable
+              isMulti
+              options={skillsOptions}
+              value={formData.skills}
+              onChange={handleSkillsChange}
+            />
+          </FormControl>
 
-          <Button colorScheme="teal" type="submit" onClick={onSubmit}>
+          <Button
+            colorScheme="teal"
+            type="submit"
+            onClick={() => onSubmit(formData)}
+          >
             Next
           </Button>
         </VStack>

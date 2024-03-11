@@ -52,7 +52,7 @@ const routes: Route[] = [
   },
   {
     path: "/employeeForm/:employeeId",
-    component: EmployeeForm,
+    component: Page,
     layout: VerticalLayout,
   },{
     path: "/viewEmployee",

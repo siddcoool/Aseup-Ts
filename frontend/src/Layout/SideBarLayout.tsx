@@ -4,6 +4,7 @@ import { BsBriefcaseFill, BsPersonFill } from "react-icons/bs";
 import { PiSignOutBold } from "react-icons/pi";
 import useIsAuthentication from "../hooks/useIsAuthentication";
 import { useNavigate } from "react-router-dom";
+import { Switch } from "@chakra-ui/react";
 
 export default function VerticalLayout({ children }: any) {
   const {deleteAuthenticated} = useIsAuthentication()
@@ -18,6 +19,8 @@ export default function VerticalLayout({ children }: any) {
         </div>
         {/* Main Content */}
         <div className="text-white py-8 px-4">
+          <div className="space-x-4">Dark Mode <Switch/></div>
+          
           <div className="text-xl flex justify-items py-4 gap-3">
             <RxDashboard fontSize={28} />
             DashBoard

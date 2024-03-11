@@ -1,22 +1,31 @@
 "use client";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
-import React, { JSXElementConstructor, ReactElement, useState } from "react";
+import React, { JSXElementConstructor, ReactElement, useEffect, useState } from "react";
 
 type ILineFormRepeater = {
   children: (
-    index: number
+    index: number,
   ) => ReactElement<any, string | JSXElementConstructor<any>>;
   className?: string;
-  options?: {
-    buttonContainerClass: string;
-  };
+  
+  addButtonLabel?: string;
+  deleteButtonLabel?: string;
+  hidden?: boolean
+  size?: number
+};
+
+const getArray = (size?: number) => {
+  return size ? Array.from({ length: size }, (_, i) => i) : [0];
 };
 
 export const LineItemRepeater = ({
   children,
   className,
-  options,
+  addButtonLabel,
+  deleteButtonLabel,
+  hidden,
+  size
 }: ILineFormRepeater) => {
   const [fields, setFields] = useState([0]);
 
@@ -29,8 +38,16 @@ export const LineItemRepeater = ({
     setFields(updatedFields);
   };
 
+  useEffect(() => {
+    if (Number.isInteger(size)) {
+      setFields([...getArray(size)]);
+    }
+  }, [size]);
+
   return (
-    <div className={className}>
+    <div className={className} style={{
+      display: hidden? `none`: `block`
+    }}>
       {fields.map((fieldIndex) => (
         <div
           className="mb-4 flex w-full flex-col items-center"
@@ -47,7 +64,7 @@ export const LineItemRepeater = ({
               rightIcon={<DeleteIcon />}
               onClick={() => removeField(fieldIndex)}
             >
-              Delete
+              {deleteButtonLabel ? deleteButtonLabel : "Delete"}
             </Button>
           </div>
         </div>
@@ -56,12 +73,9 @@ export const LineItemRepeater = ({
         <Button
           rightIcon={<AddIcon />}
           colorScheme="blue"
-          onClick={(e:any) => {
-            e.preventDefault();
-            addField();
-          }}
+          onClick={() => addField()}
         >
-          Add
+          {addButtonLabel ? addButtonLabel : "Add"}
         </Button>
       </div>
     </div>

@@ -18,7 +18,7 @@ employeeRouter.get("/", async (req: Request, res: Response) => {
 
 employeeRouter.get("/:id", async (req: Request, res: Response) => {
   try {
-    const employee = await Employee.findById(req.params.id).populate("skill");
+    const employee = await Employee.findById(req.params.id);
     res.json(employee);
   } catch (error) {
     console.log(error);
