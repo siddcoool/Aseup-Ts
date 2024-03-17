@@ -148,6 +148,8 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
             </Select>
           </FormControl>
           <FormControl>
+          <FormLabel>Select Skills</FormLabel>
+
             <CreatableSelect
               isClearable
               isMulti

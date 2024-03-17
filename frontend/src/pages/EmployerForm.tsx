@@ -17,6 +17,7 @@ import {
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
+import { LineItemRepeater } from "../components/LineItemRepeater";
 
 interface FormData {
   companyName: string;
@@ -37,7 +38,7 @@ const EmployerForm = () => {
   const [employerDetails, setEmployerDetails] = useState<any>(); // Update this line to correct type
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef();
+  const cancelRef = useRef(null);
   const { id } = useParams();
 
   const handleInputChange = (fieldName: string, value: string) => {
@@ -112,6 +113,25 @@ const EmployerForm = () => {
               onChange={(e) => handleInputChange("employees", e.target.value)}
             />
           </FormControl>
+          <div className="">
+          <LineItemRepeater>
+            {(index) => {
+              return (
+                <FormControl>
+                  <FormLabel>Contact Person {index + 1}</FormLabel>
+                  <Input
+                    type="number"
+                    name="employees"
+                    value={formData.employees}
+                    onChange={(e) =>
+                      handleInputChange("employees", e.target.value)
+                    }
+                  />
+                </FormControl>
+              );
+            }}
+          </LineItemRepeater>
+          </div>
 
           <>
             <Button colorScheme="teal" onClick={onOpen}>

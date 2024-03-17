@@ -6,12 +6,13 @@ import ExperienceForm from "./Experience";
 import { EmployeeDocument } from "../../types/employee";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { useToast } from "@chakra-ui/react";
 
 const Page = () => {
   const [employeeFormData, setEmployeeFormData] = useState<EmployeeDocument>(
     {}
   );
+  const toast = useToast();
 
   const { employeeId } = useParams();
 
@@ -24,16 +25,29 @@ const Page = () => {
   const handleFormSubmit = async () => {
     try {
       if (employeeId) {
-        const response = await axios.put(`/employee/edit/${employeeId}`,employeeFormData);
-        toast.success('Employee updated successfully')
-
+        const response = await axios.put(
+          `/employee/edit/${employeeId}`,
+          employeeFormData
+        );
+        toast({
+          title: "Employee updated successfully",
+          duration: 5000,
+          status: "success",
+        });
       } else {
-        const response = await axios.post('/employee',employeeFormData )
-        toast.success('Employee added successfully')
-
+        const response = await axios.post("/employee", employeeFormData);
+        toast({
+          title: "Employee added successfully",
+          duration: 5000,
+          status: "success",
+        });
       }
     } catch (error) {
-      toast.error('an Error has occured')
+      toast({
+        title: (error as Error).message,
+        duration: 5000,
+        status: "error",
+      });
     }
   };
 
@@ -78,7 +92,7 @@ const Page = () => {
           onSubmit={(input: Partial<EmployeeDocument>) => {
             handlePartialParameters(input);
             goToPrevious();
-            handleFormSubmit()
+            handleFormSubmit();
           }}
         />
       ),
@@ -89,9 +103,7 @@ const Page = () => {
     try {
       const res = await axios.get(`/employee/${employeeId}`);
       setEmployeeFormData(res.data);
-      toast.success("employee data fetch success");
     } catch (error) {
-      toast.error("error fetching data");
     }
   };
 

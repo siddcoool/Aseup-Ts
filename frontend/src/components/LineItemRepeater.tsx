@@ -1,4 +1,3 @@
-"use client";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
 import React, { JSXElementConstructor, ReactElement, useEffect, useState } from "react";

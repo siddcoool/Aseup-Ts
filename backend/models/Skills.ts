@@ -1,7 +1,7 @@
 import { Document, model, Schema, } from "mongoose";   
 
 const SkillSchema = new Schema({
-    name: String
+    label: String,
 })
 
 const Skill = model('skill', SkillSchema)
