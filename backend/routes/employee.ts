@@ -35,7 +35,9 @@ employeeRouter.get("/:id", async (req: Request, res: Response) => {
 });
 
 employeeRouter.post("/", async (req: Request, res: Response) => {
-  const employeeDetails = req.body;
+  const newSkills = req.body.skills.map((skill:any) => skill.value)
+  
+  const employeeDetails = {...req.body, skills: newSkills};
   try {
     await Employee.create(employeeDetails);
     res.status(201).json({ message: "Employee Created Successfully" });
