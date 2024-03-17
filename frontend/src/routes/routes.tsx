@@ -12,6 +12,7 @@ import ViewEmployer from "../pages/ViewEmployer";
 import EmployerForm from "../pages/EmployerForm";
 import EmployeeForm from "../pages/EmployeeForm";
 import Page from "../pages/Employee/Page";
+import SearchEmployee from "../pages/SearchEmployee";
 
 interface Route {
   path: string;
@@ -69,6 +70,10 @@ const routes: Route[] = [
   },{
     path: '/employer/edit/:id',
     component: EmployerForm,
+    layout: VerticalLayout
+  },{
+    path: '/employee/search',
+    component: SearchEmployee,
     layout: VerticalLayout
   }
 ];
