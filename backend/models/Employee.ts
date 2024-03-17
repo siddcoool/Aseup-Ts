@@ -33,7 +33,7 @@ const EmployeeSchema = new Schema({
     expectedCTC: String,
     noticePeriod: String,
     skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'skill' }]
-})
+},{timestamps:true})
 
 const Employee = model('employee',EmployeeSchema)
 export default Employee;

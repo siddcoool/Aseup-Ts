@@ -18,7 +18,7 @@ const EmployerSchema = new Schema({
     type: Boolean,
     default: false,
   },
-});
+},{timestamps:true});
 
 const Employer = model("employer", EmployerSchema);
 export default Employer;

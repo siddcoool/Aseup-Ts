@@ -15,6 +15,15 @@ employeeRouter.get("/", async (req: Request, res: Response) => {
     console.log(error);
   }
 });
+// Getting total employee count
+employeeRouter.get('/count',async(req:Request,res:Response)=>{
+  try{
+    const count=await Employee.count();
+    res.json({count});
+  }catch(error){
+    return res.status(500).json({Error:"count not found"})
+  }
+})
 
 employeeRouter.get("/:id", async (req: Request, res: Response) => {
   try {
@@ -49,6 +58,7 @@ employeeRouter.delete("/:id", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 employeeRouter.put("/edit/:id", async (req: Request, res: Response) => {
   const ID = req.params.id;
