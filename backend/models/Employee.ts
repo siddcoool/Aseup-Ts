@@ -20,20 +20,18 @@ const ExperienceSchema = new Schema({
 });
 
 const EmployeeSchema = new Schema({
-  name: String,
-  email: String,
-  phoneNumber: String,
-  DOB: { type: Date, default: dayjs().toISOString() },
-  gender: String,
-  educations: [EducationSchema],
-  experience: [ExperienceSchema],
-  currentCTC: String,
-  expectedCTC: String,
-  noticePeriod: String,
-  skills: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "skill", label: String },
-  ],
-});
+    name: String,
+    email: String,
+    phoneNumber: String,
+    DOB: { type: Date, default: dayjs().toISOString() },
+    gender: String,
+    educations: [EducationSchema],
+    experience: [ExperienceSchema],
+    currentCTC: String, 
+    expectedCTC: String,
+    noticePeriod: String,
+    skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'skill' }]
+},{timestamps:true})
 
 const Employee = model("employee", EmployeeSchema);
 export default Employee;

@@ -22,7 +22,7 @@ const UserSchema = new Schema<IUser, IUserModel>({
   //   enum: ["approved", "rejected", "pending"],
   //   default: "pending",
   // },
-});
+},{timestamps:true});
 
 UserSchema.pre("save", function (next) {
   let user = this;
