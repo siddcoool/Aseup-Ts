@@ -21,7 +21,7 @@ const Page = () => {
   ) => {
     setEmployeeFormData({ ...employeeFormData, ...partialParameters });
   };
-
+  console.log({parentForm: employeeFormData})
   const handleFormSubmit = async () => {
     try {
       if (employeeId) {

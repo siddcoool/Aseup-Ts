@@ -8,8 +8,8 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { Education, EmployeeDocument } from "../../types/employee";
-import { LineItemRepeater } from "../../components/LineItemRepeater";
 import dayjs from "dayjs";
+import { LineItemRepeater } from "../../components/LineItemRepeater";
 
 interface IEducationForm {
   onSubmit: (input: Partial<EmployeeDocument>) => void;

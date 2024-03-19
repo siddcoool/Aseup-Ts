@@ -85,9 +85,22 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     }
   };
 
+
+  const setSkills = () => {
+    if(employeeData && employeeData.skills){
+      const mappedSkills = employeeData.skills.map(skill => ({
+        value: skill._id,
+        label: skill.name
+      }));
+    return mappedSkills
+    }
+
+  }
+
   useEffect(() => {
     if (employeeData) {
-      setFormData({ ...employeeData });
+      const skillSetting = setSkills()
+      setFormData({ ...employeeData, skills: skillSetting });
     }
     getSkills();
   }, [employeeData]);

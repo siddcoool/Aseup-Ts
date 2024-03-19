@@ -27,7 +27,7 @@ employeeRouter.get('/count',async(req:Request,res:Response)=>{
 
 employeeRouter.get("/:id", async (req: Request, res: Response) => {
   try {
-    const employee = await Employee.findById(req.params.id);
+    const employee = await Employee.findById(req.params.id).populate('skills');
     res.json(employee);
   } catch (error) {
     console.log(error);
@@ -64,8 +64,11 @@ employeeRouter.delete("/:id", async (req: Request, res: Response) => {
 
 employeeRouter.put("/edit/:id", async (req: Request, res: Response) => {
   const ID = req.params.id;
+  const newSkills = req.body.skills.map((skill:any) => skill.value)
+  
+  const employeeDetails = {...req.body, skills: newSkills};
   try {
-    const result = await Employee.findByIdAndUpdate(ID, req.body);
+    const result = await Employee.findByIdAndUpdate(ID, employeeDetails);
 
     if (!result) {
       return res.status(404).json({ error: "Employee not found" });

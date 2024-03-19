@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
-import { stat } from "fs";
+import { Link } from "react-router-dom";
+import {
+  Card,
+  CardHeader,
+  Heading,
+  CardBody,
+  CardFooter,
+  Button,
+  Text,
+} from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
 
 export const Dashboard = () => {
   const [employeeCount, setEmployeeCount] = useState(0);
@@ -45,6 +55,19 @@ export const Dashboard = () => {
           <h1 className="text-2xl py-3">Total Employeer</h1>
           <h2 className="text-3xl">{employerCount}</h2>
         </div>
+      </div>
+      <div>
+       
+        <p className="mt-8 text-xl font-bold text-center text-gray-700 flex flex-col justify-center gap-y-4">
+          Want to add an admin account?
+          {/*  */}
+          <Link
+            to="/register"
+            className="font-medium text-base text-purple-600 hover:underline"
+          >
+            <Button colorScheme="messenger" rightIcon={<AddIcon/>}>Sign up</Button>
+          </Link>
+        </p>
       </div>
     </div>
   );

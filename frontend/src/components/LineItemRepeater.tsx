@@ -7,7 +7,6 @@ type ILineFormRepeater = {
     index: number,
   ) => ReactElement<any, string | JSXElementConstructor<any>>;
   className?: string;
-  
   addButtonLabel?: string;
   deleteButtonLabel?: string;
   hidden?: boolean
@@ -49,7 +48,7 @@ export const LineItemRepeater = ({
     }}>
       {fields.map((fieldIndex) => (
         <div
-          className="mb-4 flex w-full flex-col items-center"
+          className="mb-4 flex w-full flex-col items-center rounded shadow-xl py-6 px-2"
           key={fieldIndex}
         >
           <div className="mb-2 w-full" style={{ flex: 1 }}>

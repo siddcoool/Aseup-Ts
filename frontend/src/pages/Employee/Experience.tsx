@@ -8,8 +8,8 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { EmployeeDocument, Experience } from "../../types/employee";
-import { LineItemRepeater } from "../../components/LineItemRepeater";
 import dayjs from "dayjs";
+import { LineItemRepeater } from "../../components/LineItemRepeater";
 
 interface IExperienceForm {
   employeeData: EmployeeDocument;
@@ -28,6 +28,7 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
     },
   ]);
 
+  console.log({formData})
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     index: number
