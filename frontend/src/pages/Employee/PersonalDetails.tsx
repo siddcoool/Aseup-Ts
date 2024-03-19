@@ -90,7 +90,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     if(employeeData && employeeData.skills){
       const mappedSkills = employeeData.skills.map(skill => ({
         value: skill._id,
-        label: skill.name
+        label: skill.name 
       }));
     return mappedSkills
     }
