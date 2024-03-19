@@ -60,7 +60,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
 
       return newSkill;
     } catch (error) {
-      console.error('Error adding skill to the database', error);
+      console.error("Error adding skill to the database", error);
       throw error;
     }
   };
@@ -85,21 +85,19 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     }
   };
 
-
   const setSkills = () => {
-    if(employeeData && employeeData.skills){
-      const mappedSkills = employeeData.skills.map(skill => ({
+    if (employeeData && employeeData.skills) {
+      const mappedSkills = employeeData.skills.map((skill) => ({
         value: skill._id,
-        label: skill.name 
+        label: skill.name,
       }));
-    return mappedSkills
+      return mappedSkills;
     }
-
-  }
+  };
 
   useEffect(() => {
     if (employeeData) {
-      const skillSetting = setSkills()
+      const skillSetting = setSkills();
       setFormData({ ...employeeData, skills: skillSetting });
     }
     getSkills();
@@ -143,7 +141,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
             <Input
               type="date"
               name="DOB"
-              value={dayjs(formData.DOB).format('YYYY-MM-DD')}
+              value={dayjs(formData.DOB).format("YYYY-MM-DD")}
               onChange={handleChange}
             />
           </FormControl>
@@ -161,7 +159,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
             </Select>
           </FormControl>
           <FormControl>
-          <FormLabel>Select Skills</FormLabel>
+            <FormLabel>Select Skills</FormLabel>
 
             <CreatableSelect
               isClearable

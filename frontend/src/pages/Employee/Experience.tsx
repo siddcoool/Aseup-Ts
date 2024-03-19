@@ -57,7 +57,7 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
 
   return (
     <div>
-      <LineItemRepeater>
+      <LineItemRepeater size={employeeData?.experience?.length}>
         {(index) => {
           return (
             <div className="p-8 w-[70%] m-auto" key={index}>
