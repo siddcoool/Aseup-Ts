@@ -19,9 +19,8 @@ export default function VerticalLayout({ children }: any) {
         </div>
         {/* Main Content */}
         <div className="text-white py-8 px-4">
-          <div className="space-x-4">Dark Mode <Switch/></div>
           
-          <div className="text-xl flex justify-items py-4 gap-3">
+          <div className="text-xl flex justify-items py-4 gap-3" onClick={()=>navigate('/Dashboard')}>
             <RxDashboard fontSize={28} />
             Dashboard
           </div>

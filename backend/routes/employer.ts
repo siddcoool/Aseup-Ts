@@ -14,7 +14,7 @@ employerRouter.get("/", async (req: Request, res: Response) => {
 // Getting total employee count
 employerRouter.get('/count',async(req:Request,res:Response)=>{
   try{
-    const count=await Employer.count();
+    const count=await Employer.count({isDeleted:false});
     res.json({count});
   }catch(error){
     return res.status(500).json({Error:"count not found"})

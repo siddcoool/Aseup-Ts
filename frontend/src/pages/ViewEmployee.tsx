@@ -112,7 +112,7 @@ const ViewEmployeedetails = () => {
         ) : (
           <div className="m-3 border-2 border-gray-300">
             <TableContainer>
-              <Table variant="striped" colorScheme="teal">
+              <Table >
                 <Thead>
                   <Tr>
                     <Th>Name</Th>

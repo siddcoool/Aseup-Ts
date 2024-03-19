@@ -10,6 +10,7 @@ import {
 import { EmployeeDocument, Experience } from "../../types/employee";
 import dayjs from "dayjs";
 import { LineItemRepeater } from "../../components/LineItemRepeater";
+import { useNavigate } from "react-router-dom";
 
 interface IExperienceForm {
   employeeData: EmployeeDocument;
@@ -27,8 +28,8 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
       employmentType: "",
     },
   ]);
+  const navigate = useNavigate();
 
-  console.log({formData})
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     index: number
@@ -138,7 +139,10 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
       <Button
         colorScheme="teal"
         type="submit"
-        onClick={() => onSubmit({ experience: formData })}
+        onClick={() => {
+          onSubmit({ experience: formData });
+          navigate("/thankyou");
+        }}
       >
         Submit
       </Button>
