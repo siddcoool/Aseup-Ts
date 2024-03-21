@@ -10,7 +10,6 @@ import {
 import { EmployeeDocument, Experience } from "../../types/employee";
 import dayjs from "dayjs";
 import { LineItemRepeater } from "../../components/LineItemRepeater";
-import { useNavigate } from "react-router-dom";
 
 interface IExperienceForm {
   employeeData: EmployeeDocument;
@@ -28,7 +27,6 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
       employmentType: "",
     },
   ]);
-  const navigate = useNavigate();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -45,11 +43,6 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(formData); // Handle form submission
-  };
-
   useEffect(() => {
     if (employeeData && Array.isArray(employeeData.experience)) {
       setFormData([...employeeData.experience]);
@@ -62,7 +55,7 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
         {(index) => {
           return (
             <div className="p-8 w-[70%] m-auto" key={index}>
-              <form onSubmit={handleSubmit}>
+              <form>
                 <VStack spacing={4}>
                   <FormControl isRequired>
                     <FormLabel>Company Name</FormLabel>
@@ -141,7 +134,6 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
         type="submit"
         onClick={() => {
           onSubmit({ experience: formData });
-          navigate("/thankyou");
         }}
       >
         Submit

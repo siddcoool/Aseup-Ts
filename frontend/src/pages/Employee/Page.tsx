@@ -4,7 +4,7 @@ import PersonalDetails from "./PersonalDetails";
 import EducationForm from "./Education";
 import ExperienceForm from "./Experience";
 import { EmployeeDocument } from "../../types/employee";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 
@@ -12,20 +12,26 @@ const Page = () => {
   const [employeeFormData, setEmployeeFormData] = useState<EmployeeDocument>(
     {}
   );
-  const toast = useToast();
 
   const { employeeId } = useParams();
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const handlePartialParameters = (
-    partialParameters: Partial<EmployeeDocument>
+    partialParameters: Partial<EmployeeDocument>,
+    isLastStep?: boolean,
   ) => {
-    setEmployeeFormData({ ...employeeFormData, ...partialParameters });
+    const employeeData = { ...employeeFormData, ...partialParameters }
+    setEmployeeFormData(employeeData);
+    if(isLastStep) {
+      handleFormSubmit(employeeData);
+    }
   };
-  console.log({parentForm: employeeFormData})
-  const handleFormSubmit = async () => {
+
+  const handleFormSubmit = async (employeeFormData: EmployeeDocument) => {
     try {
       if (employeeId) {
-        const response = await axios.put(
+        await axios.put(
           `/employee/edit/${employeeId}`,
           employeeFormData
         );
@@ -35,13 +41,14 @@ const Page = () => {
           status: "success",
         });
       } else {
-        const response = await axios.post("/employee", employeeFormData);
+        await axios.post("/employee", employeeFormData);
         toast({
           title: "Employee added successfully",
           duration: 5000,
           status: "success",
         });
       }
+      navigate('/thankyou')
     } catch (error) {
       toast({
         title: (error as Error).message,
@@ -86,13 +93,11 @@ const Page = () => {
       step: 2,
       title: "Experience ",
       description: "Experience Details",
-      component: ({ goToPrevious }) => (
+      component: () => (
         <ExperienceForm
           employeeData={employeeFormData}
           onSubmit={(input: Partial<EmployeeDocument>) => {
-            handlePartialParameters(input);
-            goToPrevious();
-            handleFormSubmit();
+            handlePartialParameters(input, true);
           }}
         />
       ),
@@ -104,6 +109,7 @@ const Page = () => {
       const res = await axios.get(`/employee/${employeeId}`);
       setEmployeeFormData(res.data);
     } catch (error) {
+      console.error(error)
     }
   };
 

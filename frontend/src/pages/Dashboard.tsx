@@ -45,14 +45,13 @@ export const Dashboard = () => {
 
   return (
     <div>
-      <h1 className="text-xl text-center mt-5">Dashbaord</h1>
-      <div className="grid grid-cols-2 ">
+      <div className="grid grid-cols-2 mt-4">
         <div className="text-center m-3 p-4 border rounded-lg bg-slate-100 hover:bg-slate-300">
-          <h1 className="text-2xl py-3">Total Employee</h1>
+          <h1 className="text-2xl py-3">Total Employees</h1>
           <h2 className="text-3xl">{employeeCount}</h2>
         </div>
         <div className="text-center m-3 p-4 border rounded-lg bg-slate-100 hover:bg-slate-300">
-          <h1 className="text-2xl py-3">Total Employeer</h1>
+          <h1 className="text-2xl py-3">Total Employers</h1>
           <h2 className="text-3xl">{employerCount}</h2>
         </div>
       </div>
@@ -65,7 +64,7 @@ export const Dashboard = () => {
             to="/register"
             className="font-medium text-base text-purple-600 hover:underline"
           >
-            <Button colorScheme="messenger" rightIcon={<AddIcon/>}>Sign up</Button>
+            <Button colorScheme="messenger" rightIcon={<AddIcon/>}>Create</Button>
           </Link>
         </p>
       </div>

@@ -23,7 +23,7 @@ export default function Sidebar() {
           Employee
         </div>
         <div className="text-xl flex justify-items py-4 gap-3">
-          <BsBriefcaseFill fontSize={28} /> Employeer
+          <BsBriefcaseFill fontSize={28} /> Employer
         </div>
       </div>
       {/* Sign Out */}

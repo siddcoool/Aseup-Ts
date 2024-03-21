@@ -10,7 +10,7 @@ export default function VerticalLayout({ children }: any) {
   const {deleteAuthenticated} = useIsAuthentication()
   const navigate = useNavigate()
   return (
-    <div className="flex ">
+    <div className="flex h-screen">
       <div className="bg-neutral-800 p-3 w-1/5 flex flex-col">
         {/* Logo */}
         <div className=" flex item-center gap-3 px-2 py-4 ">
@@ -36,7 +36,7 @@ export default function VerticalLayout({ children }: any) {
           </div>
         </div>
         {/* Sign Out */}
-        <div className="text-white flex justify-items px-4 gap-4 pt-[340px]">
+        <div className="text-white flex justify-items px-4 gap-4">
           <PiSignOutBold fontSize={28} />
           <span onClick={deleteAuthenticated}
         className="text-xl">Sign Out</span>
