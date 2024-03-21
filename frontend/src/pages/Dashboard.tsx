@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
-import Sidebar from "./Sidebar";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import {
-  Card,
-  CardHeader,
-  Heading,
-  CardBody,
-  CardFooter,
   Button,
-  Text,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 
