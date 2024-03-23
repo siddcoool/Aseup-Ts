@@ -23,7 +23,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
 
-interface IEmployers {
+export interface IEmployers {
   companyName: string;
   employees: string;
   industry: string;

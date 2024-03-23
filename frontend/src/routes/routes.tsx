@@ -14,6 +14,8 @@ import EmployeeForm from "../pages/EmployeeForm";
 import Page from "../pages/Employee/Page";
 import SearchEmployee from "../pages/SearchEmployee";
 import Thankyou from "../pages/Thankyou";
+import Jobs from "../pages/Jobs";
+import ViewJobs from "../pages/ViewJobs";
 
 interface Route {
   path: string;
@@ -79,6 +81,18 @@ const routes: Route[] = [
   },{
     path: '/thankyou',
     component: Thankyou,
+    layout: VerticalLayout
+  },{
+    path: '/jobs',
+    component: ViewJobs,
+    layout: VerticalLayout
+  },{
+    path: "/jobs/add",
+    component: Jobs,
+    layout: VerticalLayout
+  },{
+    path: "/jobs/edit/:id",
+    component: Jobs,
     layout: VerticalLayout
   }
 ];
