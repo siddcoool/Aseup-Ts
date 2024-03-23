@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import { IEmployers } from "./ViewEmployer";
 import Select from "react-select";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 export type IJobs = {
   jobTitle: string;
@@ -31,9 +31,9 @@ const Jobs = () => {
   });
   const [employerOptions, setEmployerOptions] = useState<any[]>([]);
   const toast = useToast();
+  const navigate = useNavigate();
 
-  const {id} = useParams()
-  
+  const { id } = useParams();
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -60,45 +60,57 @@ const Jobs = () => {
     }
   };
 
-  const getJobs = async (id:string)=>{
+  const getJobs = async (id: string) => {
     try {
-        const response = await axios.get(`/jobs/${id}`)
-        setFormData(response.data)
+      const response = await axios.get(`/jobs/${id}`);
+      setFormData(response.data);
     } catch (error) {
-        
+      console.log((error as Error).message);
     }
-  }
+  };
 
   useEffect(() => {
     fetchEmployers();
   }, []);
 
-  useEffect(()=>{
-    if(id){
-        getJobs(id)
+  useEffect(() => {
+    if (id) {
+      getJobs(id);
     }
-  },[])
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await axios.post("/jobs", formData);
-      console.log({response})
-      if (response.status === 201) {
-        toast({
-          title: "Form Submitted",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-        toast({
-            title: (error as Error).message,
-            status: "error",
+      if (id) {
+        const response = await axios.put(`/jobs/${id}`, formData);
+        if (response.status === 201) {
+          toast({
+            title: "Form Updated successfully",
+            status: "success",
             duration: 5000,
             isClosable: true,
           });
+        }
+      } else {
+        const response = await axios.post("/jobs", formData);
+        if (response.status === 201) {
+          toast({
+            title: "Form Submitted",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+        navigate("/");
+      }
+    } catch (error) {
+      toast({
+        title: (error as Error).message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
