@@ -12,6 +12,15 @@ jobRouter.get("/", async (req: Request, res: Response) => {
   }
 });
 
+jobRouter.get("/count", async (req: Request, res: Response) => {
+  try {
+    const count = await Jobs.count();
+    res.json({ count });
+  } catch (error) {
+    return res.status(500).json({ Error: "count not found" });
+  }
+});
+
 jobRouter.get("/:id", async (req: Request, res: Response) => {
   try {
     const job = await Jobs.findById(req.params.id);
