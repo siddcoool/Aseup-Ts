@@ -30,19 +30,30 @@ const EmployeeForm = () => {
     expectedCTC: "",
     noticePeriod: "",
   });
-
+  
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    if (name === "email" && !isEmailValid(value)) {
+      // Handle invalid email here
+      alert("Invalid email address")
+      return;
+    }
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-    }));
+    })
+    );
   };
-
+  const isEmailValid = (email: string): boolean => {
+    // Regular expression for email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
     console.log(formData); // Do something with form data like sending it to server
   };
 

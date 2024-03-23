@@ -81,23 +81,23 @@ const EmployeeForm1 = () => {
       skills: [],
     },
     enableReinitialize: true,
-    // validationSchema: Yup.object({
-    //   name: Yup.string()
-    //     .matches(/^[a-zA-Z]+$/, "Only letters are allowed")
-    //     .required("This is a required field"),
-    //   email: Yup.string()
-    //     .email("Must be a valid Email")
-    //     .required("This is a required field"),
-    //   phone: Yup.string()
-    //     .matches(/^[0-9]+$/, "Must contain only numeric characters")
-    //     .required("input must be a number"),
-    //   gender: Yup.string().required("This is a required field"),
-    //   // DOB: Yup.date().required("This is a required field"),
-    //   // currentCTC: Yup.number().required("This is a required field"),
-    //   // expectedCTC: Yup.number().required("This is a required field"),
-    //   // noticePeriod: Yup.number().required("This is a required field"),
-    //   // Skills: Yup.string(),
-    // }),
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .matches(/^[a-zA-Z]+$/, "Only letters are allowed")
+        .required("This is a required field"),
+      email: Yup.string()
+        .email("Must be a valid Email")
+        .required("This is a required field"),
+      phone: Yup.string()
+        .matches(/^[0-9]+$/, "Must contain only numeric characters")
+        .required("input must be a number"),
+      gender: Yup.string().required("This is a required field"),
+      // DOB: Yup.date().required("This is a required field"),
+      // currentCTC: Yup.number().required("This is a required field"),
+      // expectedCTC: Yup.number().required("This is a required field"),
+      // noticePeriod: Yup.number().required("This is a required field"),
+      // Skills: Yup.string(),
+    }),
     onSubmit: async (values) => {
       console.log(values, ID);
 
@@ -165,6 +165,26 @@ const EmployeeForm1 = () => {
       navigate("/home");
     }
   }, [isEmployeeCreated]);
+
+  // For validating the email address
+  const validateEmail = (email: string) => {
+    // Basic email validation regex
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setFieldValue('email', value); // Set form value
+    if (!validateEmail(value)) {
+      // Handle invalid email here
+      console.log("Invalid email");
+      // You can also set an error message here using formik's setFieldError function
+    }
+    else{
+      console.log("Valid Email");
+      
+    }
+  };
 
   const getSkills = async () => {
     const response = await axios.get("/skill");
@@ -242,7 +262,7 @@ const EmployeeForm1 = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="email"
               type="email"
-              onChange={handleChange}
+              onChange={handleEmailChange}
               value={values.email}
               placeholder="Enter your email"
             />
@@ -563,3 +583,9 @@ const EmployeeForm1 = () => {
 };
 
 export default EmployeeForm1;
+
+
+function setFieldValue(arg0: string, value: string) {
+  throw new Error("Function not implemented.");
+}
+
