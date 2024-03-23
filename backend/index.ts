@@ -9,6 +9,7 @@ import employeeRouter from "./routes/employee";
 import employerRouter from "./routes/employer";
 import { Authentication } from "./middlewares/Authentication"
 import morgan from "morgan";
+import jobRouter from "./routes/jobs";
 
 dotenv.config(); 
 
@@ -28,6 +29,7 @@ app.use("/user", userRouter);
 app.use("/skill",Authentication.Admin, skillRouter);
 app.use("/employee", Authentication.Admin, employeeRouter);
 app.use("/employer", Authentication.Admin, employerRouter);
+app.use('/jobs', jobRouter)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

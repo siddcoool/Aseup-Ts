@@ -9,31 +9,50 @@ import { AddIcon } from "@chakra-ui/icons";
 export const Dashboard = () => {
   const [employeeCount, setEmployeeCount] = useState(0);
   const [employerCount, setEmployerCount] = useState(0);
-  useEffect(() => {
-    const getEmployeeCount = async () => {
-      try {
-        const { data, status } = await axios.get("/employee/count");
-        if (status === 200) {
-          console.log(data);
+  const [jobsCount, setJobsCount] = useState(0);
 
-          setEmployeeCount(data.count);
+
+
+  const getJobsCount = async () => {
+    try {
+      const {data, status} = await axios.get('/jobs/count')
+        if(status === 200){
+        setJobsCount(data.count)
         }
-      } catch (unknownError) {
-        console.log(unknownError);
       }
-    };
-    const getEmployerCount = async () => {
-      try {
-        const { data, status } = await axios.get("/employer/count");
-        if (status === 200) {
-          setEmployerCount(data.count);
-        }
-      } catch (unknownError) {
-        console.log(unknownError);
+     catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getEmployeeCount = async () => {
+    try {
+      const { data, status } = await axios.get("/employee/count");
+      if (status === 200) {
+        console.log(data);
+
+        setEmployeeCount(data.count);
       }
-    };
+    } catch (unknownError) {
+      console.log(unknownError);
+    }
+  };
+  const getEmployerCount = async () => {
+    try {
+      const { data, status } = await axios.get("/employer/count");
+      if (status === 200) {
+        setEmployerCount(data.count);
+      }
+    } catch (unknownError) {
+      console.log(unknownError);
+    }
+  };
+
+  useEffect(() => {
+    
     getEmployeeCount();
     getEmployerCount();
+    getJobsCount()
   }, []);
 
   return (
@@ -46,6 +65,10 @@ export const Dashboard = () => {
         <div className="text-center m-3 p-4 border rounded-lg bg-slate-100 hover:bg-slate-300">
           <h1 className="text-2xl py-3">Total Employers</h1>
           <h2 className="text-3xl">{employerCount}</h2>
+        </div>
+        <div className="text-center m-3 p-4 border rounded-lg bg-slate-100 hover:bg-slate-300">
+          <h1 className="text-2xl py-3">Total Jobs</h1>
+          <h2 className="text-3xl">{jobsCount}</h2>
         </div>
       </div>
       <div>
