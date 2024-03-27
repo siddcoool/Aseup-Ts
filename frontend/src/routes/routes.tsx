@@ -16,6 +16,8 @@ import SearchEmployee from "../pages/SearchEmployee";
 import Thankyou from "../pages/Thankyou";
 import Jobs from "../pages/Jobs";
 import ViewJobs from "../pages/ViewJobs";
+import Skills from "../pages/Skills";
+import SkillForm from "../pages/Employee/SkillForm";
 
 interface Route {
   path: string;
@@ -91,12 +93,19 @@ const routes: Route[] = [
     component: Jobs,
     layout: VerticalLayout
   },{
-    path: "/jobs/edit/:id",
+    path: "/jobs/add",
     component: Jobs,
+    layout: VerticalLayout
+  },{
+    path: "/skills",
+    component: Skills,
+    layout: VerticalLayout
+  },{
+    path: "/skill/add",
+    component: SkillForm,
     layout: VerticalLayout
   }
 ];
-
 export const createRoutes = () => {
   const newRoutes = routes.map((route) => {
     const Layout = route.layout;

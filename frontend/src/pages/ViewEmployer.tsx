@@ -31,6 +31,8 @@ export interface IEmployers {
   _id: string;
 }
 
+
+
 const ViewEmployer = () => {
   const [employers, setEmployers] = useState<IEmployers[]>([]);
   const [loading, setLoading] = useState(false);
