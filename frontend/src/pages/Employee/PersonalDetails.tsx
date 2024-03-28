@@ -28,17 +28,38 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     skills: [],
   });
   const [skillsOptions, setSkillsOptions] = useState<any[]>([]);
-
+  const[message,setMessage]=useState(" ");
+  const[phonemessage,setPhonemessage]=useState(" ");
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    if(name ==="email" && !isEmailValid(value)){
+      setMessage("Invalid Email Address")
+    }
+    else{
+      setMessage("");
+    }
+    if(name ==="phoneNumber" && !isPhoneValid(value)){
+      setPhonemessage("Phone number not valid")
+    }
+    else{
+      setPhonemessage(" ");
+    }
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
-
+  const isEmailValid = (email: string): boolean => {
+    // Regular expression for email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+  const isPhoneValid=(phoneNumber:string):boolean=>{
+    const phoneregex=/^([0-9])\d{9}$/;
+    return phoneregex.test(phoneNumber);
+  }
   const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
     if (actionMeta.action === "create-option") {
       const newSkill = selectedValues[selectedValues.length - 1];
@@ -123,7 +144,9 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-            />
+            /><div className="text-red-500 font-bold">
+              {message}
+            </div>
           </FormControl>
 
           <FormControl isRequired>
@@ -134,6 +157,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
               value={formData.phoneNumber}
               onChange={handleChange}
             />
+            <div className="text-red-500 font-bold">{phonemessage}</div>
           </FormControl>
 
           <FormControl isRequired>
