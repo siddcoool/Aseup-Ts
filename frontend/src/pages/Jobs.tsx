@@ -27,7 +27,7 @@ const Jobs = () => {
     jobRequirements: "",
     employer: [],
     budget: "",
-    noticePeriod: undefined,
+    noticePeriod:undefined,
   });
   const [employerOptions, setEmployerOptions] = useState<any[]>([]);
   const toast = useToast();
@@ -117,7 +117,7 @@ const Jobs = () => {
   return (
     <form onSubmit={handleSubmit} className="p-8 flex justify-center ">
       <div className="w-[60%]">
-        <div className="font-bold text-blue-500 text-4xl text-center mb-4">
+        <div className="font-bold text-3xl text-center m-4">
           Create a Job
         </div>
         <VStack spacing={4} align="stretch">
@@ -135,7 +135,7 @@ const Jobs = () => {
           <FormControl id="jobRequirements" isRequired>
             <FormLabel>Job Requirements</FormLabel>
             <Textarea
-              name="jobRequirements"
+              name="job Requirements"
               value={formData.jobRequirements}
               onChange={handleChange}
               placeholder="Enter job requirements"

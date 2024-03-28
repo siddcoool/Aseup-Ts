@@ -96,7 +96,7 @@ const ViewEmployeedetails = () => {
   } else
     return (
       <div className="">
-        <h1 className="text-center text-3xl mt-3 font-medium text-violet-600">
+        <h1 className="font-bold text-3xl text-center m-4">
           Employee Details
         </h1>
         <div className="flex justify-end mr-4">

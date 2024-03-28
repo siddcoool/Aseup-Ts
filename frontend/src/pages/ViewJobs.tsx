@@ -70,7 +70,7 @@ import { IJobs } from "./Jobs";
     else
       return (
         <div className="p-8">
-          <div className="font-bold text-3xl text-center mb-4">View Employer</div>
+          <div className="font-bold text-3xl text-center mb-4">Jobs Description</div>
           <div className="flex justify-end mb-4">
             <Button onClick={() => navigate("/jobs/add")} colorScheme="blue">
               Add Jobs
@@ -80,11 +80,11 @@ import { IJobs } from "./Jobs";
             <Table variant="striped" colorScheme="teal">
               <Thead>
                 <Tr>
-                  <Th>jobTitle</Th>
-                  <Th>jobRequirements</Th>
-                  <Th>employer</Th>
-                  <Th>budget</Th>
-                  <Th>noticePeriod</Th>
+                  <Th>job Title</Th>
+                  <Th>job Requirements</Th>
+                  <Th>Employer</Th>
+                  <Th>Budget</Th>
+                  <Th>notice Period</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -109,7 +109,7 @@ import { IJobs } from "./Jobs";
                                   handleDelete();
                                   toast({
                                     title: "Employer deleted.",
-                                    description: "We've deleted your account ",
+                                    description: "Job has been Deleted",
                                     status: "error",
                                     duration: 9000,
                                     isClosable: true,

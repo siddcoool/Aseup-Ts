@@ -71,7 +71,7 @@ const ViewEmployer = () => {
   else
     return (
       <div className="p-8">
-        <div className="font-bold text-3xl text-center mb-4">View Employer</div>
+        <div className="font-bold text-3xl text-center mb-4">Employer Details</div>
         <div className="flex justify-end mb-4">
           <Button onClick={() => navigate("/employer/add")} colorScheme="blue">
             Add Employer
