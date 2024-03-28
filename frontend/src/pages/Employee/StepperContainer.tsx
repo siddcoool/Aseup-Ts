@@ -39,12 +39,18 @@ const StepperContainer = ({ steps }: IStepperContainer) => {
   const goToNext = () => setCurrentStep((v) => v + 1);
   const goToPrevious = () => setCurrentStep((v) => v - 1);
 
+  const handleNavigate = (index: number) => {
+    if (index < currentStep) {
+      setCurrentStep(index);
+    }
+  };
+
   return (
     <div className="p-8">
       <div className="px-44">
         <Stepper index={currentStep}>
           {steps.map((step, index) => (
-            <Step key={index}>
+            <Step key={index} onClick={() => handleNavigate(index)}>
               <StepIndicator>
                 <StepStatus
                   complete={<StepIcon />}

@@ -34,6 +34,9 @@ export default function VerticalLayout({ children }: any) {
           <div className="text-xl flex justify-items py-4 gap-3" onClick={()=>navigate('/jobs')}>
             <BsBriefcaseFill fontSize={28} /> Jobs
           </div>
+          <div className="text-xl flex justify-items py-4 gap-3" onClick={()=>navigate('/skills')}>
+            <BsBriefcaseFill fontSize={28} /> Skills
+          </div>
         </div>
         {/* Sign Out */}
         <div className="text-white flex justify-items px-4 gap-4">
@@ -42,7 +45,7 @@ export default function VerticalLayout({ children }: any) {
         className="text-xl">Sign Out</span>
         </div>
       </div>
-      <div className="w-4/5"> {children}</div>
+      <div className="w-4/5 overflow-y-scroll"> {children}</div>
     </div>
   );
 }
