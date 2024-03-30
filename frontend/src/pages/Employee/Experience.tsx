@@ -17,6 +17,7 @@ interface IExperienceForm {
 }
 
 const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
+  const[expError,setExpError]=useState("")
   const [formData, setFormData] = useState<Experience[]>([
     {
       companyName: "",
@@ -33,6 +34,15 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
     index: number
   ) => {
     const { name, value } = e.target;
+    if(name==="endDate"){
+      const startdate=formData[index]?.startDate;
+      if(startdate && value<= startdate){
+        setExpError("End year should be greater than start Date")
+      }
+      else{
+        setExpError("")
+      }
+    }
     setFormData((prevData) => {
       const updatedFormData = [...prevData];
       updatedFormData[index] = {
@@ -109,6 +119,7 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
                       )}
                       onChange={(e) => handleChange(e, index)}
                     />
+                    <div className="text-red-500 font-bold">{expError}</div>
                   </FormControl>
 
                   <FormControl isRequired>

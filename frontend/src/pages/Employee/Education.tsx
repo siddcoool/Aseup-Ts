@@ -10,6 +10,7 @@ import {
 import { Education, EmployeeDocument } from "../../types/employee";
 import dayjs from "dayjs";
 import { LineItemRepeater } from "../../components/LineItemRepeater";
+import { start } from "repl";
 
 interface IEducationForm {
   onSubmit: (input: Partial<EmployeeDocument>) => void;
@@ -17,6 +18,7 @@ interface IEducationForm {
 }
 
 const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
+  const [yearError, setYearError] = useState("");
   const [formData, setFormData] = useState<Education[]>([
     {
       title: "",
@@ -33,6 +35,17 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
     index: number
   ) => {
     const { name, value } = e.target;
+    if (name === "endYear") {
+      const startYear = formData[index]?.startYear;
+      
+      
+      if (startYear && value <= startYear) {
+        console.log(startYear,value);
+        setYearError("End year should be greater than start Date");
+      } else {
+        setYearError("");
+      }
+    }
     setFormData((prevData) => {
       const updatedFormData = [...prevData];
       updatedFormData[index] = {
@@ -47,7 +60,16 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
     e.preventDefault();
     console.log(formData); // Handle form submission
   };
-
+  // const calculatediff = (endYear: string, startYear: string) => {
+  //   const startyear = new Date(startYear);
+  //   const endyear = new Date(endYear);
+  //   console.log(`startyear,${startyear},endyear=${endyear}`);
+    
+  //   const diff = endyear.getFullYear() - startyear.getFullYear();
+  //   console.log(diff,endyear.getFullYear(),startyear.getFullYear());
+    
+  // return diff;
+  // };
   useEffect(() => {
     if (employeeData && Array.isArray(employeeData.educations)) {
       setFormData([...employeeData.educations]);
@@ -114,6 +136,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       )}
                       onChange={(e) => handleChange(e, index)}
                     />
+                    <div className="text-red-500 font-bold">{yearError}</div>
                   </FormControl>
 
                   <FormControl isRequired>

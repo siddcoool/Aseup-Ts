@@ -28,23 +28,30 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     skills: [],
   });
   const [skillsOptions, setSkillsOptions] = useState<any[]>([]);
-  const[message,setMessage]=useState(" ");
-  const[phonemessage,setPhonemessage]=useState(" ");
+  const [message, setMessage] = useState(" ");
+  const [phonemessage, setPhonemessage] = useState(" ");
+  const [ageError, setAgeError] = useState(" ");
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    if(name ==="email" && !isEmailValid(value)){
-      setMessage("Invalid Email Address")
-    }
-    else{
+    if (name === "email" && !isEmailValid(value)) {
+      setMessage("Invalid Email Address");
+    } else {
       setMessage("");
     }
-    if(name ==="phoneNumber" && !isPhoneValid(value)){
-      setPhonemessage("Phone number not valid")
-    }
-    else{
+    if (name === "phoneNumber" && !isPhoneValid(value)) {
+      setPhonemessage("Phone number not valid");
+    } else {
       setPhonemessage(" ");
+    }
+    if (name === "DOB") {
+      const age = calculateage(value);
+      if (age < 18) {
+        setAgeError("Age should be greater that 18");
+      } else {
+        setAgeError("");
+      }
     }
     setFormData((prevData) => ({
       ...prevData,
@@ -56,10 +63,11 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
-  const isPhoneValid=(phoneNumber:string):boolean=>{
-    const phoneregex=/^([0-9])\d{9}$/;
+  const isPhoneValid = (phoneNumber: string): boolean => {
+    //Regular expression for phone number validation
+    const phoneregex = /^([0-9])\d{9}$/;
     return phoneregex.test(phoneNumber);
-  }
+  };
   const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
     if (actionMeta.action === "create-option") {
       const newSkill = selectedValues[selectedValues.length - 1];
@@ -105,7 +113,22 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
       toast.error(error.message);
     }
   };
-
+  const calculateage = (DOB: string) => {
+    const birthdate = new Date(DOB);
+    const today = new Date();
+    let age = today.getFullYear() - birthdate.getFullYear();
+     console.log(`before if ${age}`);
+      
+    const month = today.getMonth() - birthdate.getMonth();
+    // console.log(`month ${month}`);
+    //need to ask to piyush 
+    if (month < 0 || (month === 0 && today.getDay() < birthdate.getDay())) {
+      age--;
+    }
+    // console.log(`after if ${age}`);
+    
+    return age;
+  };
   const setSkills = () => {
     if (employeeData && employeeData.skills) {
       const mappedSkills = employeeData.skills.map((skill) => ({
@@ -144,9 +167,8 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-            /><div className="text-red-500 font-bold">
-              {message}
-            </div>
+            />
+            <div className="text-red-500 font-bold">{message}</div>
           </FormControl>
 
           <FormControl isRequired>
@@ -168,6 +190,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
               value={dayjs(formData.DOB).format("YYYY-MM-DD")}
               onChange={handleChange}
             />
+            <div className="text-red-500 font-bold">{ageError}</div>
           </FormControl>
 
           <FormControl isRequired>
