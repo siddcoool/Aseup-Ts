@@ -200,6 +200,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
               value={formData.gender}
               onChange={handleChange}
             >
+              <option value="Select"></option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>

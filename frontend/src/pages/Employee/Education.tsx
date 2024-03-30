@@ -145,7 +145,8 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       name="grade"
                       value={formData[index]?.grade}
                       onChange={(e) => handleChange(e, index)}
-                    >
+                    > 
+                    ,<option value="select"></option>
                       <option value="A">A</option>
                       <option value="B">B</option>
                       <option value="C">C</option>
