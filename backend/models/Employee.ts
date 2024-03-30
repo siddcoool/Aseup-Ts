@@ -7,7 +7,8 @@ const EducationSchema = new Schema({
   institute: String,
   startYear: { type: Date, default: dayjs().toISOString() }, // Year of starting the course/study.
   endYear: { type: Date, default: dayjs().toISOString() },
-  grade: { enum: ["A", "B", "C", "D", "E", "F"] },
+  grade:String,
+  // grade: { enum: ["A", "B", "C", "D", "E", "F"] },
 });
 
 const ExperienceSchema = new Schema({
