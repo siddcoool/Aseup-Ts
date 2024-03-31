@@ -48,7 +48,7 @@ export const LineItemRepeater = ({
     }}>
       {fields.map((fieldIndex) => (
         <div
-          className="mb-4 flex w-full flex-col items-center rounded shadow-xl py-6 px-2"
+          className="mb-4 flex w-full flex-col items-center rounded shadow-xl py-6 px-7"
           key={fieldIndex}
         >
           <div className="mb-2 w-full" style={{ flex: 1 }}>

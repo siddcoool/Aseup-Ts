@@ -86,7 +86,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
   const addSkillToDatabase = async (newSkill: any) => {
     try {
       await axios.post("/skill", { name: newSkill.label });
-
+      console.log(newSkill);
       return newSkill;
     } catch (error) {
       console.error("Error adding skill to the database", error);
@@ -117,16 +117,16 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     const birthdate = new Date(DOB);
     const today = new Date();
     let age = today.getFullYear() - birthdate.getFullYear();
-     console.log(`before if ${age}`);
-      
+    console.log(`before if ${age}`);
+
     const month = today.getMonth() - birthdate.getMonth();
     // console.log(`month ${month}`);
-    //need to ask to piyush 
+    //need to ask to piyush
     if (month < 0 || (month === 0 && today.getDay() < birthdate.getDay())) {
       age--;
     }
     // console.log(`after if ${age}`);
-    
+
     return age;
   };
   const setSkills = () => {

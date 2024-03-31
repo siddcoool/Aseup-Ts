@@ -135,7 +135,7 @@ const Jobs = () => {
           <FormControl id="jobRequirements" isRequired>
             <FormLabel>Job Requirements</FormLabel>
             <Textarea
-              name="job Requirements"
+              name="jobRequirements"
               value={formData.jobRequirements}
               onChange={handleChange}
               placeholder="Enter job requirements"
