@@ -102,7 +102,7 @@ const Jobs = () => {
             isClosable: true,
           });
         }
-        navigate("/");
+        navigate("/jobs");
       }
     } catch (error) {
       toast({

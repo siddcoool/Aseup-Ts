@@ -120,9 +120,6 @@ const ViewEmployeedetails = () => {
                     <Th>Contact NO</Th>
                     <Th>DOB</Th>
                     <Th>Gender</Th>
-                    <Th>Current CTC</Th>
-                    <Th>Expected CTC</Th>
-                    <Th>Notice Period(days)</Th>
                     <Th>Skills</Th>
                     <Th>Action</Th>
                   </Tr>
@@ -135,9 +132,6 @@ const ViewEmployeedetails = () => {
                       <Td>{employee.phoneNumber}</Td>
                       <Td>{dayjs(employee.DOB).format("DD-MM-YYYY")}</Td>
                       <Td>{employee.gender}</Td>
-                      <Td>{employee.currentCTC}</Td>
-                      <Td>{employee.expectedCTC}</Td>
-                      <Td>{employee.noticePeriod}</Td>
                       <Td>
                         {employee.skills.map((skill, index) => (
                           <div key={index}>{skill.name}</div>

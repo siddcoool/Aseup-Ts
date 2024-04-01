@@ -82,9 +82,9 @@ import { IJobs } from "./Jobs";
                 <Tr>
                   <Th>job Title</Th>
                   <Th>job Requirements</Th>
-                  <Th>Employer</Th>
                   <Th>Budget</Th>
-                  <Th>notice Period</Th>
+                  <Th>notice Period(In Days)</Th>
+                  <Th>Action</Th>
                 </Tr>
               </Thead>
               <Tbody>

@@ -208,8 +208,8 @@ interface FormData {
   industry: string;
   location: string;
   employees: string;
-  contactName:string;
-  contactNumber:string;
+  contactName: string;
+  contactNumber: string;
 }
 
 const EmployerForm = () => {
@@ -218,8 +218,8 @@ const EmployerForm = () => {
     industry: "",
     location: "",
     employees: "",
-    contactName:"",
-    contactNumber:"",
+    contactName: "",
+    contactNumber: "",
   });
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -268,7 +268,12 @@ const EmployerForm = () => {
 
   return (
     <div className="p-8 w-[70%] m-auto">
-      <form onSubmit={(e) => {e.preventDefault(); handleSubmit();}}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         <VStack spacing={4}>
           <FormControl>
             <FormLabel>Company Name</FormLabel>
@@ -313,7 +318,7 @@ const EmployerForm = () => {
             <LineItemRepeater>
               {(index) => {
                 return (
-                  <FormControl key={index}>
+                  <FormControl key={index +1}>
                     <FormLabel>Contact Person Name</FormLabel>
                     <Input
                       type="text"
@@ -325,7 +330,7 @@ const EmployerForm = () => {
                     />
                     <FormLabel>Contact Person Number</FormLabel>
                     <Input
-                      type="tel"
+                      type="text"
                       name="contactNumber"
                       value={formData.contactNumber}
                       onChange={(e) =>
