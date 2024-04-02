@@ -14,9 +14,6 @@ interface FormData {
   phoneNumber: string;
   DOB: string;
   gender: string;
-  currentCTC: string;
-  expectedCTC: string;
-  noticePeriod: string;
 }
 
 const EmployeeForm = () => {
@@ -26,9 +23,6 @@ const EmployeeForm = () => {
     phoneNumber: "",
     DOB: "",
     gender: "",
-    currentCTC: "",
-    expectedCTC: "",
-    noticePeriod: "",
   });
   
   const handleChange = (

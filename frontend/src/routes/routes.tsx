@@ -93,7 +93,7 @@ const routes: Route[] = [
     component: Jobs,
     layout: VerticalLayout
   },{
-    path: "/jobs/add",
+    path: "/jobs/edit/:id",
     component: Jobs,
     layout: VerticalLayout
   },{

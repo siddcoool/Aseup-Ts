@@ -28,9 +28,6 @@ const EmployeeSchema = new Schema({
     gender: String,
     educations: [EducationSchema],
     experience: [ExperienceSchema],
-    currentCTC: String, 
-    expectedCTC: String,
-    noticePeriod: String,
     skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'skill' }]
 },{timestamps:true})
 

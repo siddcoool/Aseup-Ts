@@ -18,14 +18,14 @@ const EmployerSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  contactName: {
+  contactName: [{
     type: String,
     required: true,
-  },
-  contactNumber: {
+  }],
+  contactNumber:  [{
     type: String,
     required: true,
-  },
+  }],
 },{timestamps:true});
 
 const Employer = model("employer", EmployerSchema);
