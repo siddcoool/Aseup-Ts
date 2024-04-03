@@ -9,6 +9,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import CreatableSelect from "react-select/creatable";
+
 import { IEmployers } from "./ViewEmployer";
 import Select from "react-select";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
@@ -19,6 +21,7 @@ export type IJobs = {
   employer: IEmployers[];
   budget: string;
   noticePeriod: number;
+  skills?: string[];
 };
 
 const Jobs = () => {
@@ -27,9 +30,12 @@ const Jobs = () => {
     jobRequirements: "",
     employer: [],
     budget: "",
-    noticePeriod:undefined,
+    noticePeriod: undefined || 0,
+    skills: []
   });
   const [employerOptions, setEmployerOptions] = useState<any[]>([]);
+  const [skillsOptions, setSkillsOptions] = useState<any[]>([]);
+
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -64,13 +70,37 @@ const Jobs = () => {
     try {
       const response = await axios.get(`/jobs/${id}`);
       setFormData(response.data);
+      
     } catch (error) {
       console.log((error as Error).message);
     }
   };
 
+  const getSkills = async () => {
+    try {
+      const { data: skills } = await axios.get("/skill");
+      const options = skills.map((skill: any) => ({
+        value: skill._id,
+        label: skill.name,
+      }));
+
+      setSkillsOptions(options);
+      console.log({ skills });
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+console.log({formData, employerOptions})
+  const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      skills: selectedValues,
+    }));
+  };
+
   useEffect(() => {
     fetchEmployers();
+    getSkills()
   }, []);
 
   useEffect(() => {
@@ -117,9 +147,7 @@ const Jobs = () => {
   return (
     <form onSubmit={handleSubmit} className="p-8 flex justify-center ">
       <div className="w-[60%]">
-        <div className="font-bold text-3xl text-center m-4">
-          Create a Job
-        </div>
+        <div className="font-bold text-3xl text-center m-4">Create a Job</div>
         <VStack spacing={4} align="stretch">
           <FormControl id="jobTitle" isRequired>
             <FormLabel>Job Title</FormLabel>
@@ -152,6 +180,18 @@ const Jobs = () => {
                 setFormData((prevData) => ({ ...prevData, employer: option }))
               }
               options={employerOptions}
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Select Skills</FormLabel>
+
+            <CreatableSelect
+              isClearable
+              isMulti
+              options={skillsOptions}
+              value={formData.skills}
+              onChange={handleSkillsChange}
             />
           </FormControl>
 

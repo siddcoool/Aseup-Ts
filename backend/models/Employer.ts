@@ -1,5 +1,12 @@
 import mongoose, { Schema, model } from "mongoose";
 
+
+const ContactSchema = new Schema({
+  contactName: String,
+  contactNumber: String
+})
+
+
 const EmployerSchema = new Schema({
   companyName: {
     type: String,
@@ -18,14 +25,8 @@ const EmployerSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  contactName: [{
-    type: String,
-    required: true,
-  }],
-  contactNumber:  [{
-    type: String,
-    required: true,
-  }],
+  contact: [ContactSchema]
+ 
 },{timestamps:true});
 
 const Employer = model("employer", EmployerSchema);

@@ -30,10 +30,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
     },
   ]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    index: number
-  ) => {
+  const handleChange = ( e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, index: number) => {
     const { name, value } = e.target;
     if (name === "endYear") {
       const startYear = formData[index]?.startYear;

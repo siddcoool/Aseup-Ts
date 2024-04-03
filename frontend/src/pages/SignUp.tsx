@@ -3,16 +3,20 @@ import { ChangeEvent, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import useIsAuthentication from "../hooks/useIsAuthentication";
+import isEmail from "validator/lib/isEmail";
+import { useToast } from "@chakra-ui/react";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState('')
+  const [fullName, setFullName] = useState("");
+  const Ctoast = useToast();
 
-  const {setAuthenticate} = useIsAuthentication()
+  const { setAuthenticate } = useIsAuthentication();
 
   const handleEmail = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+      setEmail(event.target.value);
+    
   };
 
   const handlePassword = (event: ChangeEvent<HTMLInputElement>) => {
@@ -20,30 +24,43 @@ export default function SignUp() {
   };
 
   const handleFullName = (event: ChangeEvent<HTMLInputElement>) => {
-    setFullName(event.target.value)
-  }
-
+    setFullName(event.target.value);
+  };
+console.log({email, password, fullName})
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const { data, status } = await axios.post("/user/register", {
-        email,
-        password,
-        fullName
-      });
-      if (status === 201) {
-        toast.success(data.message);
-        setAuthenticate(data.user,data.token)
-        
-        
+      if (email && password && fullName) {
+        if(!isEmail(email)){
+            Ctoast({
+              title: "Invalid Email",
+              status: 'error',
+              duration: 3000
+            })
+            return
+          }
+        const { data, status } = await axios.post("/user/register", {
+          email,
+          password,
+          fullName,
+        });
+        if (status === 201) {
+          toast.success(data.message);
+          setAuthenticate(data.user, data.token);
+        } else {
+          toast.warn(data.message);
+        }
       } else {
-        toast.warn(data.message);
+        Ctoast({
+          title: "Please enter all the fields",
+          status: "info",
+          duration: 5000,
+        });
       }
     } catch (error) {
       toast.error((error as Error).message);
     }
   };
- 
 
   return (
     <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
