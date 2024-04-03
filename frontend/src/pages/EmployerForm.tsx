@@ -183,7 +183,7 @@
 
 // export default EmployerForm;
 
-import { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   FormControl,
   FormLabel,
@@ -221,7 +221,6 @@ const EmployerForm = () => {
     contactName: "",
     contactNumber: "",
   });
-  const [submitting, setSubmitting] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast(); // Move useToast here
 
@@ -235,12 +234,9 @@ const EmployerForm = () => {
   const handleSubmit = async () => {
     try {
       if (id) {
-        const res = await axios.put(`/employer/${id}`, formData);
+        await axios.put(`/employer/${id}`, formData);
       } else {
-        setSubmitting(true);
-        const res = await axios.post("/employer", formData);
-        console.log({ res });
-        setSubmitting(false);
+         await axios.post("/employer", formData);
         toast({
           title: "Employer Account created.",
           description: "We've created your account for you.",
@@ -314,12 +310,12 @@ const EmployerForm = () => {
               onChange={(e) => handleInputChange("employees", e.target.value)}
             />
           </FormControl>
-          
-            <LineItemRepeater className="w-full">
-              {(index) => {
-                return (
-                  <div className="w-full">
-                  <FormControl key={index +1}>
+
+          <LineItemRepeater className="w-full">
+            {(index) => {
+              return (
+                <div className="w-full">
+                  <FormControl key={index + 1}>
                     <FormLabel>Contact Person Name</FormLabel>
                     <Input
                       type="text"
@@ -341,10 +337,10 @@ const EmployerForm = () => {
                       }
                     />
                   </FormControl>
-                  </div>
-                );
-              }}
-            </LineItemRepeater>
+                </div>
+              );
+            }}
+          </LineItemRepeater>
 
           <>
             <Button colorScheme="teal" onClick={onOpen}>
