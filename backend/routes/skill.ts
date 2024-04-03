@@ -7,6 +7,15 @@ skillRouter.get("/", async (req: Request, res: Response) => {
   res.json(listOfSkills);
 });
 
+skillRouter.get('/:id', async(req: Request, res: Response)=>{
+  try {
+    const skill = await Skill.findById(req.params.id)
+    res.send(skill)
+  } catch (error) {
+    res.send((error as Error).message)
+  }
+})
+
 skillRouter.post("/", async (req: Request, res: Response) => {
   const { name } = req.body;
   const alreadyExist = await Skill.findOne({ name: name });
@@ -21,12 +30,13 @@ skillRouter.post("/", async (req: Request, res: Response) => {
   }
 });
 
-skillRouter.put("/update", async (req: Request, res: Response) => {
+skillRouter.put("/:id", async (req: Request, res: Response) => {
   const { skill } = req.body;
   const newEntry = {
     skill,
   };
-  await Skill.updateOne(newEntry);
+  await Skill.findByIdAndUpdate(req.params.id,newEntry);
+  res.status(200).json({message:'skill updated successfully'})
 });
 
 skillRouter.delete("/:id", async (req: Request, res: Response) => {

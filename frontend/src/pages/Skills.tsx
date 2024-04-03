@@ -17,6 +17,12 @@ const Skills = () => {
     const [loading, setLoading] = useState(false);
     const toast = useToast();
     const [id, setId] = useState();
+
+
+    
+
+
+
     const getSkills = async () => {
       setLoading(true);
       const res = await axios.get("/skill");
