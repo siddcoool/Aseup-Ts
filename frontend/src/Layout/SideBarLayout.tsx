@@ -4,9 +4,11 @@ import { BsBriefcaseFill, BsPersonFill } from "react-icons/bs";
 import { PiSignOutBold } from "react-icons/pi";
 import useIsAuthentication from "../hooks/useIsAuthentication";
 import { useNavigate } from "react-router-dom";
-import { Switch } from "@chakra-ui/react";
+import { ReactChildren } from "react";
 
-export default function VerticalLayout({ children }: any) {
+
+
+export default function VerticalLayout({ children }: any ) {
   const { deleteAuthenticated } = useIsAuthentication();
   const navigate = useNavigate();
   return (

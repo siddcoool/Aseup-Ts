@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import { IEmployers } from "./ViewEmployer";
 import Select from "react-select";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 
 export type IJobs = {
   jobTitle: string;
@@ -21,6 +21,7 @@ export type IJobs = {
   noticePeriod: number;
 };
 
+
 const Jobs = () => {
   const [formData, setFormData] = useState<IJobs>({
     jobTitle: "",
@@ -29,7 +30,7 @@ const Jobs = () => {
     budget: "",
     noticePeriod:undefined,
   });
-  const [employerOptions, setEmployerOptions] = useState<any[]>([]);
+  const [employerOptions, setEmployerOptions] = useState([]);
   const toast = useToast();
   const navigate = useNavigate();
 
