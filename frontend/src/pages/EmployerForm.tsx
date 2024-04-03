@@ -314,10 +314,11 @@ const EmployerForm = () => {
               onChange={(e) => handleInputChange("employees", e.target.value)}
             />
           </FormControl>
-          <div className="">
-            <LineItemRepeater>
+          
+            <LineItemRepeater className="w-full">
               {(index) => {
                 return (
+                  <div className="w-full">
                   <FormControl key={index +1}>
                     <FormLabel>Contact Person Name</FormLabel>
                     <Input
@@ -328,6 +329,8 @@ const EmployerForm = () => {
                         handleInputChange("contactName", e.target.value)
                       }
                     />
+                  </FormControl>
+                  <FormControl>
                     <FormLabel>Contact Person Number</FormLabel>
                     <Input
                       type="text"
@@ -338,10 +341,10 @@ const EmployerForm = () => {
                       }
                     />
                   </FormControl>
+                  </div>
                 );
               }}
             </LineItemRepeater>
-          </div>
 
           <>
             <Button colorScheme="teal" onClick={onOpen}>
