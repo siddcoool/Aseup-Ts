@@ -26,7 +26,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use(cors());
 app.use("/token", tokenRouter);
 app.use("/user", userRouter);
-app.use("/skill",Authentication.Admin, skillRouter);
+app.use("/skill", skillRouter);
 app.use("/employee", Authentication.Admin, employeeRouter);
 app.use("/employer", Authentication.Admin, employerRouter);
 app.use('/jobs', jobRouter)

@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 
 const Card = () => {
   const navigate = useNavigate();
-  const handleAddEmployee = (e) => {
+  const handleAddEmployee = () => {
     navigate("/employeeForm");
   };
-  const handleViewEmployee = (e) => {
+  const handleViewEmployee = () => {
     navigate("/ViewEmployee");
   };
   return (

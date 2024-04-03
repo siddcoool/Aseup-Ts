@@ -13,7 +13,7 @@ import CreatableSelect from "react-select/creatable";
 
 import { IEmployers } from "./ViewEmployer";
 import Select from "react-select";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 
 export type IJobs = {
   jobTitle: string;
@@ -24,6 +24,7 @@ export type IJobs = {
   skills?: string[];
 };
 
+
 const Jobs = () => {
   const [formData, setFormData] = useState<IJobs>({
     jobTitle: "",
@@ -33,9 +34,7 @@ const Jobs = () => {
     noticePeriod: undefined || 0,
     skills: []
   });
-  const [employerOptions, setEmployerOptions] = useState<any[]>([]);
-  const [skillsOptions, setSkillsOptions] = useState<any[]>([]);
-
+  const [employerOptions, setEmployerOptions] = useState([]);
   const toast = useToast();
   const navigate = useNavigate();
 

@@ -4,9 +4,11 @@ import { BsBriefcaseFill, BsPersonFill } from "react-icons/bs";
 import { PiSignOutBold } from "react-icons/pi";
 import useIsAuthentication from "../hooks/useIsAuthentication";
 import { useNavigate } from "react-router-dom";
-import { Switch } from "@chakra-ui/react";
+import { ReactChildren } from "react";
 
-export default function VerticalLayout({ children }: any) {
+
+
+export default function VerticalLayout({ children }: any ) {
   const { deleteAuthenticated } = useIsAuthentication();
   const navigate = useNavigate();
   return (
@@ -19,71 +21,32 @@ export default function VerticalLayout({ children }: any) {
         </div>
         {/* Main Content */}
         <div className="text-white py-8 ">
-          
-          <div className="text-xl flex justify-items py-4 gap-3 hover:bg-white hover:text-black hover:cursor-pointer" onClick={()=>navigate('/Dashboard')}>
+          <div className="text-xl flex justify-items py-4 gap-3 hover:bg-white hover:text-black hover:cursor-pointer" onClick={() => navigate('/Dashboard')}>
             <RxDashboard fontSize={28} className="pl-1"/>
             Dashboard
           </div>
-          <div className="text-xl flex justify-items py-4 gap-3 hover:bg-white hover:text-black hover:cursor-pointer" onClick={()=>navigate('/viewEmployee')}>
+          <div className="text-xl flex justify-items py-4 gap-3 hover:bg-white hover:text-black hover:cursor-pointer" onClick={() => navigate('/viewEmployee')}>
             <BsPersonFill fontSize={28} className="pl-1" />
             Employee
           </div>
-          <div className="text-xl flex justify-items py-4 gap-3 hover:bg-white hover:text-black hover:cursor-pointer" onClick={()=>navigate('/employer/view')}>
+          <div className="text-xl flex justify-items py-4 gap-3 hover:bg-white hover:text-black hover:cursor-pointer" onClick={() => navigate('/employer/view')}>
             <BsBriefcaseFill fontSize={28} className="pl-1" /> Employer
           </div>
-          <div className="text-xl flex justify-items py-4 gap-3 hover:bg-white hover:text-black hover:cursor-pointer" onClick={()=>navigate('/jobs')}>
+          <div className="text-xl flex justify-items py-4 gap-3 hover:bg-white hover:text-black hover:cursor-pointer" onClick={() => navigate('/jobs')}>
             <BsBriefcaseFill fontSize={28} className="pl-1" /> Jobs
           </div>
-          <div className="text-xl flex justify-items py-4 gap-3 hover:bg-white hover:text-black hover:cursor-pointer" onClick={()=>navigate('/skills')}>
+          <div className="text-xl flex justify-items py-4 gap-3 hover:bg-white hover:text-black hover:cursor-pointer" onClick={() => navigate('/skills')}>
             <BsBriefcaseFill fontSize={28} className="pl-1"/> Skills
-        <div className="text-white py-8 px-4">
-          <div
-            className="text-xl flex justify-items py-4 gap-3"
-            onClick={() => navigate("/Dashboard")}
-          >
-            <RxDashboard fontSize={28} />
-            Dashboard
-          </div>
-          <div
-            className="text-xl flex justify-items py-4 gap-3"
-            onClick={() => navigate("/viewEmployee")}
-          >
-            <BsPersonFill fontSize={28} />
-            Employee
-          </div>
-          <div
-            className="text-xl flex justify-items py-4 gap-3"
-            onClick={() => navigate("/employer/view")}
-          >
-            <BsBriefcaseFill fontSize={28} /> Employer
-          </div>
-          <div
-            className="text-xl flex justify-items py-4 gap-3"
-            onClick={() => navigate("/jobs")}
-          >
-            <BsBriefcaseFill fontSize={28} /> Jobs
-          </div>
-          <div
-            className="text-xl flex justify-items py-4 gap-3"
-            onClick={() => navigate("/skills")}
-          >
-            <BsBriefcaseFill fontSize={28} /> Skills
-          </div>
-          <div className="text-xl flex justify-items py-4 gap-3">
-            <PiSignOutBold fontSize={28} />
-            <span onClick={deleteAuthenticated} className="text-xl">
-              Sign Out
-            </span>
           </div>
         </div>
         {/* Sign Out */}
+       
         <div className="text-white flex justify-items gap-2 hover:cursor-pointer">
           <PiSignOutBold fontSize={28} className="pl-1" />
-          <span onClick={deleteAuthenticated}
-        className="text-xl">Sign Out</span>
+          <span onClick={deleteAuthenticated} className="text-xl">Sign Out</span>
         </div>
       </div>
-      <div className="w-4/5 overflow-y-scroll"> {children}</div>
+      <div className="w-4/5 overflow-y-scroll">{children}</div>
     </div>
   );
 }

@@ -112,7 +112,7 @@ const ViewEmployeedetails = () => {
         ) : (
           <div className="m-3 border-2 border-gray-300">
             <TableContainer>
-              <Table >
+              <Table variant="striped" colorScheme="teal" >
                 <Thead>
                   <Tr>
                     <Th>Name</Th>
@@ -120,7 +120,6 @@ const ViewEmployeedetails = () => {
                     <Th>Contact NO</Th>
                     <Th>DOB</Th>
                     <Th>Gender</Th>
-                    <Th>Skills</Th>
                     <Th>Action</Th>
                   </Tr>
                 </Thead>
@@ -132,11 +131,6 @@ const ViewEmployeedetails = () => {
                       <Td>{employee.phoneNumber}</Td>
                       <Td>{dayjs(employee.DOB).format("DD-MM-YYYY")}</Td>
                       <Td>{employee.gender}</Td>
-                      <Td>
-                        {employee.skills.map((skill, index) => (
-                          <div key={index}>{skill.name}</div>
-                        ))}
-                      </Td>
                       <Td className="flex gap-x-4">
                         <Button
                           colorScheme="blue"

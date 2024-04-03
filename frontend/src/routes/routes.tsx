@@ -2,7 +2,6 @@ import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
 import { Home } from "../pages/Home";
 import { Dashboard } from "../pages/Dashboard";
-import EmployeeForm1 from "../pages/EmployeeForm1";
 import VerticalLayout from "../Layout/SideBarLayout";
 import BlankLayout from "../Layout/BlankLayout";
 import AuthenticationProvider from "../common/provider/AuthenticationProvider";
@@ -10,7 +9,6 @@ import React from "react";
 import ViewEmployee from "../pages/ViewEmployee";
 import ViewEmployer from "../pages/ViewEmployer";
 import EmployerForm from "../pages/EmployerForm";
-import EmployeeForm from "../pages/EmployeeForm";
 import Page from "../pages/Employee/Page";
 import SearchEmployee from "../pages/SearchEmployee";
 import Thankyou from "../pages/Thankyou";
@@ -102,6 +100,10 @@ const routes: Route[] = [
     layout: VerticalLayout
   },{
     path: "/skill/add",
+    component: SkillForm,
+    layout: VerticalLayout
+  },{
+    path: '/skill/update/:id',
     component: SkillForm,
     layout: VerticalLayout
   }

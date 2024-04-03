@@ -1,21 +1,16 @@
 import {
   TableContainer,
   Table,
-  TableCaption,
   Thead,
   Tr,
   Th,
   Tbody,
   Td,
-  Tfoot,
   Button,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import {
-  PhoneIcon,
-  AddIcon,
-  WarningIcon,
   EditIcon,
   DeleteIcon,
 } from "@chakra-ui/icons";
@@ -37,7 +32,6 @@ const ViewEmployer = () => {
   const [employers, setEmployers] = useState<IEmployers[]>([]);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
-  const [id, setId] = useState();
   const navigate = useNavigate();
   const getEmployer = async () => {
     setLoading(true);
@@ -52,7 +46,7 @@ const ViewEmployer = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`/employer/${id}`);
+      await axios.delete(`/employer/${id}`);
     } catch (error) {
       console.log(error);
     }

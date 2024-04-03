@@ -6,6 +6,7 @@ import {
   Button,
   VStack,
   Select,
+  Progress,
 } from "@chakra-ui/react";
 import { EmployeeDocument } from "../../types/employee";
 import CreatableSelect from "react-select/creatable";
@@ -26,10 +27,13 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     DOB: "",
     gender: "",
     skills: [],
+    currentCTC: undefined,
+    expectedCTC: undefined,
   });
+  const [loading, setLoading] = useState(false);
   const [skillsOptions, setSkillsOptions] = useState<any[]>([]);
   const [message, setMessage] = useState(" ");
-  const [phonemessage, setPhonemessage] = useState(" ");
+  const [phoneMessage, setPhoneMessage] = useState(" ");
   const [ageError, setAgeError] = useState(" ");
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -41,9 +45,9 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
       setMessage("");
     }
     if (name === "phoneNumber" && !isPhoneValid(value)) {
-      setPhonemessage("Phone number not valid");
+      setPhoneMessage("Phone number not valid");
     } else {
-      setPhonemessage(" ");
+      setPhoneMessage(" ");
     }
     if (name === "DOB") {
       const age = calculateage(value);
@@ -102,12 +106,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
   const getSkills = async () => {
     try {
       const { data: skills } = await axios.get("/skill");
-      const options = skills.map((skill: any) => ({
-        value: skill._id,
-        label: skill.name,
-      }));
-
-      setSkillsOptions(options);
+      setSkillsOptions(skills);
       console.log({ skills });
     } catch (error: any) {
       toast.error(error.message);
@@ -120,115 +119,136 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     console.log(`before if ${age}`);
 
     const month = today.getMonth() - birthdate.getMonth();
-    // console.log(`month ${month}`);
     //need to ask to piyush
     if (month < 0 || (month === 0 && today.getDay() < birthdate.getDay())) {
       age--;
     }
-    // console.log(`after if ${age}`);
 
     return age;
   };
-  const setSkills = () => {
-    if (employeeData && employeeData.skills) {
-      const mappedSkills = employeeData.skills.map((skill) => ({
-        value: skill._id,
-        label: skill.name,
-      }));
-      return mappedSkills;
+
+  const EmployeeDataSetting = () => {
+    setLoading(true);
+    if (employeeData) {
+      setFormData({ ...employeeData });
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    if (employeeData) {
-      const skillSetting = setSkills();
-      setFormData({ ...employeeData, skills: skillSetting });
-    }
-    getSkills();
+    EmployeeDataSetting();
   }, [employeeData]);
-  return (
-    <div className="p-8 w-[70%] m-auto">
-      <form onSubmit={handleSubmit}>
-        <VStack spacing={4}>
-          <FormControl isRequired>
-            <FormLabel>Name</FormLabel>
-            <Input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </FormControl>
 
-          <FormControl isRequired>
-            <FormLabel>Email</FormLabel>
-            <Input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            <div className="text-red-500 font-bold">{message}</div>
-          </FormControl>
+  useEffect(() => {
+    getSkills();
+  }, []);
 
-          <FormControl isRequired>
-            <FormLabel>Phone Number</FormLabel>
-            <Input
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-            />
-            <div className="text-red-500 font-bold">{phonemessage}</div>
-          </FormControl>
+  if (loading) return <div className="mt-8 w-1/2 m-auto"><Progress size="xs" isIndeterminate /></div>;
+  else
+    return (
+      <div className="p-8 w-[70%] m-auto">
+        <form onSubmit={handleSubmit}>
+          <VStack spacing={4}>
+            <FormControl isRequired>
+              <FormLabel>Name</FormLabel>
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </FormControl>
 
-          <FormControl isRequired>
-            <FormLabel>Date of Birth</FormLabel>
-            <Input
-              type="date"
-              name="DOB"
-              value={dayjs(formData.DOB).format("YYYY-MM-DD")}
-              onChange={handleChange}
-            />
-            <div className="text-red-500 font-bold">{ageError}</div>
-          </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Email</FormLabel>
+              <Input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+              <div className="text-red-500 font-bold">{message}</div>
+            </FormControl>
 
-          <FormControl isRequired>
-            <FormLabel>Gender</FormLabel>
-            <Select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
+            <FormControl isRequired>
+              <FormLabel>Phone Number</FormLabel>
+              <Input
+                type="tel"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+              />
+              <div className="text-red-500 font-bold">{phoneMessage}</div>
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Date of Birth</FormLabel>
+              <Input
+                type="date"
+                name="DOB"
+                value={dayjs(formData.DOB).format("YYYY-MM-DD")}
+                onChange={handleChange}
+              />
+              <div className="text-red-500 font-bold">{ageError}</div>
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Gender</FormLabel>
+              <Select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+              >
+                <option value="Select"></option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </Select>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Select Skills</FormLabel>
+
+              <CreatableSelect
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option._id}
+                isClearable
+                isMulti
+                options={skillsOptions}
+                value={formData.skills}
+                onChange={handleSkillsChange}
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Current CTC</FormLabel>
+              <Input
+                type="number"
+                name="currentCTC"
+                value={formData.currentCTC}
+                onChange={handleChange}
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Expected CTC</FormLabel>
+              <Input
+                type="number"
+                name="expectedCTC"
+                value={formData.expectedCTC}
+                onChange={handleChange}
+              />
+            </FormControl>
+
+            <Button
+              colorScheme="teal"
+              type="submit"
+              onClick={() => onSubmit(formData)}
             >
-              <option value="Select"></option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <FormLabel>Select Skills</FormLabel>
-
-            <CreatableSelect
-              isClearable
-              isMulti
-              options={skillsOptions}
-              value={formData.skills}
-              onChange={handleSkillsChange}
-            />
-          </FormControl>
-
-          <Button
-            colorScheme="teal"
-            type="submit"
-            onClick={() => onSubmit(formData)}
-          >
-            Next
-          </Button>
-        </VStack>
-      </form>
-    </div>
-  );
+              Next
+            </Button>
+          </VStack>
+        </form>
+      </div>
+    );
 };
 
 export default PersonalDetails;

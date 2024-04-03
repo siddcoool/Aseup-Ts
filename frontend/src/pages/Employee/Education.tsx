@@ -10,7 +10,6 @@ import {
 import { Education, EmployeeDocument } from "../../types/employee";
 import dayjs from "dayjs";
 import { LineItemRepeater } from "../../components/LineItemRepeater";
-import { start } from "repl";
 
 interface IEducationForm {
   onSubmit: (input: Partial<EmployeeDocument>) => void;
