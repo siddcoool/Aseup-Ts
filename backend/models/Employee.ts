@@ -7,7 +7,7 @@ const EducationSchema = new Schema({
   institute: String,
   startYear: { type: Date, default: dayjs().toISOString() }, // Year of starting the course/study.
   endYear: { type: Date, default: dayjs().toISOString() },
-  grade:String,
+  grade: String,
   // grade: { enum: ["A", "B", "C", "D", "E", "F"] },
 });
 
@@ -20,7 +20,8 @@ const ExperienceSchema = new Schema({
   employmentType: { enum: ["Contract", "Full-Time", "Part-Time"] }, // End date of employment or null if current employee
 });
 
-const EmployeeSchema = new Schema({
+const EmployeeSchema = new Schema(
+  {
     name: String,
     email: String,
     phoneNumber: String,
@@ -28,8 +29,12 @@ const EmployeeSchema = new Schema({
     gender: String,
     educations: [EducationSchema],
     experience: [ExperienceSchema],
-    skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'skill' }]
-},{timestamps:true})
+    currentCTC: Number,
+    expectedCTC: Number,
+    skills: [{ type: mongoose.Schema.Types.ObjectId, ref: "skill" }],
+  },
+  { timestamps: true }
+);
 
 const Employee = model("employee", EmployeeSchema);
 export default Employee;

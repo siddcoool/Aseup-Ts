@@ -31,9 +31,9 @@ skillRouter.post("/", async (req: Request, res: Response) => {
 });
 
 skillRouter.put("/:id", async (req: Request, res: Response) => {
-  const { skill } = req.body;
+  const { name } = req.body;
   const newEntry = {
-    skill,
+    name,
   };
   await Skill.findByIdAndUpdate(req.params.id,newEntry);
   res.status(200).json({message:'skill updated successfully'})

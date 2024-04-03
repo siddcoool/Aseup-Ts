@@ -1,3 +1,5 @@
+import { ISkills } from "../pages/Skills";
+
 export interface Education {
     title?: string;
     field?: string;
@@ -28,5 +30,5 @@ export interface EmployeeDocument {
     currentCTC?: string;
     expectedCTC?: string;
     noticePeriod?: string;
-    skills?: string[]; // Assuming skill IDs are stored as strings
+    skills?: ISkills[]; // Assuming skill IDs are stored as strings
 }

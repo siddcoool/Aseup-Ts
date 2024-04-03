@@ -1,15 +1,11 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
-const EmployerSchema = new Schema({
-  companyName: {
-    type: String,
-  },
-});
+
 
 const JobsSchema = new Schema({
   jobTitle: String,
   jobRequirements: String,
-  employer: [EmployerSchema],
+  employer: { type: mongoose.Schema.Types.ObjectId, ref: 'employer' },
   budget: String,
   noticePeriod: Number,
   isDeleted: { type: Boolean, default: false },
