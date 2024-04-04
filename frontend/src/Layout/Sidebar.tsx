@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { ReactNode, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface SidebarLinkGroupProps {
   children: (handleClick: () => void, open: boolean) => ReactNode;
@@ -30,46 +30,44 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const sidebar = useRef<any>(null);
 
   const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(
-    localStorage.getItem('sidebar-expanded') === 'true'
+    localStorage.getItem("sidebar-expanded") === "true"
   );
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
       if (!sidebarOpen || !sidebar.current || !trigger.current) return;
-      if (
-        sidebar.current.contains(target) ||
-        trigger.current.contains(target)
-      )
+      if (sidebar.current.contains(target) || trigger.current.contains(target))
         return;
       setSidebarOpen(false);
     };
-    document.addEventListener('click', clickHandler);
-    return () => document.removeEventListener('click', clickHandler);
+    document.addEventListener("click", clickHandler);
+    return () => document.removeEventListener("click", clickHandler);
   }, [sidebarOpen]);
 
   useEffect(() => {
     const keyHandler = ({ key }: KeyboardEvent) => {
-      if (key !== 'Escape' || !sidebarOpen) return;
+      if (key !== "Escape" || !sidebarOpen) return;
       setSidebarOpen(false);
     };
-    document.addEventListener('keydown', keyHandler);
-    return () => document.removeEventListener('keydown', keyHandler);
+    document.addEventListener("keydown", keyHandler);
+    return () => document.removeEventListener("keydown", keyHandler);
   }, [sidebarOpen]);
 
   useEffect(() => {
-    localStorage.setItem('sidebar-expanded', sidebarExpanded.toString());
+    localStorage.setItem("sidebar-expanded", sidebarExpanded.toString());
     if (sidebarExpanded) {
-      document.querySelector('body')?.classList.add('sidebar-expanded');
+      document.querySelector("body")?.classList.add("sidebar-expanded");
     } else {
-      document.querySelector('body')?.classList.remove('sidebar-expanded');
+      document.querySelector("body")?.classList.remove("sidebar-expanded");
     }
   }, [sidebarExpanded]);
 
   return (
     <aside
       ref={sidebar}
-      className={`absolute left-0 top-0 z-9999 flex h-screen w-[60%] flex-col  overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:w-[18%] lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+      className={`absolute left-0 top-0 z-9999 flex h-screen w-[60%] flex-col  overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:w-[18%] lg:translate-x-0 ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
     >
       <div className="mb-4 mr-9 mt-8 flex items-center justify-center gap-2 text-3xl font-bold text-white ">
         <button
@@ -96,30 +94,35 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         <nav className=" px-4  lg:px-6">
           <div>
             <ul className=" flex flex-col gap-1.5">
-              <SidebarLinkGroup
-                activeCondition={true}
-              >
+              <SidebarLinkGroup activeCondition={true}>
                 {(handleClick, open) => {
                   return (
                     <>
                       <Link
                         to="/dashboard"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${open && 'bg-graydark dark:bg-meta-4'
-                          }`}
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                          open && "bg-graydark dark:bg-meta-4"
+                        }`}
                         onClick={(e) => {
                           e.preventDefault();
-                          sidebarExpanded ? handleClick() : setSidebarExpanded(true);
+                          sidebarExpanded
+                            ? handleClick()
+                            : setSidebarExpanded(true);
                         }}
                       >
                         Dashboard
                       </Link>
 
-                      <div className={`translate transform overflow-hidden ${!open && 'hidden'}`}>
+                      <div
+                        className={`translate transform overflow-hidden ${
+                          !open && "hidden"
+                        }`}
+                      >
                         <ul className="mb-1 mt-1 flex flex-col gap-2.5">
                           <li>
                             <Link
                               to="/employee"
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
                             >
                               Employee
                             </Link>
@@ -127,7 +130,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <Link
                               to="/employer/view"
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110 `}
                             >
                               Employer
                             </Link>
@@ -135,7 +138,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <Link
                               to="/jobs"
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
                             >
                               Jobs
                             </Link>
@@ -143,7 +146,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <Link
                               to="/skills"
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
                             >
                               Skills
                             </Link>
@@ -156,7 +159,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </SidebarLinkGroup>
 
               {/* Other menu items */}
-
             </ul>
           </div>
         </nav>
