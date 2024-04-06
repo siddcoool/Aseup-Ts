@@ -64,7 +64,9 @@ userRouter.post('/register', async (req: Request, res: Response) => {
     }
 });
 
-
+userRouter.get('/me', Authentication.Admin, (req, res) => {
+    return res.json(req.context?.user)
+})
 
 userRouter.get('/:id', async(req : Request, res : Response)=>{
     const id = req.params.id

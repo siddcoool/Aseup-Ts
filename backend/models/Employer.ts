@@ -3,7 +3,8 @@ import mongoose, { Schema, model } from "mongoose";
 
 const ContactSchema = new Schema({
   contactName: String,
-  contactNumber: String
+  contactNumber: String,
+  contactEmail: String
 })
 
 
