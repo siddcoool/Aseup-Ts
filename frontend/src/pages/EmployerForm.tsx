@@ -62,14 +62,24 @@ const EmployerForm = () => {
     setFormData((prev) => ({ ...prev, contact: updatedContactInfo }));
   };
 
-  console.log({ formData });
   const handleSubmit = async () => {
     const emailChecked = formData.contact.every((oneContact) =>
       isEmail(oneContact.contactEmail)
     );
 
+    if (!emailChecked) {
+      toast({
+        title: "Email is not valid",
+        description: "Please check ",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+      return
+    }
+
     try {
-      if (id && emailChecked) {
+      if (id) {
         await axios.put(`/employer/${id}`, formData);
         toast({
           title: "Employer Updated created.",
@@ -78,20 +88,12 @@ const EmployerForm = () => {
           duration: 5000,
           isClosable: true,
         });
-      } else if (emailChecked) {
+      } else {
         await axios.post("/employer", formData);
         toast({
           title: "Employer Account created.",
           description: "We've created your account for you.",
           status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: "Email is not valid",
-          description: "Please check ",
-          status: "warning",
           duration: 5000,
           isClosable: true,
         });
