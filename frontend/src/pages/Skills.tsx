@@ -1,20 +1,15 @@
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
-  Button,
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { IEmployers } from "./ViewEmployer";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../common/component/Loader";
+import DataTable from "../common/component/table/DataTable";
+import DeleteAlert from "../common/component/alerts/deleteAlerts";
+import TableHeader from "../common/component/header/tableHeader";
 
 export type ISkills = {
   name: string;
@@ -27,6 +22,11 @@ const Skills = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const [refetch, setRefetch] = useState(0);
+
+  const [selectedRow, setSelectedRow] = useState<ISkills | null>(null);
+  const [deleteSkillLoading, setDeleteSkillLoading] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef(null);
 
   const refresh = () => setRefetch((v) => v + 1);
 
@@ -41,8 +41,14 @@ const Skills = () => {
     navigate(`/skill/update/${id}`);
   };
 
+  const handleDeleteModalOpen = (row) => {
+    onOpen();
+    setSelectedRow(row);
+  };
+
   const handleDelete = async (id: string) => {
     try {
+      setDeleteSkillLoading(true)
       const { status } = await axios.delete(`/skill/${id}`);
       refresh();
       if (status === 200) {
@@ -61,9 +67,42 @@ const Skills = () => {
         });
       }
     } catch (error) {
-      console.log(error);
+      toast({
+        title: (error as Error).message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    } finally {
+      setDeleteSkillLoading(false)
+      onClose()
     }
   };
+
+  const columns = [
+    {
+      id: 'name',
+      name: 'Name',
+      renderCell: (row) => {
+        return row.name
+      }
+    }, {
+      id: 'action',
+      name: 'Action',
+      renderCell: (skill) => {
+        return <div className="flex gap-x-2">
+          <div onClick={() => handleEdit(skill._id)}>
+            <EditIcon />
+          </div>
+          <div
+            onClick={() => handleDeleteModalOpen(skill)}
+          >
+            <DeleteIcon />
+          </div>
+        </div>
+      }
+    },
+  ]
 
   useEffect(() => {
     getSkills();
@@ -78,48 +117,22 @@ const Skills = () => {
   else
     return (
       <div className="p-8">
-        <div className="font-bold text-3xl text-center mb-4">View Skills</div>
-        <div className="flex justify-end mb-4">
-          <Button onClick={() => navigate("/skill/add")} colorScheme="blue">
-            Add Skills
-          </Button>
+        <TableHeader
+          title='Skills'
+          buttonLabel='Create Skills'
+          onClick={() => navigate("/skill/add")}
+        />
+        <div className="px-12 my-4">
+          <DataTable rows={skills} columns={columns} />
         </div>
-        <TableContainer>
-          <Table variant="striped" colorScheme="teal">
-            <Thead>
-              <Tr>
-                <Th>Name</Th>
-                <Th>Action</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {skills &&
-                skills.map((skill: ISkills, index: number) => {
-                  return (
-                    <Tr key={index}>
-                      <Td>{skill.name}</Td>
-                      <Td>
-                        {
-                          <div className="flex gap-x-2 cursor-pointer">
-                            <div onClick={() => handleEdit(skill._id)}>
-                              <EditIcon />
-                            </div>
-                            <div
-                              onClick={() => {
-                                handleDelete(skill._id);
-                              }}
-                            >
-                              <DeleteIcon />
-                            </div>
-                          </div>
-                        }
-                      </Td>
-                    </Tr>
-                  );
-                })}
-            </Tbody>
-          </Table>
-        </TableContainer>
+        <DeleteAlert
+          loading={deleteSkillLoading}
+          title={selectedRow?.name ?? ""}
+          isOpen={isOpen}
+          onClose={onClose}
+          onClick={() => selectedRow && handleDelete(selectedRow._id)}
+          ref={cancelRef}
+        />
       </div>
     );
 };

@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import DataTable from "../common/component/table/DataTable";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import DeleteAlert from "../common/component/alerts/deleteAlerts";
+import TableHeader from "../common/component/header/tableHeader";
 
 enum Grade {
   A = "A",
@@ -62,15 +63,16 @@ export interface Employee {
 
 const ViewEmployeeDetails = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [selectedRow, setSelectedRow] = useState<Employee | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const [selectedRow, setSelectedRow] = useState<Employee | null>(null);
   const [refetch, setRefetch] = useState(0);
   const [deleteEmployeeLoading, setDeleteEmployeeLoading] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef(null);
 
   const navigate = useNavigate();
   const toast = useToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef(null);
 
   const refresh = () => setRefetch((v) => v + 1);
 
@@ -117,7 +119,6 @@ const ViewEmployeeDetails = () => {
     }
   };
 
-
   const columns = [
     { id: 'name', name: 'Employee Name', renderCell: (row) => row.name },
     { id: 'email', name: 'Email', renderCell: (row) => row.email },
@@ -145,28 +146,13 @@ const ViewEmployeeDetails = () => {
   } else
     return (
       <div className="my-4">
-        <div className="flex justify-between items-center px-12">
-          <h1 className="font-bold text-3xl">
-            Employee Details
-          </h1>
-          <button
-            onClick={() => navigate("/employeeForm")}
-          >
-            <span
-              className="my-3 inline-flex rounded-md border border-primary p-1 py-3 text-center text-paragraph-xsm text-black dark:text-white dark:border-white font-bold bg-white dark:bg-meta-10  hover:bg-opacity-90 lg:px-8 xl:px-10"
-            >
-              Create Employee
-            </span>
-          </button>
+        <TableHeader title='Employee Details'
+          onClick={() => navigate("/employeeForm")}
+          buttonLabel='Create Employee'
+        />
+        <div className="px-12 my-4">
+          <DataTable rows={employees} columns={columns} />
         </div>
-
-        {loading ? (
-          <Loader />
-        ) : (
-          <div className="px-12 my-4 border-gray-300">
-            <DataTable rows={employees} columns={columns} />
-          </div>
-        )}
         <DeleteAlert
           loading={deleteEmployeeLoading}
           title={selectedRow?.name ?? ""}

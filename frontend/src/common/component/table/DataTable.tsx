@@ -1,6 +1,19 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 
-const DataTable = ({ rows, columns }) => {
+type IColumns<T> = {
+  id: string;
+  name: string;
+  renderCell?: (v: T) => ReactNode;
+};
+
+type IDataTable<T> = {
+  rows: T[];
+  columns: IColumns<T>[];
+}
+type Props<T> = IDataTable<T> & {
+  showCheckbox?: boolean;
+};
+const DataTable = <T,>({ rows, columns, showCheckbox }: Props<T>) => {
   const [selectedOption, setSelectedOption] = useState('Last 7 days');
   
   const handleOptionChange = (e) => {
@@ -26,8 +39,7 @@ const DataTable = ({ rows, columns }) => {
               {rows.map((row, index) => (
                 <li key={index}>
                   <div className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <input id={`filter-radio-example-${index}`} type="radio" value={row.label} name="filter-radio" checked={selectedOption === row.label} onChange={handleOptionChange} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                    <label htmlFor={`filter-radio-example-${index}`} className="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">{row.label}</label>
+                    <input id={`filter-radio-example-${index}`} type="radio" name="filter-radio" onChange={handleOptionChange} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                   </div>
                 </li>
               ))}
@@ -45,12 +57,14 @@ const DataTable = ({ rows, columns }) => {
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" className="p-4">
-              <div className="flex items-center">
-                <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
-              </div>
-            </th>
+            {showCheckbox && (
+              <th scope="col" className="p-4">
+                <div className="flex items-center">
+                  <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                  <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
+                </div>
+              </th>
+            )}
             {columns.map(column => (
               <th key={column.id} scope="col" className="px-6 py-3">
                 {column.name}
@@ -61,12 +75,14 @@ const DataTable = ({ rows, columns }) => {
         <tbody>
           {rows.map((row, rowIndex) => (
             <tr key={rowIndex} className={`bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600`}>
-              <td className="w-4 p-4">
-                <div className="flex items-center">
-                  <input id={`checkbox-table-search-${rowIndex}`} type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                  <label htmlFor={`checkbox-table-search-${rowIndex}`} className="sr-only">checkbox</label>
-                </div>
-              </td>
+              {showCheckbox && (
+                <td className="w-4 p-4">
+                  <div className="flex items-center">
+                    <input id={`checkbox-table-search-${rowIndex}`} type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                    <label htmlFor={`checkbox-table-search-${rowIndex}`} className="sr-only">checkbox</label>
+                  </div>
+                </td>
+              )}
               {columns.map(column => (
                 <td key={column.id} className="px-6 py-4">
                   {column.renderCell(row)}
