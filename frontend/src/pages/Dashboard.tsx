@@ -3,9 +3,9 @@ import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { CheckIcon, BellIcon, CalendarIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import DashboardCard from "../common/component/cards/DashboardCard";
-import DashboardLinkCard from "../common/component/cards/DashboardLinkCard";
 import DashboardTile from "../common/component/cards/DashboardTile";
 import { useUser } from "../hooks/useUser";
+import DashboardLinkCard from "../common/component/cards/DashboardLinkCard";
 
 export const Dashboard = () => {
   const [employeesCount, setEmployeesCount] = useState<number>();
@@ -24,6 +24,7 @@ export const Dashboard = () => {
       setEmployeesCount(employeeCount.count)
       setEmployersCount(employerCount.count)
       setJobsCount(jobsCount.count)
+      setTotalAverage('0%')
 
     } catch (error) {
       toast({
@@ -40,6 +41,7 @@ export const Dashboard = () => {
 
 
   return (
+
     <div className="grid-col-2 grid px-16 py-8">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
         <DashboardCard name={user ? user.name.toUpperCase() : ''} />

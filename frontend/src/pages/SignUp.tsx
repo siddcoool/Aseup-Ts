@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ChangeEvent, MouseEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useIsAuthentication from "../hooks/useIsAuthentication";
 import isEmail from "validator/lib/isEmail";
@@ -11,13 +11,11 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const Ctoast = useToast();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const { setAuthenticate } = useIsAuthentication();
 
   const handleEmail = (event: ChangeEvent<HTMLInputElement>) => {
-      setEmail(event.target.value);
-    
+    setEmail(event.target.value);
   };
 
   const handlePassword = (event: ChangeEvent<HTMLInputElement>) => {
@@ -27,19 +25,19 @@ export default function SignUp() {
   const handleFullName = (event: ChangeEvent<HTMLInputElement>) => {
     setFullName(event.target.value);
   };
-console.log({email, password, fullName})
+  console.log({ email, password, fullName });
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       if (email && password && fullName) {
-        if(!isEmail(email)){
-            Ctoast({
-              title: "Invalid Email",
-              status: 'error',
-              duration: 3000
-            })
-            return
-          }
+        if (!isEmail(email)) {
+          Ctoast({
+            title: "Invalid Email",
+            status: "error",
+            duration: 3000,
+          });
+          return;
+        }
         const { data, status } = await axios.post("/user/register", {
           email,
           password,
@@ -47,9 +45,13 @@ console.log({email, password, fullName})
         });
         if (status === 201) {
           toast.success(data.message);
-          navigate('/')
+          navigate("/Dashboard");
         } else {
-          toast.warn(data.message);
+          Ctoast({
+            title: "User already exists",
+            status: "warning",
+            duration: 3000,
+          });
         }
       } else {
         Ctoast({

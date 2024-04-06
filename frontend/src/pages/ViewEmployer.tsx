@@ -52,6 +52,13 @@ const ViewEmployer = () => {
       setDeleteEmployeeLoading(true)
       await axios.delete(`/employer/${id}`);
       refresh()
+      toast({
+        title: "Employer deleted.",
+        description: "We've deleted selected Employer ",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
     } catch (error) {
       toast({
         title: (error as Error).message,
@@ -127,18 +134,13 @@ const ViewEmployer = () => {
   else
     return (
       <div className="p-8">
-         <TableHeader title='Employer Details'
+        <TableHeader title='Employer Details'
           onClick={() => navigate("/employer/add")}
           buttonLabel='Create Employer'
         />
-        
-        {loading ? (
-          <Loader />
-        ) : (
-          <div className="px-12 my-4">
-            <DataTable rows={employers} columns={columns} />
-          </div>
-        )}
+        <div className="px-12 my-4">
+          <DataTable rows={employers} columns={columns} />
+        </div>
         <DeleteAlert
           loading={deleteEmployeeLoading}
           title={selectedRow?.companyName ?? ""}
