@@ -16,29 +16,26 @@ type ISkill = {
 };
 
 const SkillForm = () => {
-  const [skill, setSkill] = useState({
+  const [skillName, setSkillName] = useState({
     name: "",
   });
 
-  const [updatedSkill, setUpdatedSkill] = useState<ISkill>('');
   const { id } = useParams();
   const toast = useToast();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (id) {
-      const newSkill = {
-        name: e.target.value,
-      };
-      setUpdatedSkill();
-    } else {
-      setSkill({ name: e.target.value });
-    }
+    setSkillName((prev) => ({
+      ...prev,
+      name: e.target.value,
+    }));
   };
+
+  console.log({ skillName, id });
 
   const handleSubmit = async () => {
     try {
       if (id) {
-        const { status } = await axios.put(`/skill/${id}`, updatedSkill);
+        const { status } = await axios.put(`/skill/${id}`, skillName);
         if (status === 200) {
           toast({
             title: "Skill updated successfully!",
@@ -53,7 +50,7 @@ const SkillForm = () => {
           });
         }
       } else {
-        const { data, status } = await axios.post("/skill", skill);
+        const { data, status } = await axios.post("/skill", skillName);
         console.log({ data, status });
         if (status === 204) {
           toast({
@@ -69,8 +66,6 @@ const SkillForm = () => {
           });
         }
       }
-
-      console.log();
     } catch (error) {
       console.log(error);
     }
@@ -80,7 +75,7 @@ const SkillForm = () => {
     try {
       const { data } = await axios.get(`/skill/${id}`);
       console.log({ data });
-      setUpdatedSkill(data);
+      setSkillName(data);
     } catch (error) {}
   };
 
@@ -98,7 +93,7 @@ const SkillForm = () => {
           <Input
             type="text"
             name="skillName"
-            value={updatedSkill.name ?? ""}
+            value={skillName.name}
             onChange={handleInputChange}
           />
         </FormControl>

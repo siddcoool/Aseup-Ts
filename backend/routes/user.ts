@@ -4,14 +4,13 @@ import User from '../models/User'
 import TokenManagement from '../lib/Token'
 import { Authentication } from '../middlewares/Authentication'
 
-userRouter.get('/', async (req : Request , res: Response)=> {
+userRouter.get('/',Authentication.Admin, async (req : Request , res: Response)=> {
     const users = await User.find({password:0})
-    res.status(200).json({message:'Login success'})
+    res.status(200).send(users)
 })
 
 userRouter.post('/login', async (req : Request, res : Response)=>{
     const user = await User.findOne({email : req.body.email})
-    // const user = await User.findById(req.params.id)
     try {
         if(!user){
             return res.status(404).json({message: 'user not found '})
