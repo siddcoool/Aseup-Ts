@@ -23,7 +23,7 @@ jobRouter.get("/count", async (req: Request, res: Response) => {
 
 jobRouter.get("/:id", async (req: Request, res: Response) => {
   try {
-    const job = await Jobs.findById(req.params.id);
+    const job = await Jobs.findById(req.params.id).populate(['skills', 'employer  ']);
     if (job) {
       res.send(job);
     } else {
@@ -36,8 +36,13 @@ jobRouter.get("/:id", async (req: Request, res: Response) => {
 
 jobRouter.post("/", async (req: Request, res: Response) => {
   try {
-    await Jobs.create(req.body);
-    res.status(201).json({ message: "new job created" });
+    const {employer,skills} = req.body
+    const employerId = employer.value
+    let newSkills = []
+   newSkills =  skills.map((oneSkill: any)=>oneSkill.value)
+    const newJob = {...req.body, employer: employerId, skills: newSkills}
+   const createdJob =  await Jobs.create(newJob);
+    res.status(201).json({ message: "new job created" ,createdJob});
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
