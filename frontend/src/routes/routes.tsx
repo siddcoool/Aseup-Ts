@@ -1,6 +1,5 @@
 import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
-import { Home } from "../pages/Home";
 import { Dashboard } from "../pages/Dashboard";
 import VerticalLayout from "../Layout/SideBarLayout";
 import BlankLayout from "../Layout/BlankLayout";
@@ -28,11 +27,6 @@ const routes: Route[] = [
     path: '/',
     component: Login,
     layout: BlankLayout,
-  },
-  {
-    path: "/home",
-    component: Home,
-    layout: VerticalLayout,
   },
   {
     path: "/login",
