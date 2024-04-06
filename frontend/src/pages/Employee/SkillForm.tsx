@@ -20,7 +20,7 @@ const SkillForm = () => {
     name: "",
   });
 
-  const [updatedSkill, setUpdatedSkill] = useState<ISkill>({});
+  const [updatedSkill, setUpdatedSkill] = useState<ISkill>('');
   const { id } = useParams();
   const toast = useToast();
 
@@ -29,7 +29,7 @@ const SkillForm = () => {
       const newSkill = {
         name: e.target.value,
       };
-      setUpdatedSkill( { name: e.target.value} );
+      setUpdatedSkill();
     } else {
       setSkill({ name: e.target.value });
     }

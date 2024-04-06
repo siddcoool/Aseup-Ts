@@ -2,10 +2,11 @@ import {Router, Request, Response} from 'express'
 const userRouter = Router()
 import User from '../models/User'
 import TokenManagement from '../lib/Token'
+import { Authentication } from '../middlewares/Authentication'
 
 userRouter.get('/', async (req : Request , res: Response)=> {
-    const users = await User.find()
-    res.send(users)
+    const users = await User.find({password:0})
+    res.status(200).json({message:'Login success'})
 })
 
 userRouter.post('/login', async (req : Request, res : Response)=>{
