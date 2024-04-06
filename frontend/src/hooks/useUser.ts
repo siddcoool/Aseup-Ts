@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 type IUser = {
     name: string
     _id: string
+    picture: string
+    isAdmin: string
 }
 
 export const useUser = (): IUser => {

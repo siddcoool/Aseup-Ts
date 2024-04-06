@@ -30,7 +30,7 @@ const useIsAuthentication = () => {
     localStorage.setItem("Token", token);
 
     axios.defaults.headers.common.access_token = token;
-    navigate("/Dashboard");
+    navigate("/dashboard");
   };
 
   const check = () => {
