@@ -1,5 +1,3 @@
-
-
 import { useState, useRef, useEffect } from "react";
 import {
   FormControl,
@@ -19,19 +17,20 @@ import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { LineItemRepeater } from "../components/LineItemRepeater";
+import isEmail from "validator/lib/isEmail";
 
 type IContact = {
-  contactName: string;
-  contactNumber: string;
-}
+  contactName?: string;
+  contactNumber?: string;
+  contactEmail?: string;
+};
 
 interface FormData {
   companyName: string;
   industry: string;
   location: string;
   employees: string;
-  contact : IContact[]
-  
+  contact: IContact[];
 }
 
 const EmployerForm = () => {
@@ -40,35 +39,62 @@ const EmployerForm = () => {
     industry: "",
     location: "",
     employees: "",
-    contact : []
+    contact: [],
   });
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast(); // Move useToast here
-
-  const cancelRef = useRef(null);
   const { id } = useParams();
 
-  const handleInputChange = (fieldName: string, value: string,index?: number) => {
-    // if(fieldName === 'contact' && index){
-    //   setFormData({...formData, contact[index].contactName: value)
-    // }
+  const handleInputChange = (fieldName: string, value: string) => {
     setFormData({ ...formData, [fieldName]: value });
   };
 
+  const handleContactChange = (
+    fieldName: string,
+    value: string,
+    index?: number
+  ) => {
+    const updatedContactInfo = [...formData.contact];
+
+    updatedContactInfo[index] = {
+      ...(updatedContactInfo[index] ?? {}),
+      [fieldName]: value,
+    };
+    setFormData((prev) => ({ ...prev, contact: updatedContactInfo }));
+  };
+
+  console.log({ formData });
   const handleSubmit = async () => {
+    const emailChecked = formData.contact.every((oneContact) =>
+      isEmail(oneContact.contactEmail)
+    );
+
     try {
-      if (id) {
+      if (id && emailChecked) {
         await axios.put(`/employer/${id}`, formData);
-      } else {
-         await axios.post("/employer", formData);
+        toast({
+          title: "Employer Updated created.",
+          description: "We've updated your account for you.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      } else if (emailChecked) {
+        await axios.post("/employer", formData);
         toast({
           title: "Employer Account created.",
           description: "We've created your account for you.",
           status: "success",
-          duration: 9000,
+          duration: 5000,
           isClosable: true,
         });
-        onClose();
+      } else {
+        toast({
+          title: "Email is not valid",
+          description: "Please check ",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
       }
     } catch (error) {
       console.error("Error:", error);
@@ -146,7 +172,11 @@ const EmployerForm = () => {
                       name="contactName"
                       value={formData && formData?.contact[index]?.contactName}
                       onChange={(e) =>
-                        handleInputChange("contact", e.target.value)
+                        handleContactChange(
+                          "contactName",
+                          e.target.value,
+                          index
+                        )
                       }
                     />
                   </FormControl>
@@ -157,7 +187,26 @@ const EmployerForm = () => {
                       name="contactNumber"
                       value={formData && formData.contact[index]?.contactNumber}
                       onChange={(e) =>
-                        handleInputChange("contactNumber", e.target.value)
+                        handleContactChange(
+                          "contactNumber",
+                          e.target.value,
+                          index
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Contact Person Email</FormLabel>
+                    <Input
+                      type="text"
+                      name="contactEmail"
+                      value={formData && formData.contact[index]?.contactEmail}
+                      onChange={(e) =>
+                        handleContactChange(
+                          "contactEmail",
+                          e.target.value,
+                          index
+                        )
                       }
                     />
                   </FormControl>
@@ -167,38 +216,9 @@ const EmployerForm = () => {
           </LineItemRepeater>
 
           <>
-            <Button colorScheme="teal" onClick={onOpen}>
+            <Button colorScheme="teal" onClick={handleSubmit}>
               {id ? "Update" : "Add"} employer
             </Button>
-
-            <AlertDialog
-              isOpen={isOpen}
-              leastDestructiveRef={cancelRef}
-              onClose={onClose}
-            >
-              <AlertDialogOverlay>
-                <AlertDialogContent>
-                  <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                    {id ? "Update" : "Add"} Employer
-                  </AlertDialogHeader>
-
-                  <AlertDialogBody>Are you sure?</AlertDialogBody>
-
-                  <AlertDialogFooter>
-                    <Button onClick={onClose}>Cancel</Button>
-                    <Button
-                      colorScheme="blue"
-                      onClick={() => {
-                        handleSubmit();
-                      }}
-                      ml={3}
-                    >
-                      Submit
-                    </Button>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialogOverlay>
-            </AlertDialog>
           </>
         </VStack>
       </form>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ChangeEvent, MouseEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useIsAuthentication from "../hooks/useIsAuthentication";
 import isEmail from "validator/lib/isEmail";
@@ -11,6 +11,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const Ctoast = useToast();
+  const navigate = useNavigate()
 
   const { setAuthenticate } = useIsAuthentication();
 
@@ -46,7 +47,7 @@ console.log({email, password, fullName})
         });
         if (status === 201) {
           toast.success(data.message);
-          setAuthenticate(data.user, data.token);
+          navigate('/')
         } else {
           toast.warn(data.message);
         }
