@@ -31,6 +31,7 @@ export interface IEmployers {
 const ViewEmployer = () => {
   const [employers, setEmployers] = useState<IEmployers[]>([]);
   const [loading, setLoading] = useState(false);
+  const [refetch, setRefetch] = useState(0)
   const toast = useToast();
   const navigate = useNavigate();
   const getEmployer = async () => {
@@ -44,9 +45,21 @@ const ViewEmployer = () => {
     navigate(`/employer/edit/${id}`);
   };
 
+const refresh = () => setRefetch(prev => prev + 1)
+
   const handleDelete = async (id: string) => {
     try {
       await axios.delete(`/employer/${id}`);
+      // const oldEmployers = [...employers.filter(e => e._id !== id)]
+      // setEmployers(oldEmployers)
+      refresh()
+      toast({
+        title: "Employer deleted.",
+        description: "We've deleted selected Employer ",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -54,7 +67,7 @@ const ViewEmployer = () => {
 
   useEffect(() => {
     getEmployer();
-  }, []);
+  }, [refetch]);
 
   if (loading)
     return (
@@ -100,13 +113,7 @@ const ViewEmployer = () => {
                             <div
                               onClick={() => {
                                 handleDelete(employer._id);
-                                toast({
-                                  title: "Employer deleted.",
-                                  description: "We've deleted your account ",
-                                  status: "error",
-                                  duration: 9000,
-                                  isClosable: true,
-                                });
+                                
                               }}
                             >
                               <DeleteIcon />
