@@ -24,7 +24,7 @@ export const Dashboard = () => {
       setEmployeesCount(employeeCount.count)
       setEmployersCount(employerCount.count)
       setJobsCount(jobsCount.count)
-      setTotalAverage('0')
+      setTotalAverage('0');
 
     } catch (error) {
       toast({
