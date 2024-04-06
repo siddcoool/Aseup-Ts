@@ -14,6 +14,7 @@ import CreatableSelect from "react-select/creatable";
 import { IEmployers } from "./ViewEmployer";
 import Select from "react-select";
 import { useNavigate, useParams } from "react-router-dom";
+import { ISkills } from "./Skills";
 
 export type IJobs = {
   jobTitle: string;
@@ -21,7 +22,7 @@ export type IJobs = {
   employer: IEmployers[];
   budget: string;
   noticePeriod: number;
-  skills?: string[];
+  skills?: ISkills[];
   _id: string;
 };
 
@@ -34,6 +35,7 @@ const Jobs = () => {
     budget: "",
     noticePeriod: undefined || 0,
     skills: [],
+    _id: ''
   });
   const [employerOptions, setEmployerOptions] = useState([]);
   const toast = useToast();
@@ -55,12 +57,9 @@ const Jobs = () => {
 
   const fetchEmployers = async () => {
     try {
-      const response = await axios.get("/employer");
-      const options = response.data.map((employerName: IEmployers) => ({
-        value: employerName._id,
-        label: employerName.companyName,
-      }));
-      setEmployerOptions(options);
+      const {data} = await axios.get("/employer");
+      
+      setEmployerOptions(data);
     } catch (error) {
       console.log(error);
     }
@@ -77,16 +76,13 @@ const Jobs = () => {
 
   const getSkills = async () => {
     try {
-      const { data: skills } = await axios.get("/skill");
-      const options = skills.map((skill: any) => ({
-        value: skill._id,
-        label: skill.name,
-      }));
-
-      setSkillsOptions(options);
-      console.log({ skills });
+      const { data } = await axios.get("/skill");
+      setSkillsOptions(data);
     } catch (error: any) {
-      toast.error(error.message);
+      toast({
+        title: error.message,
+        status: 'error'
+      });
     }
   };
   console.log({ formData, employerOptions });
@@ -170,15 +166,25 @@ const Jobs = () => {
           </FormControl>
           <FormControl id="employer" isRequired>
             <FormLabel>Employer</FormLabel>
-            <Select
+            {/* <Select
               name="employer"
-              value={employerOptions.find(
-                (option) => option.value === formData.employer?.value
-              )}
+              // value={employerOptions.find(
+              //   (option) => option.value === formData.employer?.value
+              // )}
+              value={formData.employer}
               onChange={(option) =>
                 setFormData((prevData) => ({ ...prevData, employer: option }))
               }
               options={employerOptions}
+            /> */}
+            <CreatableSelect
+            getOptionLabel={(option) => option.companyName}
+            getOptionValue={(option) => option._id}
+            isClearable
+            isMulti
+            options={employerOptions}
+            value={formData.employer}
+            onChange={handleSkillsChange}
             />
           </FormControl>
 
@@ -187,6 +193,8 @@ const Jobs = () => {
 
             <CreatableSelect
               isClearable
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option._id}
               isMulti
               options={skillsOptions}
               value={formData.skills}

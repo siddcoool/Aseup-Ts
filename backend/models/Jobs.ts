@@ -13,3 +13,4 @@ const JobsSchema = new Schema({
 const Jobs = model("jobs", JobsSchema);
 
 export default Jobs;
+  

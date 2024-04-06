@@ -56,10 +56,10 @@ const EmployerForm = () => {
   };
 
   const handleSubmit = async () => {
-    const emailChecked = formData.contact.every((oneContact) =>
-      isEmail(oneContact.contactEmail)
+    const emailChecked = formData.contact.length && formData.contact.every((oneContact) =>
+     oneContact.contactEmail && isEmail(oneContact.contactEmail)
     );
-
+    
     if (!emailChecked) {
       toast({
         title: "Email is not valid",
@@ -68,7 +68,7 @@ const EmployerForm = () => {
         duration: 5000,
         isClosable: true,
       });
-      return
+      return;
     }
 
     try {
