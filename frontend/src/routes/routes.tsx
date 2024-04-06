@@ -39,7 +39,7 @@ const routes: Route[] = [
     layout: BlankLayout,
   },
   {
-    path: "/Dashboard",
+    path: "/dashboard",
     component: Dashboard,
     layout: VerticalLayout,
   },
@@ -53,7 +53,7 @@ const routes: Route[] = [
     component: Page,
     layout: VerticalLayout,
   },{
-    path: "/viewEmployee",
+    path: "/employee",
     component: ViewEmployee,
     layout:VerticalLayout ,
   },{

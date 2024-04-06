@@ -2,7 +2,6 @@ import axios from "axios";
 import { ChangeEvent, MouseEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import useIsAuthentication from "../hooks/useIsAuthentication";
 import isEmail from "validator/lib/isEmail";
 import { useToast } from "@chakra-ui/react";
 
@@ -45,7 +44,7 @@ export default function SignUp() {
         });
         if (status === 201) {
           toast.success(data.message);
-          navigate("/Dashboard");
+          navigate("/dashboard");
         } else {
           Ctoast({
             title: "User already exists",
