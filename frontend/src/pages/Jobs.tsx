@@ -13,7 +13,7 @@ import CreatableSelect from "react-select/creatable";
 
 import { IEmployers } from "./ViewEmployer";
 import Select from "react-select";
-import {useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export type IJobs = {
   jobTitle: string;
@@ -32,7 +32,7 @@ const Jobs = () => {
     employer: [],
     budget: "",
     noticePeriod: undefined || 0,
-    skills: []
+    skills: [],
   });
   const [employerOptions, setEmployerOptions] = useState([]);
   const toast = useToast();
@@ -69,7 +69,6 @@ const Jobs = () => {
     try {
       const response = await axios.get(`/jobs/${id}`);
       setFormData(response.data);
-      
     } catch (error) {
       console.log((error as Error).message);
     }
@@ -89,7 +88,7 @@ const Jobs = () => {
       toast.error(error.message);
     }
   };
-console.log({formData, employerOptions})
+  console.log({ formData, employerOptions });
   const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -99,7 +98,7 @@ console.log({formData, employerOptions})
 
   useEffect(() => {
     fetchEmployers();
-    getSkills()
+    getSkills();
   }, []);
 
   useEffect(() => {

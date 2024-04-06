@@ -3,9 +3,10 @@ import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { CheckIcon, BellIcon, CalendarIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import DashboardCard from "../common/component/cards/DashboardCard";
-import DashboardLinkCard from "../common/component/cards/DashboardLinkCard";
 import DashboardTile from "../common/component/cards/DashboardTile";
 import { useUser } from "../hooks/useUser";
+import DashboardLinkCard from "../common/component/cards/DashboardLinkCard";
+import DashboardLinkCard2 from "../common/component/cards/DashboardLinkCard2";
 
 export const Dashboard = () => {
   const [employeesCount, setEmployeesCount] = useState<number>();
@@ -41,9 +42,10 @@ export const Dashboard = () => {
 
   return (
     <div className="grid-col-2 grid px-16 py-8">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
         <DashboardCard name={user ? user.name.toUpperCase() : ''} />
-        <DashboardLinkCard />
+        <DashboardLinkCard/>
+        <DashboardLinkCard2/>
       </div>
       <div className="my-4 grid grid-cols-2 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         <DashboardTile icon={<BellIcon width={6} height={6} />} count={String(jobsCount ?? 0).padStart(2, '0')} title={" Jobs"} />

@@ -36,7 +36,6 @@ import { IJobs } from "./Jobs";
     const [jobs, setJobs] = useState<IJobs[]>([]);
     const [loading, setLoading] = useState(false);
     const toast = useToast();
-    const [id, setId] = useState();
     const navigate = useNavigate();
     const getJobs = async () => {
       setLoading(true);
