@@ -4,7 +4,7 @@ import { Dashboard } from "../pages/Dashboard";
 import VerticalLayout from "../Layout/SideBarLayout";
 import BlankLayout from "../Layout/BlankLayout";
 import AuthenticationProvider from "../common/provider/AuthenticationProvider";
-import React from "react";
+import React, { ReactNode } from "react";
 import ViewEmployee from "../pages/ViewEmployee";
 import ViewEmployer from "../pages/ViewEmployer";
 import EmployerForm from "../pages/EmployerForm";
@@ -18,8 +18,8 @@ import SkillForm from "../pages/Employee/SkillForm";
 
 interface Route {
   path: string;
-  component: any; // Use ComponentType with any as a workaround for generic components
-  layout: any; // Use ComponentType with any as a workaround for generic components
+  component: React.FC; // Use ComponentType with any as a workaround for generic components
+  layout: ({ children }) => ReactNode; // Use ComponentType with any as a workaround for generic components
 }
 
 const routes: Route[] = [
