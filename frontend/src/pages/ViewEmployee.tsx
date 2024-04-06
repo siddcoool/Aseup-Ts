@@ -1,18 +1,15 @@
 import axios from "axios";
-import  { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Button,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
+import DataTable from "../common/component/table/DataTable";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import DeleteAlert from "../common/component/alerts/deleteAlerts";
 
 enum Grade {
   A = "A",
@@ -62,100 +59,124 @@ export interface Employee {
   skills: string[]; // Assuming skill IDs are strings
 }
 
-const ViewEmployeedetails = () => {
+
+const ViewEmployeeDetails = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [selectedRow, setSelectedRow] = useState<Employee | null>(null);
   const [loading, setLoading] = useState(false);
+  const [refetch, setRefetch] = useState(0);
+  const [deleteEmployeeLoading, setDeleteEmployeeLoading] = useState(false);
+
   const navigate = useNavigate();
-  const fetchData = async () => {
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef(null);
+
+  const refresh = () => setRefetch((v) => v + 1);
+
+  const fetchEmployees = async () => {
     try {
       setLoading(true);
       const response = await axios.get("/employee/");
       setEmployees(response.data.data);
       setLoading(false);
-
-      console.log({ response });
     } catch (error) {
       console.error("Error fetching employee data:", error);
+      toast({
+        title: (error as Error).message,
+        status: "error",
+        duration: 5000,
+      });
     }
   };
 
-  console.log({ employees });
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchEmployees();
+  }, [refetch]);
+
+  const handleDeleteModalOpen = (row) => {
+    onOpen();
+    setSelectedRow(row);
+  };
+
   const deleteEmployee = async (id: string) => {
     try {
+      setDeleteEmployeeLoading(true)
       await axios.delete(`/employee/${id}`);
-      setEmployees(employees.filter((employee) => employee._id !== id)); // Assuming each employee object has an "id" field
+      refresh();
     } catch (error) {
-      console.error("Error deleting employee:", error);
+      toast({
+        title: (error as Error).message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      onClose();
+      setDeleteEmployeeLoading(false)
     }
   };
+
+
+  const columns = [
+    { id: 'name', name: 'Employee Name', renderCell: (row) => row.name },
+    { id: 'email', name: 'Email', renderCell: (row) => row.email },
+    { id: 'contact', name: 'Contact', renderCell: (row) => row.phoneNumber },
+    { id: 'dob', name: 'DOB', renderCell: (row) => dayjs(row.DOB).format("DD-MM-YYYY") },
+    { id: 'gender', name: 'Gender', renderCell: (row) => row.gender },
+    {
+      id: 'action', name: 'Action', renderCell: (row) => <div className="flex gap-x-2">
+        <div
+          onClick={() =>
+            navigate(`/employeeForm/${row._id}`)
+          }
+        >
+          <EditIcon />
+        </div>
+        <div>
+          <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
+        </div>
+      </div>
+    },
+  ]
+
   if (loading) {
     return <div className="flex  justify-center mt-36 "><Loader /></div>;
   } else
     return (
-      <div className="">
-        <h1 className="font-bold text-3xl text-center m-4">
-          Employee Details
-        </h1>
-        <div className="flex justify-end mr-4">
+      <div className="my-4">
+        <div className="flex justify-between items-center px-12">
+          <h1 className="font-bold text-3xl">
+            Employee Details
+          </h1>
           <button
             onClick={() => navigate("/employeeForm")}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Add Employee
+            <span
+              className="my-3 inline-flex rounded-md border border-primary p-1 py-3 text-center text-paragraph-xsm text-black dark:text-white dark:border-white font-bold bg-white dark:bg-meta-10  hover:bg-opacity-90 lg:px-8 xl:px-10"
+            >
+              Create Employee
+            </span>
           </button>
         </div>
+
         {loading ? (
           <Loader />
         ) : (
-          <div className="m-3 border-2 border-gray-300">
-            <TableContainer>
-              <Table variant="striped" colorScheme="teal" >
-                <Thead>
-                  <Tr>
-                    <Th>Name</Th>
-                    <Th>Email</Th>
-                    <Th>Contact NO</Th>
-                    <Th>DOB</Th>
-                    <Th>Gender</Th>
-                    <Th>Action</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {employees.map((employee, index) => (
-                    <Tr key={index}>
-                      <Td>{employee.name}</Td>
-                      <Td>{employee.email}</Td>
-                      <Td>{employee.phoneNumber}</Td>
-                      <Td>{dayjs(employee.DOB).format("DD-MM-YYYY")}</Td>
-                      <Td>{employee.gender}</Td>
-                      <Td className="flex gap-x-4">
-                        <Button
-                          colorScheme="blue"
-                          onClick={() =>
-                            navigate(`/employeeForm/${employee._id}`)
-                          }
-                        >
-                          Update
-                        </Button>
-                        <Button
-                          colorScheme="red"
-                          onClick={() => deleteEmployee(employee._id)}
-                        >
-                          Delete
-                        </Button>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
+          <div className="px-12 my-4 border-gray-300">
+            <DataTable rows={employees} columns={columns} />
           </div>
         )}
+        <DeleteAlert
+          loading={deleteEmployeeLoading}
+          title={selectedRow?.name ?? ""}
+          isOpen={isOpen}
+          onClose={onClose}
+          onClick={() => selectedRow && deleteEmployee(selectedRow._id)}
+          ref={cancelRef}
+        />
       </div>
     );
 };
 
-export default ViewEmployeedetails;
+export default ViewEmployeeDetails;
