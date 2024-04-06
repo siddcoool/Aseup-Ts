@@ -24,8 +24,8 @@ export type IJobs = {
   skills?: string[];
 };
 
-
 const Jobs = () => {
+  const [skillsOptions, setSkillsOptions] = useState([]);
   const [formData, setFormData] = useState<IJobs>({
     jobTitle: "",
     jobRequirements: "",
