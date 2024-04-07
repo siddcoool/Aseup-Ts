@@ -1,22 +1,21 @@
-import './App.css'
- import { BrowserRouter as Router, Route, Routes, } from 'react-router-dom';
-import Login from './Login';
-import SignUp from './SignUp';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { createRoutes } from "./routes/routes";
 
-const App: React.FC = () =>  {
+axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_URL;
+axios.defaults.headers.common.access_token = localStorage.getItem("Token");
+
+const router = createBrowserRouter(createRoutes());
+
+const App = () => {
   return (
-    <Router> 
-      <Routes>
-       <Route path='/' element={<Login/>}></Route>
-       <Route path='/SignUp' element={<SignUp/>}></Route>
-       </Routes>
-        {/* <Link to="/Login">Login</Link>
-        <Link to="/SignUp">SignUp</Link> */}
-      
-     
-    </Router>
+    <>
+      <RouterProvider router={router}></RouterProvider>
+      <ToastContainer />
+    </>
+  );
+};
 
-  )
-}
-
-export default App
+export default App;
