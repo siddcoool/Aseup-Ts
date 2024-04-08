@@ -21,7 +21,18 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - name: install
+          
+      - name: Install dependencies
         run: npm install
-      - name: ESLint
-        run: npm run lint
+        working-directory: frontend
+
+      - name: Fix ESLint issues
+        run: npm run lint:fix
+        working-directory: frontend
+
+      - name: Commit Changes
+        run: |
+              git config user.name "GitHub Actions"
+              git config user.email "actions@github.com"
+              git add.
+              git commit -m "Fix linting issues"

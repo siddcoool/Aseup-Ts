@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "frontend:lint": "cd frontend && npm i && npm run lint",
+    "frontend:lint": "cd frontend && npm i && npm run lint --fix",
     "lint": "npm run frontend:lint"
   },
   "keywords": [],
