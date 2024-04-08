@@ -1,14 +1,15 @@
-import React, { JSXElementConstructor, ReactElement, useState } from "react";
+import React, { ReactElement, JSXElementConstructor, useState } from "react";
 
 import HoverButton from "./IconDelete.svg";
 import NextImage from "./add-button.png";
 
 type ILineFormRepeater = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: ReactElement<any, string | JSXElementConstructor<any>>;
   responsive?: boolean;
 };
 
-const LineFormRepeater = ({ children, responsive }: ILineFormRepeater) => {
+const LineFormRepeater = ({ children }: ILineFormRepeater) => {
   const [fields, setFields] = useState([0]); // Initial field
 
   const addField = () => {
@@ -24,23 +25,23 @@ const LineFormRepeater = ({ children, responsive }: ILineFormRepeater) => {
     <div>
       {fields.map((fieldIndex, idx) => (
         <div
-        className="mb-4 flex items-center"
+          className="mb-4 flex items-center"
           key={fieldIndex}
         >
-            <>
-              <div style={{ marginRight: "10px" }}>
-                {HoverButton}
-                <div
-                  className="focus:shadow-outline-blue rounded-full bg-gray-400 px-4 py-2 text-white focus:outline-none mb-20 "
-                  onClick={() => removeField(fieldIndex)}
-                >
-                  {idx + 1}
-                </div>
+          <>
+            <div style={{ marginRight: "10px" }}>
+              {HoverButton}
+              <div
+                className="focus:shadow-outline-blue rounded-full bg-gray-400 px-4 py-2 text-white focus:outline-none mb-20 "
+                onClick={() => removeField(fieldIndex)}
+              >
+                {idx + 1}
               </div>
-              <div style={{ flex: 1 }}>
-                {React.cloneElement(children, { index: fieldIndex })}
-              </div>{" "}
-            </>
+            </div>
+            <div style={{ flex: 1 }}>
+              {React.cloneElement(children, { index: fieldIndex })}
+            </div>{" "}
+          </>
         </div>
       ))}
       <button

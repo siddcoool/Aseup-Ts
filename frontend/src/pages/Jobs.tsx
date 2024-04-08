@@ -12,7 +12,6 @@ import axios from "axios";
 import CreatableSelect from "react-select/creatable";
 
 import { IEmployers } from "./ViewEmployer";
-import Select from "react-select";
 import { useNavigate, useParams } from "react-router-dom";
 import { ISkills } from "./Skills";
 
@@ -78,15 +77,15 @@ const Jobs = () => {
     try {
       const { data } = await axios.get("/skill");
       setSkillsOptions(data);
-    } catch (error: any) {
+    } catch (error) {
       toast({
-        title: error.message,
+        title: (error as Error).message,
         status: 'error'
       });
     }
   };
   console.log({ formData, employerOptions });
-  const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
+  const handleSkillsChange = (selectedValues: ISkills[]) => {
     setFormData((prevData) => ({
       ...prevData,
       skills: selectedValues,
@@ -166,19 +165,8 @@ const Jobs = () => {
           </FormControl>
           <FormControl id="employer" isRequired>
             <FormLabel>Employer</FormLabel>
-            {/* <Select
-              name="employer"
-              // value={employerOptions.find(
-              //   (option) => option.value === formData.employer?.value
-              // )}
-              value={formData.employer}
-              onChange={(option) =>
-                setFormData((prevData) => ({ ...prevData, employer: option }))
-              }
-              options={employerOptions}
-            /> */}
             <CreatableSelect
-            getOptionLabel={(option) => option.companyName}
+            getOptionLabel={(option) => option.name}
             getOptionValue={(option) => option._id}
             isClearable
             isMulti
