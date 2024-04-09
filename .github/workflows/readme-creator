@@ -1,0 +1,30 @@
+name: Update README
+
+on:
+  push:
+    branches:
+      - main  # You can change this to your default branch name
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Update README
+      run: |
+        # Extract the commit message
+        commit_message=$(git log -1 --pretty=%B)
+        
+        # Update the README file with the commit message
+        echo "$commit_message" > README.md
+        
+        # Commit and push changes
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.md
+        git commit -m "Update README with latest commit message" || exit 0
+        git push
+        
