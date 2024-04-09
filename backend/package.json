@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "nodemon index.ts",
+    "build": "node api.js && npx tsc",
+    "start": "node api.js && node dist/index.js",
+    "dev": "node api.js && nodemon index.ts",
     "setup": "npm install && npm run build"
   },
   "dependencies": {
