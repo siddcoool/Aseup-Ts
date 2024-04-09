@@ -1,4 +1,7 @@
 import defaultTheme from "tailwindcss/defaultTheme";
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 const config = {
   content: [
