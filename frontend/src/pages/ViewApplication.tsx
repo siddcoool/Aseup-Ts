@@ -83,7 +83,7 @@ const ViewApplication = () => {
     {
       id: "employee",
       name: "Employee",
-      renderCell: (row) => row.employee.name,
+      renderCell: (row) => { return row.employee.name},
     },
     {
       id: "action",
