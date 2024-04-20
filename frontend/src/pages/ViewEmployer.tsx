@@ -7,7 +7,7 @@ import {
   EditIcon,
   DeleteIcon,
 } from "@chakra-ui/icons";
-import React, { useEffect, useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
 import DeleteAlert from "../common/component/alerts/deleteAlerts";

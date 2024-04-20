@@ -119,6 +119,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         }`}
                       >
                         <ul className="mb-1 mt-1 flex flex-col gap-2.5">
+                        <li>
+                            <Link
+                              to="/home"
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
+                            >
+                              Home
+                            </Link>
+                          </li>
                           <li>
                             <Link
                               to="/employee"

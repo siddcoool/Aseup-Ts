@@ -42,6 +42,10 @@ const routes: Route[] = [
     path: "/dashboard",
     component: Dashboard,
     layout: VerticalLayout,
+  },{
+    path: "/home",
+    component: Dashboard,
+    layout: VerticalLayout,
   },
   {
     path: "/employeeForm/",
