@@ -5,7 +5,7 @@ const applicationRouter = Router();
 
 applicationRouter.get("/", async (req, res) => {
   try {
-    const applications = await Application.find().populate("job");
+    const applications = await Application.find().populate(['job','employee']);
 
     res.status(200).send(applications);
   } catch (error) {
