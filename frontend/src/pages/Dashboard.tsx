@@ -44,7 +44,7 @@ export const Dashboard = () => {
 
     <div className="grid-col-2 grid px-16 py-8">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
-        <DashboardCard name={user ? user.name.toUpperCase() : ''} />
+        <DashboardCard name={user && user.name ? user.name.toUpperCase() : 'User'} />
         <DashboardLinkCard />
       </div>
       <div className="my-4 grid grid-cols-2 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">

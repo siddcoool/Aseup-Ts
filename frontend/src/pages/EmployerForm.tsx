@@ -156,7 +156,7 @@ const EmployerForm = () => {
             />
           </FormControl>
 
-          <LineItemRepeater className="w-full">
+          <LineItemRepeater className="w-full" size={formData.contact.length}>
             {(index) => {
               return (
                 <div className="w-full">
