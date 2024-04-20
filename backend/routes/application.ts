@@ -1,11 +1,11 @@
-import { Router } from "express";
+import { Router, application } from "express";
 import Application from "../models/Application";
 
 const applicationRouter = Router();
 
 applicationRouter.get("/", async (req, res) => {
   try {
-    const applications = await Application.find();
+    const applications = await Application.find().populate("job");
 
     res.status(200).send(applications);
   } catch (error) {
@@ -29,3 +29,5 @@ applicationRouter.post("/", async (req, res) => {
     res.status(500).send((error as Error).message);
   }
 });
+
+export default applicationRouter;

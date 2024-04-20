@@ -98,7 +98,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 {(handleClick, open) => {
                   return (
                     <>
-                      <Link
+                      {/* <Link
                         to="/dashboard"
                         className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                           open && "bg-graydark dark:bg-meta-4"
@@ -111,14 +111,23 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         }}
                       >
                         Dashboard
-                      </Link>
+                      </Link> */}
 
                       <div
-                        className={`translate transform overflow-hidden ${
-                          !open && "hidden"
-                        }`}
+                        // className={`translate transform overflow-hidden ${
+                        //   !open && "hidden"
+                        // }`}
+                        
                       >
                         <ul className="mb-1 mt-1 flex flex-col gap-2.5">
+                          <li>
+                          <Link
+                              to="/dashboard"
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
+                            >
+                              Dashboard
+                            </Link>
+                          </li>
                           <li>
                             <Link
                               to="/employee"
@@ -150,6 +159,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             >
                               Skills
                             </Link>
+                          </li>
+                          <li>
+                              <Link
+                              to="/application"
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
+                              >Application</Link>
                           </li>
                         </ul>
                       </div>
