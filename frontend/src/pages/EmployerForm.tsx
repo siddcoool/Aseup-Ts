@@ -5,6 +5,7 @@ import {
   Input,
   Button,
   VStack,
+  Text,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
@@ -115,8 +116,10 @@ const EmployerForm = () => {
           handleSubmit();
         }}
       >
-        <VStack spacing={4}>
+        <VStack spacing={4}>+
+        ------------------------------------
           <FormControl>
+            <div className='text-3xl text-center font-bold'>Create Employer</div>
             <FormLabel>Company Name</FormLabel>
             <Input
               type="text"

@@ -35,13 +35,15 @@ const Jobs = () => {
     budget: "",
     noticePeriod: undefined || 0,
     skills: [],
-    _id: ''
+    _id: "",
   });
   const [employerOptions, setEmployerOptions] = useState([]);
   const toast = useToast();
   const navigate = useNavigate();
 
   const { id } = useParams();
+
+  console.log({ formData });
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -55,10 +57,16 @@ const Jobs = () => {
     }));
   };
 
+  const handleEmployeeDropdown = (selectedValues: any, actionMeta: any) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      employer: selectedValues,
+    }));
+  };
   const fetchEmployers = async () => {
     try {
-      const {data} = await axios.get("/employer");
-      
+      const { data } = await axios.get("/employer");
+
       setEmployerOptions(data);
     } catch (error) {
       console.log(error);
@@ -81,7 +89,7 @@ const Jobs = () => {
     } catch (error: any) {
       toast({
         title: error.message,
-        status: 'error'
+        status: "error",
       });
     }
   };
@@ -142,7 +150,9 @@ const Jobs = () => {
   return (
     <form onSubmit={handleSubmit} className="p-8 flex justify-center ">
       <div className="w-[60%]">
-        <div className="font-bold text-3xl text-center m-4">Create a Job</div>
+        <div className="font-bold text-3xl text-center m-4">
+          {id ? "Edit" : "Create"} a Job
+        </div>
         <VStack spacing={4} align="stretch">
           <FormControl id="jobTitle" isRequired>
             <FormLabel>Job Title</FormLabel>
@@ -178,13 +188,13 @@ const Jobs = () => {
               options={employerOptions}
             /> */}
             <CreatableSelect
-            getOptionLabel={(option) => option.companyName}
-            getOptionValue={(option) => option._id}
-            isClearable
-            isMulti
-            options={employerOptions}
-            value={formData.employer}
-            onChange={handleSkillsChange}
+              getOptionLabel={(option) => option.companyName}
+              getOptionValue={(option) => option._id}
+              isClearable
+              isMulti
+              options={employerOptions}
+              value={formData.employer}
+              onChange={handleEmployeeDropdown}
             />
           </FormControl>
 
