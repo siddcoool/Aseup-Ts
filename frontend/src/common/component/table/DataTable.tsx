@@ -19,6 +19,7 @@ const DataTable = <T,>({ rows, columns, showCheckbox }: Props<T>) => {
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
   };
+  console.log({rows,columns})
   
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -75,6 +76,7 @@ const DataTable = <T,>({ rows, columns, showCheckbox }: Props<T>) => {
         <tbody>
           {rows.map((row, rowIndex) => (
             <tr key={rowIndex} className={`bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600`}>
+              
               {showCheckbox && (
                 <td className="w-4 p-4">
                   <div className="flex items-center">

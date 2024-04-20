@@ -9,36 +9,57 @@ import Loader from "../common/component/loader/Loader";
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
-const ViewApplication=()=>{
+const ViewApplication = () => {
+  const [applications, setApplications] = useState<IApplication[]>([]);
+  const [rows, setRows] = useState();
 
-  const [viewapplication, setViewapplication   ] = useState<IApplication[]>([]);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
 
   const [selectedRow, setSelectedRow] = useState<IApplication | null>(null);
   const [refetch, setRefetch] = useState(0);
-  const [deleteApplicationLoading, setDeleteApllicationLoading] = useState(false);
+  const [deleteApplicationLoading, setDeleteApllicationLoading] =
+    useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
 
   const refresh = () => setRefetch((v) => v + 1);
 
   const getApplication = async () => {
-    setLoading(true);
-    const res = await axios.get("/application");
-    setLoading(false);
-    setViewapplication([...res.data]);
+    try {
+      setLoading(true);
+      const res = await axios.get("/application");
+      setLoading(false);
+      setApplications([...res.data]);
+    } catch (error) {
+      toast({
+        title: error.message,
+        status: "error",
+        duration: 3000,
+      });
+    }
   };
-  console.log({viewapplication});
-  
+  console.log({ viewapplication: applications });
+
   const handleEdit = (id: string) => {
     navigate(`/application/edit/${id}`);
   };
 
+  // const rowData = () => {
+  //   if (applications) {
+  //     const rows = applications.map((item, idx) => {
+  //       item.job.map((item) => {
+  //         return item.jobTitle;
+  //       });
+  //     });
+  //     setRows(rows);
+  //   }
+  // };
+
   const handleDelete = async (id: string) => {
     try {
-        setDeleteApllicationLoading(true)
+      setDeleteApllicationLoading(true);
       await axios.delete(`/application/${id}`);
       refresh();
     } catch (error) {
@@ -50,7 +71,7 @@ const ViewApplication=()=>{
       });
     } finally {
       onClose();
-      setDeleteApllicationLoading(false)
+      setDeleteApllicationLoading(false);
     }
   };
   const handleDeleteModalOpen = (row) => {
@@ -58,24 +79,27 @@ const ViewApplication=()=>{
     setSelectedRow(row);
   };
   const columns = [
-    { id: 'jobs', name: 'JOB', renderCell: (row) => row.jobTitle},
-    { id: 'employee', name: 'Employee', renderCell: (row) =>{
-      console.log({row});
-      
-      row.employee} },
+    { id: "job", name: "JOB", renderCell: (row) => row.job.jobTitle },
     {
-      id: 'action', name: 'Action', renderCell: (row) => <div className="flex gap-x-2">
-        <div
-          onClick={() => handleEdit(row._id)}
-        >
-          <EditIcon />
-        </div>
-        <div>
-          <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
-        </div>
-      </div>
+      id: "employee",
+      name: "Employee",
+      renderCell: (row) => { return row.employee.name},
     },
-  ]
+    {
+      id: "action",
+      name: "Action",
+      renderCell: (row) => (
+        <div className="flex gap-x-2">
+          <div onClick={() => handleEdit(row._id)}>
+            <EditIcon />
+          </div>
+          <div>
+            <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
+          </div>
+        </div>
+      ),
+    },
+  ];
 
   useEffect(() => {
     getApplication();
@@ -91,12 +115,12 @@ const ViewApplication=()=>{
     return (
       <div className="p-8">
         <TableHeader
-          title='Application'
-          buttonLabel='Create Application'
+          title="Application"
+          buttonLabel="Create Application"
           onClick={() => navigate("/application/add")}
         />
         <div className="px-12 my-4">
-          <DataTable rows={viewapplication} columns={columns} />
+          <DataTable rows={applications} columns={columns} />
         </div>
         <DeleteAlert
           loading={deleteApplicationLoading}
@@ -108,6 +132,6 @@ const ViewApplication=()=>{
         />
       </div>
     );
-}
+};
 
 export default ViewApplication;
