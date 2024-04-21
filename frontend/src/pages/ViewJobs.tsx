@@ -1,4 +1,10 @@
-import { useToast, useDisclosure, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
+import {
+  useToast,
+  useDisclosure,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +14,8 @@ import { IJobs } from "./Jobs";
 import DeleteAlert from "../common/component/alerts/deleteAlerts";
 import DataTable from "../common/component/table/DataTable";
 import TableHeader from "../common/component/header/tableHeader";
+import { Pagination } from "../components/Pagination";
+import { PAGE_LIMIT } from "../constant/app";
 
 export interface IEmployers {
   companyName: string;
@@ -20,8 +28,11 @@ export interface IEmployers {
 const ViewJobs = () => {
   const [jobs, setJobs] = useState<IJobs[]>([]);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
   const toast = useToast();
   const navigate = useNavigate();
+  const [isTableLoading, setIsTableLoading] = useState(false);
 
   const [selectedRow, setSelectedRow] = useState<IJobs | null>(null);
   const [refetch, setRefetch] = useState(0);
@@ -30,13 +41,28 @@ const ViewJobs = () => {
   const cancelRef = useRef(null);
 
   const refresh = () => setRefetch((v) => v + 1);
-
   const getJobs = async () => {
-    setLoading(true);
-    const res = await axios.get("/jobs");
-    setLoading(false);
-    setJobs(res.data);
+    try {
+      if (loading) return;
+      if (!jobs.length) {
+        setLoading(true);
+      }
+      setIsTableLoading(true);
+      const res = await axios.get(
+        `/jobs?pageLimit=${PAGE_LIMIT}&pageNumber=${currentPage}`
+      );
+      setLoading(false);
+      setJobs(res.data.jobs);
+      setTotalCount(Math.ceil(res.data.count / PAGE_LIMIT));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+      setIsTableLoading(false);
+    }
   };
+
+  console.log({ isTableLoading });
 
   const handleEdit = (id: string) => {
     navigate(`/jobs/edit/${id}`);
@@ -94,7 +120,7 @@ const ViewJobs = () => {
 
   useEffect(() => {
     getJobs();
-  }, [refetch]);
+  }, [refetch, currentPage]);
 
   if (loading)
     return (
@@ -120,6 +146,14 @@ const ViewJobs = () => {
         />
         <div className="px-12 my-4">
           <DataTable rows={jobs} columns={columns} />
+          <Pagination
+            isLoading={isTableLoading}
+            initialPage={currentPage}
+            totalPages={totalCount}
+            onPageChange={(selectedItem) =>
+              setCurrentPage(selectedItem.selected)
+            }
+          />
         </div>
         <DeleteAlert
           loading={deleteEmployeeLoading}

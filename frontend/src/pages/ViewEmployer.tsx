@@ -16,6 +16,8 @@ import Loader from "../common/component/Loader";
 import DeleteAlert from "../common/component/alerts/deleteAlerts";
 import DataTable from "../common/component/table/DataTable";
 import TableHeader from "../common/component/header/tableHeader";
+import { Pagination } from "../components/Pagination";
+import { PAGE_LIMIT } from "../constant/app";
 
 export interface IEmployers {
   companyName: string;
@@ -30,6 +32,9 @@ const ViewEmployer = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isTableLoading, setIsTableLoading] = useState(false);
 
   const [selectedRow, setSelectedRow] = useState<IEmployers | null>(null);
   const [refetch, setRefetch] = useState(0);
@@ -40,11 +45,25 @@ const ViewEmployer = () => {
   const refresh = () => setRefetch((v) => v + 1);
 
   const getEmployer = async () => {
-    setLoading(true);
-    const res = await axios.get("/employer");
+   try {
+    if(loading) return
+    if(!employers.length){
+      setLoading(true);
+    }
+    setIsTableLoading(true)
+    const res = await axios.get(`/employer?pageLimit=${PAGE_LIMIT}&pageNumber=${currentPage}`);
     setLoading(false);
-    setEmployers(res.data);
+    setEmployers(res.data.employer);
+    setTotalCount(Math.ceil(res.data.count / PAGE_LIMIT));
+   } catch (error) {
+    
+   }finally{
+    setLoading(false)
+    setIsTableLoading(false)
+   }
+
   };
+  console.log({totalCount})
 
   const handleEdit = (id: string) => {
     navigate(`/employer/edit/${id}`);
@@ -82,7 +101,7 @@ const ViewEmployer = () => {
 
   useEffect(() => {
     getEmployer();
-  }, [refetch]);
+  }, [refetch,currentPage]);
 
   const columns = [
     {
@@ -151,6 +170,14 @@ const ViewEmployer = () => {
         />
         <div className="px-12 my-4">
           <DataTable rows={employers} columns={columns} />
+          <Pagination
+            isLoading={isTableLoading}
+            initialPage={currentPage}
+            totalPages={totalCount}
+            onPageChange={(selectedItem) =>
+              setCurrentPage(selectedItem.selected)
+            }
+          />
         </div>
         <DeleteAlert
           loading={deleteEmployeeLoading}

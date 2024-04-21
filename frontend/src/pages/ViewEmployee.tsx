@@ -14,6 +14,8 @@ import DataTable from "../common/component/table/DataTable";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import DeleteAlert from "../common/component/alerts/deleteAlerts";
 import TableHeader from "../common/component/header/tableHeader";
+import { Pagination } from "../components/Pagination";
+import { PAGE_LIMIT } from "../constant/app";
 
 enum Grade {
   A = "A",
@@ -63,7 +65,6 @@ export interface Employee {
   skills: string[]; // Assuming skill IDs are strings
 }
 
-
 const ViewEmployeeDetails = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(false);
@@ -73,6 +74,9 @@ const ViewEmployeeDetails = () => {
   const [deleteEmployeeLoading, setDeleteEmployeeLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isTableLoading, setIsTableLoading] = useState(false);
 
   const navigate = useNavigate();
   const toast = useToast();
@@ -81,9 +85,18 @@ const ViewEmployeeDetails = () => {
 
   const fetchEmployees = async () => {
     try {
-      setLoading(true);
-      const response = await axios.get("/employee/");
+      if (loading) return;
+      if (!employees.length) {
+        setLoading(true);
+      }
+      setIsTableLoading(true);
+
+      const response = await axios.get(
+        `/employee/?pageLimit=${PAGE_LIMIT}&pageNumber=${currentPage}`
+      );
+
       setEmployees(response.data.data);
+      setTotalCount(Math.ceil(response.data.count / PAGE_LIMIT));
       setLoading(false);
     } catch (error) {
       console.error("Error fetching employee data:", error);
@@ -92,12 +105,15 @@ const ViewEmployeeDetails = () => {
         status: "error",
         duration: 5000,
       });
+    } finally {
+      setIsTableLoading(false);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchEmployees();
-  }, [refetch]);
+  }, [refetch, currentPage]);
 
   const handleDeleteModalOpen = (row) => {
     onOpen();
@@ -106,7 +122,7 @@ const ViewEmployeeDetails = () => {
 
   const deleteEmployee = async (id: string) => {
     try {
-      setDeleteEmployeeLoading(true)
+      setDeleteEmployeeLoading(true);
       await axios.delete(`/employee/${id}`);
       refresh();
     } catch (error) {
@@ -118,51 +134,68 @@ const ViewEmployeeDetails = () => {
       });
     } finally {
       onClose();
-      setDeleteEmployeeLoading(false)
+      setDeleteEmployeeLoading(false);
     }
   };
 
   const columns = [
-    { id: 'name', name: 'Employee Name', renderCell: (row) => row.name },
-    { id: 'email', name: 'Email', renderCell: (row) => row.email },
-    { id: 'contact', name: 'Contact', renderCell: (row) => row.phoneNumber },
-    { id: 'dob', name: 'DOB', renderCell: (row) => dayjs(row.DOB).format("DD-MM-YYYY") },
-    { id: 'gender', name: 'Gender', renderCell: (row) => row.gender },
+    { id: "name", name: "Employee Name", renderCell: (row) => row.name },
+    { id: "email", name: "Email", renderCell: (row) => row.email },
+    { id: "contact", name: "Contact", renderCell: (row) => row.phoneNumber },
     {
-      id: 'action', name: 'Action', renderCell: (row) => <div className="flex gap-x-2">
-        <div
-          onClick={() =>
-            navigate(`/employeeForm/${row._id}`)
-          }
-        >
-          <EditIcon />
-        </div>
-        <div>
-          <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
-        </div>
-      </div>
+      id: "dob",
+      name: "DOB",
+      renderCell: (row) => dayjs(row.DOB).format("DD-MM-YYYY"),
     },
-  ]
+    { id: "gender", name: "Gender", renderCell: (row) => row.gender },
+    {
+      id: "action",
+      name: "Action",
+      renderCell: (row) => (
+        <div className="flex gap-x-2">
+          <div onClick={() => navigate(`/employeeForm/${row._id}`)}>
+            <EditIcon />
+          </div>
+          <div>
+            <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
+          </div>
+        </div>
+      ),
+    },
+  ];
 
   if (loading) {
-    return <div className="flex  justify-center mt-36 "><Loader /></div>;
+    return (
+      <div className="flex  justify-center mt-36 ">
+        <Loader />
+      </div>
+    );
   } else
     return (
       <div className="my-4">
-         <Breadcrumb className="ml-12">
+        <Breadcrumb className="ml-12">
           <BreadcrumbItem>
             <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage>
             <BreadcrumbLink href="#">Employee</BreadcrumbLink>
           </BreadcrumbItem>
-          </Breadcrumb>
-        <TableHeader title='Employee Details'
+        </Breadcrumb>
+        <TableHeader
+          title="Employee Details"
           onClick={() => navigate("/employeeForm")}
-          buttonLabel='Create Employee'
+          buttonLabel="Create Employee"
         />
         <div className="px-12 my-4">
           <DataTable rows={employees} columns={columns} />
+          <Pagination
+            isLoading={isTableLoading}
+            initialPage={currentPage}
+            totalPages={totalCount}
+            onPageChange={(selectedItem) =>
+              setCurrentPage(selectedItem.selected)
+            }
+          />
         </div>
         <DeleteAlert
           loading={deleteEmployeeLoading}

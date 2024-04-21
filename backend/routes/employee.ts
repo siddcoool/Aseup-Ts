@@ -6,13 +6,19 @@ import Employee from "../models/Employee";
 
 employeeRouter.get("/", async (req: Request, res: Response) => {
   try {
-    let pageLimit , pageNumber
-    pageLimit = pageLimit || 10
-    pageNumber = pageNumber || 0
-    const employee = await Employee.find().populate("skills").sort({updatedAt:-1}).limit(pageLimit).skip(pageLimit * pageNumber);
+    const { pageLimit, pageNumber } = req.query;
+    const parsedPageLimit = pageLimit ? parseInt(pageLimit as string, 10) : 10; // Default to 10 if pageLimit is not provided
+    const parsedSkip = pageNumber ? parseInt(pageNumber as string, 10) : 0; // Default to 0 if skip is not provided
+    const count = await Employee.count();
+    const employee = await Employee.find()
+      .populate("skills")
+      .sort({ updatedAt: -1 })
+      .limit(parsedPageLimit)
+      .skip(parsedPageLimit * parsedSkip);
     res.status(200).json({
       message: "list of employee",
       data: employee,
+      count,
     });
   } catch (error) {
     console.log(error);

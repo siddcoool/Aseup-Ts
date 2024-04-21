@@ -25,14 +25,27 @@ interface SidebarProps {
   setSidebarOpen: (arg: boolean) => void;
 }
 
-const SIDEBAR_ITEMS = {
-  1: "Dashboard",
-  2: "Employee",
-  3: "Employer",
-  4: "Jobs",
-  5: "Skills",
-  6: "Application",
-};
+const SIDEBAR_ITEMS = [
+  {
+    Dashboard: "Dashboard",
+    
+  },
+  {
+    Employee: "Employee",
+  },
+  {
+    Employer: "Employer",
+  },
+  {
+    Jobs: "Jobs",
+  },
+  {
+    Skills: "Skills",
+  },
+  {
+    Application: "Application",
+  },
+];
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const trigger = useRef<any>(null);
@@ -44,7 +57,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const [selectedSidebar, setSelectedSidebar] = useState(SIDEBAR_ITEMS[3]);
 
   const handleSideBarChange = (v: number) => {
-    console.log({This:v})
+    console.log({ This: v });
     setSelectedSidebar(SIDEBAR_ITEMS[v]);
   };
 

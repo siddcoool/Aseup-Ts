@@ -13,6 +13,8 @@ import Loader from "../common/component/Loader";
 import DataTable from "../common/component/table/DataTable";
 import DeleteAlert from "../common/component/alerts/deleteAlerts";
 import TableHeader from "../common/component/header/tableHeader";
+import { PAGE_LIMIT } from "../constant/app";
+import { Pagination } from "../components/Pagination";
 
 export type ISkills = {
   name: string;
@@ -25,6 +27,9 @@ const Skills = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const [refetch, setRefetch] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isTableLoading, setIsTableLoading] = useState(false);
 
   const [selectedRow, setSelectedRow] = useState<ISkills | null>(null);
   const [deleteSkillLoading, setDeleteSkillLoading] = useState(false);
@@ -34,10 +39,24 @@ const Skills = () => {
   const refresh = () => setRefetch((v) => v + 1);
 
   const getSkills = async () => {
-    setLoading(true);
-    const res = await axios.get("/skill");
-    setLoading(false);
-    setSkills(res.data);
+    try {
+      if (loading) return;
+      if (!skills.length) {
+        setLoading(true);
+      }
+      setIsTableLoading(true);
+      const res = await axios.get(
+        `/skill?pageLimit=${PAGE_LIMIT}&pageNumber=${currentPage}`
+      );
+      console.log({res})
+      setLoading(false);
+      setSkills(res.data.listOfSkills);
+      setTotalCount(Math.ceil(res.data.count/PAGE_LIMIT))
+    } catch (error) {
+    } finally {
+      setLoading(false);
+      setIsTableLoading(false);
+    }
   };
 
   const handleEdit = (id: string) => {
@@ -51,7 +70,7 @@ const Skills = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      setDeleteSkillLoading(true)
+      setDeleteSkillLoading(true);
       const { status } = await axios.delete(`/skill/${id}`);
       refresh();
       if (status === 200) {
@@ -77,39 +96,40 @@ const Skills = () => {
         isClosable: true,
       });
     } finally {
-      setDeleteSkillLoading(false)
-      onClose()
+      setDeleteSkillLoading(false);
+      onClose();
     }
   };
 
   const columns = [
     {
-      id: 'name',
-      name: 'Name',
+      id: "name",
+      name: "Name",
       renderCell: (row) => {
-        return row.name
-      }
-    }, {
-      id: 'action',
-      name: 'Action',
-      renderCell: (skill) => {
-        return <div className="flex gap-x-2">
-          <div onClick={() => handleEdit(skill._id)}>
-            <EditIcon />
-          </div>
-          <div
-            onClick={() => handleDeleteModalOpen(skill)}
-          >
-            <DeleteIcon />
-          </div>
-        </div>
-      }
+        return row.name;
+      },
     },
-  ]
+    {
+      id: "action",
+      name: "Action",
+      renderCell: (skill) => {
+        return (
+          <div className="flex gap-x-2">
+            <div onClick={() => handleEdit(skill._id)}>
+              <EditIcon />
+            </div>
+            <div onClick={() => handleDeleteModalOpen(skill)}>
+              <DeleteIcon />
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
 
   useEffect(() => {
     getSkills();
-  }, [refetch]);
+  }, [refetch, currentPage]);
 
   if (loading)
     return (
@@ -129,12 +149,20 @@ const Skills = () => {
           </BreadcrumbItem>
         </Breadcrumb>
         <TableHeader
-          title='Skills'
-          buttonLabel='Create Skills'
+          title="Skills"
+          buttonLabel="Create Skills"
           onClick={() => navigate("/skill/add")}
         />
         <div className="px-12 my-4">
           <DataTable rows={skills} columns={columns} />
+          <Pagination
+            isLoading={isTableLoading}
+            initialPage={currentPage}
+            totalPages={totalCount}
+            onPageChange={(selectedItem) =>
+              setCurrentPage(selectedItem.selected)
+            }
+          />
         </div>
         <DeleteAlert
           loading={deleteSkillLoading}
