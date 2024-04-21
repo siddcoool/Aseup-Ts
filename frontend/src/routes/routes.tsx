@@ -14,8 +14,8 @@ import Thankyou from "../pages/Thankyou";
 import Jobs from "../pages/Jobs";
 import ViewJobs from "../pages/ViewJobs";
 import Skills from "../pages/Skills";
-import SkillForm from "../pages/Employee/SkillForm";
 import ViewApplication from "../pages/ViewApplication";
+import SkillForm from "../pages/SkillForm";
 
 interface Route {
   path: string;

@@ -36,7 +36,7 @@ const EmployerForm = () => {
     contact: [],
   });
   const toast = useToast(); // Move useToast here\
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const handleInputChange = (fieldName: string, value: string) => {
@@ -57,11 +57,19 @@ const EmployerForm = () => {
     setFormData((prev) => ({ ...prev, contact: updatedContactInfo }));
   };
 
+  const handleDelete = (index: number) => {
+    const newData = formData.contact.filter((item, idx) => index != idx);
+    setFormData((prev) => ({ ...prev, contact: newData }));
+  };
+
   const handleSubmit = async () => {
-    const emailChecked = formData.contact.length && formData.contact.every((oneContact) =>
-     oneContact.contactEmail && isEmail(oneContact.contactEmail)
-    );
-    
+    const emailChecked =
+      formData.contact.length &&
+      formData.contact.every(
+        (oneContact) =>
+          oneContact.contactEmail && isEmail(oneContact.contactEmail)
+      );
+
     if (!emailChecked) {
       toast({
         title: "Email is not valid",
@@ -83,7 +91,7 @@ const EmployerForm = () => {
           duration: 5000,
           isClosable: true,
         });
-        navigate('/employer/view')
+        navigate("/employer/view");
       } else {
         await axios.post("/employer", formData);
         toast({
@@ -105,7 +113,7 @@ const EmployerForm = () => {
       setFormData(employer.data);
     }
   };
-
+  console.log({ formData });
   useEffect(() => {
     getEmployer();
   }, []);
@@ -118,10 +126,12 @@ const EmployerForm = () => {
           handleSubmit();
         }}
       >
-        <VStack spacing={4}>+
-        ------------------------------------
+        <VStack spacing={4}>
+          + ------------------------------------
           <FormControl>
-            <div className='text-3xl text-center font-bold'>Create Employer</div>
+            <div className="text-3xl text-center font-bold">
+              Create Employer
+            </div>
             <FormLabel>Company Name</FormLabel>
             <Input
               type="text"
@@ -130,7 +140,6 @@ const EmployerForm = () => {
               onChange={(e) => handleInputChange("companyName", e.target.value)}
             />
           </FormControl>
-
           <FormControl>
             <FormLabel>Industry</FormLabel>
             <Input
@@ -140,7 +149,6 @@ const EmployerForm = () => {
               onChange={(e) => handleInputChange("industry", e.target.value)}
             />
           </FormControl>
-
           <FormControl>
             <FormLabel>Location</FormLabel>
             <Input
@@ -150,7 +158,6 @@ const EmployerForm = () => {
               onChange={(e) => handleInputChange("location", e.target.value)}
             />
           </FormControl>
-
           <FormControl>
             <FormLabel>Number of Employees</FormLabel>
             <Input
@@ -160,8 +167,11 @@ const EmployerForm = () => {
               onChange={(e) => handleInputChange("employees", e.target.value)}
             />
           </FormControl>
-
-          <LineItemRepeater className="w-full" size={formData.contact.length}>
+          <LineItemRepeater
+            className="w-full"
+            size={formData.contact.length}
+            onDelete={handleDelete}
+          >
             {(index) => {
               return (
                 <div className="w-full">
@@ -214,7 +224,6 @@ const EmployerForm = () => {
               );
             }}
           </LineItemRepeater>
-
           <>
             <Button colorScheme="teal" onClick={handleSubmit}>
               {id ? "Update" : "Add"} employer

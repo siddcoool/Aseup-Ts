@@ -6,7 +6,10 @@ import Employee from "../models/Employee";
 
 employeeRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const employee = await Employee.find().populate("skills").sort({updatedAt:-1});
+    let pageLimit , pageNumber
+    pageLimit = pageLimit || 10
+    pageNumber = pageNumber || 0
+    const employee = await Employee.find().populate("skills").sort({updatedAt:-1}).limit(pageLimit).skip(pageLimit * pageNumber);
     res.status(200).json({
       message: "list of employee",
       data: employee,

@@ -52,6 +52,12 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
     });
   };
 
+  
+  const handleDelete = (index: number) => {
+    const newData = formData.filter((item, idx) => index != idx);
+    setFormData(newData);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData); // Handle form submission
@@ -74,7 +80,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
 
   return (
     <div>
-      <LineItemRepeater size={employeeData?.educations?.length}>
+      <LineItemRepeater size={employeeData?.educations?.length} onDelete={handleDelete}>
         {(index) => {
           return (
             <div className="p-8 w-[70%] m-auto" key={index}>

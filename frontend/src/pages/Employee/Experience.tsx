@@ -53,6 +53,13 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
     });
   };
 
+  const handleDelete = (index: number) => {
+    const newData = formData.filter((item, idx) => index != idx);
+    setFormData(newData);
+  };
+
+  console.log({formData})
+
   useEffect(() => {
     if (employeeData && Array.isArray(employeeData.experience)) {
       setFormData([...employeeData.experience]);
@@ -61,7 +68,7 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
 
   return (
     <div>
-      <LineItemRepeater size={employeeData?.experience?.length}>
+      <LineItemRepeater size={employeeData?.experience?.length} onDelete={handleDelete}>
         {(index) => {
           return (
             <div className="p-8 w-[70%] m-auto" key={index}>
