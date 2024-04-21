@@ -6,7 +6,7 @@ import Employee from "../models/Employee";
 
 employeeRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const employee = await Employee.find().populate("skills");
+    const employee = await Employee.find().populate("skills").sort({updatedAt:-1});
     res.status(200).json({
       message: "list of employee",
       data: employee,

@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { LineItemRepeater } from "../components/LineItemRepeater";
 import isEmail from "validator/lib/isEmail";
 
@@ -35,7 +35,8 @@ const EmployerForm = () => {
     employees: "",
     contact: [],
   });
-  const toast = useToast(); // Move useToast here
+  const toast = useToast(); // Move useToast here\
+  const navigate = useNavigate()
   const { id } = useParams();
 
   const handleInputChange = (fieldName: string, value: string) => {
@@ -76,12 +77,13 @@ const EmployerForm = () => {
       if (id) {
         await axios.put(`/employer/${id}`, formData);
         toast({
-          title: "Employer Updated created.",
+          title: "Employer data Updated .",
           description: "We've updated your account for you.",
           status: "success",
           duration: 5000,
           isClosable: true,
         });
+        navigate('/employer/view')
       } else {
         await axios.post("/employer", formData);
         toast({

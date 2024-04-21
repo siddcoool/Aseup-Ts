@@ -5,7 +5,7 @@ const jobRouter = Router();
 
 jobRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const jobs = await Jobs.find({ isDeleted: false });
+    const jobs = await Jobs.find({ isDeleted: false }).sort({updatedAt: -1});
     res.send(jobs);
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });

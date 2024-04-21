@@ -5,7 +5,7 @@ const employerRouter = Router();
 
 employerRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const employer = await Employer.find({isDeleted:false});
+    const employer = await Employer.find({isDeleted:false}).sort({updatedAt:-1});
     res.send(employer);
   } catch (error: any) {
     res.send(error.message);

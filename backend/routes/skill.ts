@@ -3,7 +3,7 @@ const skillRouter = Router();
 import Skill from "../models/Skills";
 
 skillRouter.get("/", async (req: Request, res: Response) => {
-  const listOfSkills = await Skill.find();
+  const listOfSkills = await Skill.find().sort({updatedAt: -1});
   res.json(listOfSkills);
 });
 
