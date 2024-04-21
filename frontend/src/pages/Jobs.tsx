@@ -23,6 +23,7 @@ export type IJobs = {
   budget: string;
   noticePeriod: number;
   skills?: ISkills[];
+  _id?: string
 };
 
 const Jobs = () => {

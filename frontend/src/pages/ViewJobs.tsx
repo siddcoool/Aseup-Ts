@@ -1,12 +1,6 @@
-import {
-  useToast,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { useToast, useDisclosure, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import axios from "axios";
-import {
-  EditIcon,
-  DeleteIcon,
-} from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
@@ -50,7 +44,7 @@ const ViewJobs = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      setDeleteEmployeeLoading(true)
+      setDeleteEmployeeLoading(true);
       await axios.delete(`/jobs/${id}`);
       refresh();
     } catch (error) {
@@ -62,7 +56,7 @@ const ViewJobs = () => {
       });
     } finally {
       onClose();
-      setDeleteEmployeeLoading(false)
+      setDeleteEmployeeLoading(false);
     }
   };
   const handleDeleteModalOpen = (row) => {
@@ -70,23 +64,33 @@ const ViewJobs = () => {
     setSelectedRow(row);
   };
   const columns = [
-    { id: 'title', name: 'Title', renderCell: (row) => row.jobTitle },
-    { id: 'jobRequirements', name: 'Requirements', renderCell: (row) => row.jobRequirements },
-    { id: 'budget', name: 'Budget', renderCell: (row) => row.budget },
-    { id: 'noticePeriod', name: 'Notice Period', renderCell: (row) => row.noticePeriod },
+    { id: "title", name: "Title", renderCell: (row) => row.jobTitle },
     {
-      id: 'action', name: 'Action', renderCell: (row) => <div className="flex gap-x-2">
-        <div
-          onClick={() => handleEdit(row._id)}
-        >
-          <EditIcon />
-        </div>
-        <div>
-          <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
-        </div>
-      </div>
+      id: "jobRequirements",
+      name: "Requirements",
+      renderCell: (row) => row.jobRequirements,
     },
-  ]
+    { id: "budget", name: "Budget", renderCell: (row) => row.budget },
+    {
+      id: "noticePeriod",
+      name: "Notice Period",
+      renderCell: (row) => row.noticePeriod,
+    },
+    {
+      id: "action",
+      name: "Action",
+      renderCell: (row) => (
+        <div className="flex gap-x-2">
+          <div onClick={() => handleEdit(row._id)}>
+            <EditIcon />
+          </div>
+          <div>
+            <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
+          </div>
+        </div>
+      ),
+    },
+  ];
 
   useEffect(() => {
     getJobs();
@@ -101,9 +105,17 @@ const ViewJobs = () => {
   else
     return (
       <div className="p-8">
+        <Breadcrumb className="ml-12">
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href="#">Jobs</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
         <TableHeader
-          title='Jobs'
-          buttonLabel='Create Job'
+          title="Jobs"
+          buttonLabel="Create Job"
           onClick={() => navigate("/jobs/add")}
         />
         <div className="px-12 my-4">

@@ -1,6 +1,9 @@
 import {
   useToast,
   useDisclosure,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from "@chakra-ui/react";
 import axios from "axios";
 import {
@@ -134,6 +137,14 @@ const ViewEmployer = () => {
   else
     return (
       <div className="p-8">
+        <Breadcrumb className="ml-12">
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href="#">Employer</BreadcrumbLink>
+          </BreadcrumbItem>
+          </Breadcrumb>
         <TableHeader title='Employer Details'
           onClick={() => navigate("/employer/add")}
           buttonLabel='Create Employer'

@@ -1,5 +1,8 @@
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -117,6 +120,14 @@ const Skills = () => {
   else
     return (
       <div className="p-8">
+        <Breadcrumb className="ml-12">
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href="#">Skills</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
         <TableHeader
           title='Skills'
           buttonLabel='Create Skills'

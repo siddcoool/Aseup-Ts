@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -146,6 +149,14 @@ const ViewEmployeeDetails = () => {
   } else
     return (
       <div className="my-4">
+         <Breadcrumb className="ml-12">
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href="#">Employee</BreadcrumbLink>
+          </BreadcrumbItem>
+          </Breadcrumb>
         <TableHeader title='Employee Details'
           onClick={() => navigate("/employeeForm")}
           buttonLabel='Create Employee'
