@@ -8,7 +8,7 @@ import { useToast } from "@chakra-ui/react";
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
   const Ctoast = useToast();
   const navigate = useNavigate();
 
@@ -22,13 +22,13 @@ export default function SignUp() {
   };
 
   const handleFullName = (event: ChangeEvent<HTMLInputElement>) => {
-    setFullName(event.target.value);
+    setName(event.target.value);
   };
-  console.log({ email, password, fullName });
+  console.log({ email, password, name });
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      if (email && password && fullName) {
+      if (email && password && name) {
         if (!isEmail(email)) {
           Ctoast({
             title: "Invalid Email",
@@ -40,7 +40,7 @@ export default function SignUp() {
         const { data, status } = await axios.post("/user/register", {
           email,
           password,
-          fullName,
+           name,
         });
         if (status === 201) {
           toast.success(data.message);
