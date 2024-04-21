@@ -12,7 +12,7 @@ import axios from "axios";
 import CreatableSelect from "react-select/creatable";
 
 import { IEmployers } from "./ViewEmployer";
-import Select from "react-select";
+import Editor ,{ BtnBold, EditorProvider, HtmlEditor, Toolbar } from 'react-simple-wysiwyg';
 import { useNavigate, useParams } from "react-router-dom";
 import { ISkills } from "./Skills";
 
@@ -41,7 +41,7 @@ const Jobs = () => {
 
   const { id } = useParams();
 
-  console.log({ formData });
+  console.log({ formData: formData.jobRequirements });
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -49,6 +49,7 @@ const Jobs = () => {
     >
   ) => {
     const { name, value } = e.target;
+    console.log({name,value})
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -98,6 +99,10 @@ const Jobs = () => {
       skills: selectedValues,
     }));
   };
+
+  const handleJobRequirement = (value:string) =>{
+    setFormData((prev)=>({...prev,jobRequirements:value}))
+  }
 
   useEffect(() => {
     fetchEmployers();
@@ -166,12 +171,16 @@ const Jobs = () => {
 
           <FormControl id="jobRequirements" isRequired>
             <FormLabel>Job Requirements</FormLabel>
-            <Textarea
+            <Editor
+            value={formData.jobRequirements}
+            onChange={(e)=>handleJobRequirement(e.target.value)}
+            /> 
+            {/* <Textarea
               name="jobRequirements"
               value={formData.jobRequirements}
               onChange={handleChange}
               placeholder="Enter job requirements"
-            />
+            /> */}
           </FormControl>
           <FormControl id="employer" isRequired>
             <FormLabel>Employer</FormLabel>
