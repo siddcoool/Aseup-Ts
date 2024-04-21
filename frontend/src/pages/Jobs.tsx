@@ -23,7 +23,6 @@ export type IJobs = {
   budget: string;
   noticePeriod: number;
   skills?: ISkills[];
-  _id: string;
 };
 
 const Jobs = () => {
@@ -35,7 +34,6 @@ const Jobs = () => {
     budget: "",
     noticePeriod: undefined || 0,
     skills: [],
-    _id: "",
   });
   const [employerOptions, setEmployerOptions] = useState([]);
   const toast = useToast();
@@ -191,7 +189,6 @@ const Jobs = () => {
               getOptionLabel={(option) => option.companyName}
               getOptionValue={(option) => option._id}
               isClearable
-              isMulti
               options={employerOptions}
               value={formData.employer}
               onChange={handleEmployeeDropdown}
