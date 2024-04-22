@@ -16,6 +16,7 @@ import ViewJobs from "../pages/ViewJobs";
 import Skills from "../pages/Skills";
 import SkillForm from "../pages/Employee/SkillForm";
 import ViewApplication from "../pages/ViewApplication";
+import Profile from "../pages/Profile";
 
 interface Route {
   path: string;
@@ -42,6 +43,10 @@ const routes: Route[] = [
   {
     path: "/dashboard",
     component: Dashboard,
+    layout: VerticalLayout,
+  }, {
+    path: "/profile",
+    component: Profile,
     layout: VerticalLayout,
   },
   {
