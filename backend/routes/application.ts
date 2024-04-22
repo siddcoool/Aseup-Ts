@@ -29,5 +29,13 @@ applicationRouter.post("/", async (req, res) => {
     res.status(500).send((error as Error).message);
   }
 });
+applicationRouter.delete("/:id",async(req,res)=>{
+  try {
+    const id=req.params.id
+    const deletejob=await Application.findById(id)
+  } catch (error) {
+    
+  }
+})
 
 export default applicationRouter;

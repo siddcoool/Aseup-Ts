@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 type ISkill = {
   name: string;
@@ -19,7 +19,7 @@ const SkillForm = () => {
   const [skillName, setSkillName] = useState({
     name: "",
   });
-
+  const navigate =  useNavigate()
   const { id } = useParams();
   const toast = useToast();
 
@@ -42,6 +42,7 @@ const SkillForm = () => {
             status: "success",
             duration: 5000,
           });
+          navigate('/skills')
         } else {
           toast({
             title: "failed updating skill!",
@@ -58,12 +59,14 @@ const SkillForm = () => {
             status: "warning",
             duration: 5000,
           });
+          
         } else {
           toast({
             title: "Skill added successfully!",
             status: "success",
             duration: 5000,
           });
+          navigate('/skills')
         }
       }
     } catch (error) {
