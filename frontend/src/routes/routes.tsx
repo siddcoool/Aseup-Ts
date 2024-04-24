@@ -16,6 +16,7 @@ import ViewJobs from "../pages/ViewJobs";
 import Skills from "../pages/Skills";
 import SkillForm from "../pages/Employee/SkillForm";
 import ViewApplication from "../pages/ViewApplication";
+import Application from "../pages/Application";
 
 interface Route {
   path: string;
@@ -105,6 +106,10 @@ const routes: Route[] = [
     path:'/application',
     component:ViewApplication,
     layout:VerticalLayout,
+  },{
+    path:'/application/add',
+    component:Application,
+    layout:VerticalLayout
   }
 ];
 export const createRoutes = () => {
