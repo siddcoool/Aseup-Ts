@@ -9,6 +9,7 @@ type ILineFormRepeater = {
   className?: string;
   addButtonLabel?: string;
   deleteButtonLabel?: string;
+  onDelete: (idx:number)=>void
   hidden?: boolean
   size?: number
 };
@@ -23,6 +24,7 @@ export const LineItemRepeater = ({
   addButtonLabel,
   deleteButtonLabel,
   hidden,
+  onDelete,
   size
 }: ILineFormRepeater) => {
   const [fields, setFields] = useState([0]);
@@ -34,6 +36,7 @@ export const LineItemRepeater = ({
   const removeField = (index: number) => {
     const updatedFields = fields.filter((field) => field !== index);
     setFields(updatedFields);
+    onDelete(index)
   };
 
   useEffect(() => {

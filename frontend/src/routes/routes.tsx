@@ -14,9 +14,13 @@ import Thankyou from "../pages/Thankyou";
 import Jobs from "../pages/Jobs";
 import ViewJobs from "../pages/ViewJobs";
 import Skills from "../pages/Skills";
-import SkillForm from "../pages/Employee/SkillForm";
 import ViewApplication from "../pages/ViewApplication";
+<<<<<<< HEAD
 import Application from "../pages/Application";
+=======
+import Profile from "../pages/Profile";
+import SkillForm from "../pages/SkillForm";
+>>>>>>> e3328dbcd975160dd94f8d7124057a37de684b7f
 
 interface Route {
   path: string;
@@ -43,6 +47,10 @@ const routes: Route[] = [
   {
     path: "/dashboard",
     component: Dashboard,
+    layout: VerticalLayout,
+  }, {
+    path: "/profile",
+    component: Profile,
     layout: VerticalLayout,
   },
   {

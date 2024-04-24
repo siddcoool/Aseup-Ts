@@ -8,7 +8,7 @@ const JobsSchema = new Schema({
   noticePeriod: Number,
   isDeleted: { type: Boolean, default: false },
   skills: [{type: mongoose.Schema.Types.ObjectId, ref: 'skill'}]
-});
+},{timestamps:true});
 
 const Jobs = model("jobs", JobsSchema);
 

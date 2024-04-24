@@ -12,7 +12,7 @@ import axios from "axios";
 import CreatableSelect from "react-select/creatable";
 
 import { IEmployers } from "./ViewEmployer";
-import Select from "react-select";
+import Editor ,{ BtnBold, EditorProvider, HtmlEditor, Toolbar } from 'react-simple-wysiwyg';
 import { useNavigate, useParams } from "react-router-dom";
 import { ISkills } from "./Skills";
 
@@ -23,7 +23,7 @@ export type IJobs = {
   budget: string;
   noticePeriod: number;
   skills?: ISkills[];
-  _id: string;
+  _id?: string
 };
 
 const Jobs = () => {
@@ -35,7 +35,6 @@ const Jobs = () => {
     budget: "",
     noticePeriod: undefined || 0,
     skills: [],
-    _id: "",
   });
   const [employerOptions, setEmployerOptions] = useState([]);
   const toast = useToast();
@@ -43,7 +42,7 @@ const Jobs = () => {
 
   const { id } = useParams();
 
-  console.log({ formData });
+  console.log({ formData: formData.jobRequirements });
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -51,6 +50,7 @@ const Jobs = () => {
     >
   ) => {
     const { name, value } = e.target;
+    console.log({name,value})
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -101,6 +101,10 @@ const Jobs = () => {
     }));
   };
 
+  const handleJobRequirement = (value:string) =>{
+    setFormData((prev)=>({...prev,jobRequirements:value}))
+  }
+
   useEffect(() => {
     fetchEmployers();
     getSkills();
@@ -117,17 +121,18 @@ const Jobs = () => {
     try {
       if (id) {
         const response = await axios.put(`/jobs/${id}`, formData);
-        if (response.status === 201) {
+        if (response.status === 200) {
           toast({
             title: "Form Updated successfully",
             status: "success",
             duration: 5000,
             isClosable: true,
           });
+          navigate('/jobs')
         }
       } else {
         const response = await axios.post("/jobs", formData);
-        if (response.status === 201) {
+        if (response.status === 200) {
           toast({
             title: "Form Submitted",
             status: "success",
@@ -167,12 +172,16 @@ const Jobs = () => {
 
           <FormControl id="jobRequirements" isRequired>
             <FormLabel>Job Requirements</FormLabel>
-            <Textarea
+            <Editor
+            value={formData.jobRequirements}
+            onChange={(e)=>handleJobRequirement(e.target.value)}
+            /> 
+            {/* <Textarea
               name="jobRequirements"
               value={formData.jobRequirements}
               onChange={handleChange}
               placeholder="Enter job requirements"
-            />
+            /> */}
           </FormControl>
           <FormControl id="employer" isRequired>
             <FormLabel>Employer</FormLabel>
@@ -191,7 +200,6 @@ const Jobs = () => {
               getOptionLabel={(option) => option.companyName}
               getOptionValue={(option) => option._id}
               isClearable
-              isMulti
               options={employerOptions}
               value={formData.employer}
               onChange={handleEmployeeDropdown}

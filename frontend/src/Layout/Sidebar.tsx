@@ -25,6 +25,28 @@ interface SidebarProps {
   setSidebarOpen: (arg: boolean) => void;
 }
 
+const SIDEBAR_ITEMS = [
+  {
+    Dashboard: "Dashboard",
+    
+  },
+  {
+    Employee: "Employee",
+  },
+  {
+    Employer: "Employer",
+  },
+  {
+    Jobs: "Jobs",
+  },
+  {
+    Skills: "Skills",
+  },
+  {
+    Application: "Application",
+  },
+];
+
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -32,6 +54,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(
     localStorage.getItem("sidebar-expanded") === "true"
   );
+  const [selectedSidebar, setSelectedSidebar] = useState(SIDEBAR_ITEMS[3]);
+
+  const handleSideBarChange = (v: number) => {
+    console.log({ This: v });
+    setSelectedSidebar(SIDEBAR_ITEMS[v]);
+  };
+
+  console.log({ selectedSidebar });
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -114,21 +144,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       </Link> */}
 
                       <div
-                        // className={`translate transform overflow-hidden ${
-                        //   !open && "hidden"
-                        // }`}
-                        
+                      // className={`translate transform overflow-hidden ${
+                      //   !open && "hidden"
+                      // }`}
                       >
                         <ul className="mb-1 mt-1 flex flex-col gap-2.5">
-                          <li>
-                          <Link
+                          <li onClick={() => handleSideBarChange(1)}>
+                            <Link
                               to="/dashboard"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
                             >
                               Dashboard
                             </Link>
                           </li>
-                          <li>
+                          <li onClick={() => handleSideBarChange(2)}>
                             <Link
                               to="/employee"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
@@ -136,7 +165,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Employee
                             </Link>
                           </li>
-                          <li>
+                          <li onClick={() => handleSideBarChange(3)}>
                             <Link
                               to="/employer/view"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110 `}
@@ -144,7 +173,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Employer
                             </Link>
                           </li>
-                          <li>
+                          <li onClick={() => handleSideBarChange(4)}>
                             <Link
                               to="/jobs"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
@@ -152,7 +181,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Jobs
                             </Link>
                           </li>
-                          <li>
+                          <li onClick={() => handleSideBarChange(5)}>
                             <Link
                               to="/skills"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
@@ -160,11 +189,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Skills
                             </Link>
                           </li>
-                          <li>
-                              <Link
+                          <li onClick={() => handleSideBarChange(6)}>
+                            <Link
                               to="/application"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white hover:scale-x-110`}
-                              >Application</Link>
+                            >
+                              Application
+                            </Link>
                           </li>
                         </ul>
                       </div>

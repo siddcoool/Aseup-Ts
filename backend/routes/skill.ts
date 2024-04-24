@@ -3,8 +3,12 @@ const skillRouter = Router();
 import Skill from "../models/Skills";
 
 skillRouter.get("/", async (req: Request, res: Response) => {
-  const listOfSkills = await Skill.find();
-  res.json(listOfSkills);
+  const { pageLimit, pageNumber } = req.query;
+  const parsedPageLimit = pageLimit ? parseInt(pageLimit as string, 10) : 10; // Default to 10 if pageLimit is not provided
+  const parsedSkip = pageNumber ? parseInt(pageNumber as string, 10) : 0; // Default to 0 if skip is not provided
+  const count = await Skill.count();
+  const listOfSkills = await Skill.find().sort({ updatedAt: -1 }).limit(parsedPageLimit).skip(parsedPageLimit * parsedSkip);
+  res.json({listOfSkills, count});
 });
 
 skillRouter.get("/:id", async (req: Request, res: Response) => {
@@ -24,13 +28,13 @@ skillRouter.post("/", async (req: Request, res: Response) => {
       res.status(204).json({ message: "Skill already exist" });
     } else {
       const newEntry = {
-        name
+        name,
       };
       const skill = await Skill.create(newEntry);
       res.json({ message: "skill added", skill });
     }
-  } catch(error) {
-    res.status(500)
+  } catch (error) {
+    res.status(500);
   }
 });
 

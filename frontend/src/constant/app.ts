@@ -3,3 +3,5 @@ export const AuthenticationStatus = {
     loading : 2,
     available : 3
 }
+
+export const PAGE_LIMIT = 5
