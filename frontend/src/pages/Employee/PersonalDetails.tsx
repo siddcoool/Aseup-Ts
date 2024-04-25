@@ -13,6 +13,8 @@ import CreatableSelect from "react-select/creatable";
 import axios from "axios";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+import * as Yup from "yup";
+import ErrorText from "../../components/ErrorText";
 
 interface IPersonalDetails {
   onSubmit: (input: Partial<EmployeeDocument>) => void;
@@ -33,30 +35,67 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
   const [loading, setLoading] = useState(false);
   const [skillsOptions, setSkillsOptions] = useState<any[]>([]);
   const [message, setMessage] = useState(" ");
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    DOB: "",
+    gender: "",
+    skills: [],
+    currentCTC: undefined,
+    expectedCTC: undefined,
+  });
   const [phoneMessage, setPhoneMessage] = useState(" ");
   const [ageError, setAgeError] = useState(" ");
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required(),
+    email: Yup.string().email().required(),
+    phoneNumber: Yup.number().required(),
+    DOB: Yup.date().required(),
+    gender: Yup.string().required(),
+    skills: Yup.array().required(),
+    currentCTC: Yup.number().required(),
+    expectedCTC: Yup.number().required(),
+  });
+  const validate = async () => {
+    try {
+      const value = await validationSchema.validate(formData, {
+        abortEarly: false,
+      });
+      console.log({ value });
+    } catch (error) {
+      error.inner.forEach((item) => {
+        setErrors((prev) => ({ ...prev, [item.path]: item.message }));
+      });
+      console.log({ error });
+    }
+  };
+
+  console.log({ errors, formData });
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    if (name === "email" && !isEmailValid(value)) {
-      setMessage("Invalid Email Address");
-    } else {
-      setMessage("");
-    }
-    if (name === "phoneNumber" && !isPhoneValid(value)) {
-      setPhoneMessage("Phone number not valid");
-    } else {
-      setPhoneMessage(" ");
-    }
-    if (name === "DOB") {
-      const age = calculateage(value);
-      if (age < 18) {
-        setAgeError("Age should be greater that 18");
-      } else {
-        setAgeError("");
-      }
-    }
+    // if (name === "email" && !isEmailValid(value)) {
+    //   setMessage("Invalid Email Address");
+    // } else {
+    //   setMessage("");
+    // }
+    // if (name === "phoneNumber" && !isPhoneValid(value)) {
+    //   setPhoneMessage("Phone number not valid");
+    // } else {
+    //   setPhoneMessage(" ");
+    // }
+    // if (name === "DOB") {
+    //   const age = calculateage(value);
+    //   if (age < 18) {
+    //     setAgeError("Age should be greater that 18");
+    //   } else {
+    //     setAgeError("");
+    //   }
+    // }
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -99,14 +138,14 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(formData);
+    validate()
+    console.log({formData});
   };
 
   const getSkills = async () => {
     try {
       const { data: skills } = await axios.get("/skill");
-      setSkillsOptions(skills);
+      setSkillsOptions(skills.listOfSkills);
       console.log({ skills });
     } catch (error: any) {
       toast.error(error.message);
@@ -143,11 +182,16 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     getSkills();
   }, []);
 
-  if (loading) return <div className="mt-8 w-1/2 m-auto"><Progress size="xs" isIndeterminate /></div>;
+  if (loading)
+    return (
+      <div className="mt-8 w-1/2 m-auto">
+        <Progress size="xs" isIndeterminate />
+      </div>
+    );
   else
     return (
       <div className="p-8 w-[70%] m-auto">
-        <form onSubmit={handleSubmit}>
+        <div>
           <VStack spacing={4}>
             <FormControl isRequired>
               <FormLabel>Name</FormLabel>
@@ -157,6 +201,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
                 value={formData.name}
                 onChange={handleChange}
               />
+              <ErrorText>{errors?.name}</ErrorText>
             </FormControl>
 
             <FormControl isRequired>
@@ -167,7 +212,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
                 value={formData.email}
                 onChange={handleChange}
               />
-              <div className="text-red-500 font-bold">{message}</div>
+              <ErrorText>{errors?.email}</ErrorText>
             </FormControl>
 
             <FormControl isRequired>
@@ -178,7 +223,9 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
                 value={formData.phoneNumber}
                 onChange={handleChange}
               />
-              <div className="text-red-500 font-bold">{phoneMessage}</div>
+              <ErrorText>{errors.phoneNumber.length && errors?.phoneNumber}</ErrorText>
+
+              {/* <div className="text-red-500 font-bold">{phoneMessage}</div> */}
             </FormControl>
 
             <FormControl isRequired>
@@ -189,7 +236,9 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
                 value={dayjs(formData.DOB).format("YYYY-MM-DD")}
                 onChange={handleChange}
               />
-              <div className="text-red-500 font-bold">{ageError}</div>
+              <ErrorText>{errors?.DOB}</ErrorText>
+
+              {/* <div className="text-red-500 font-bold">{ageError}</div> */}
             </FormControl>
 
             <FormControl isRequired>
@@ -204,6 +253,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
                 <option value="female">Female</option>
                 <option value="other">Other</option>
               </Select>
+              <ErrorText>{errors?.gender}</ErrorText>
             </FormControl>
             <FormControl>
               <FormLabel>Select Skills</FormLabel>
@@ -217,6 +267,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
                 value={formData.skills}
                 onChange={handleSkillsChange}
               />
+              <ErrorText>{errors?.skills}</ErrorText>
             </FormControl>
 
             <FormControl isRequired>
@@ -227,6 +278,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
                 value={formData.currentCTC}
                 onChange={handleChange}
               />
+              <ErrorText>{errors?.currentCTC}</ErrorText>
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Expected CTC</FormLabel>
@@ -236,17 +288,24 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
                 value={formData.expectedCTC}
                 onChange={handleChange}
               />
+              <ErrorText>{errors?.expectedCTC}</ErrorText>
             </FormControl>
-
-            <Button
-              colorScheme="teal"
-              type="submit"
-              onClick={() => onSubmit(formData)}
-            >
-              Next
-            </Button>
+            <div className="flex justify-end">
+              <Button
+                colorScheme="teal"
+                type="submit"
+                // onClick={() => onSubmit(formData)}
+                // onClick={() => {
+                //   onSubmit(formData);
+                //   validate();
+                // }}
+                onClick={handleSubmit}
+              >
+                Next
+              </Button>
+            </div>
           </VStack>
-        </form>
+        </div>
       </div>
     );
 };

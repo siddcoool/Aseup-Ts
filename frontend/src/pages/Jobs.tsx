@@ -3,16 +3,16 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Textarea,
   Button,
   VStack,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import CreatableSelect from "react-select/creatable";
-
+import Select from "react-select";
 import { IEmployers } from "./ViewEmployer";
-import Editor ,{ BtnBold, EditorProvider, HtmlEditor, Toolbar } from 'react-simple-wysiwyg';
+import Editor, {
+} from "react-simple-wysiwyg";
 import { useNavigate, useParams } from "react-router-dom";
 import { ISkills } from "./Skills";
 
@@ -23,8 +23,10 @@ export type IJobs = {
   budget: string;
   noticePeriod: number;
   skills?: ISkills[];
-  _id?: string
+  _id?: string;
 };
+
+
 
 const Jobs = () => {
   const [skillsOptions, setSkillsOptions] = useState([]);
@@ -50,14 +52,17 @@ const Jobs = () => {
     >
   ) => {
     const { name, value } = e.target;
-    console.log({name,value})
+    console.log({ name, value });
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  const handleEmployeeDropdown = (selectedValues: any, actionMeta: any) => {
+  console.log({ skillsOptions, formData });
+
+  const handleEmployeeDropdown = (selectedValues: any) => {
+    console.log({ selectedValues });
     setFormData((prevData) => ({
       ...prevData,
       employer: selectedValues,
@@ -67,7 +72,7 @@ const Jobs = () => {
     try {
       const { data } = await axios.get("/employer");
 
-      setEmployerOptions(data);
+      setEmployerOptions(data.employer);
     } catch (error) {
       console.log(error);
     }
@@ -85,7 +90,7 @@ const Jobs = () => {
   const getSkills = async () => {
     try {
       const { data } = await axios.get("/skill");
-      setSkillsOptions(data);
+      setSkillsOptions(data.listOfSkills);
     } catch (error: any) {
       toast({
         title: error.message,
@@ -93,7 +98,6 @@ const Jobs = () => {
       });
     }
   };
-  console.log({ formData, employerOptions });
   const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -101,9 +105,9 @@ const Jobs = () => {
     }));
   };
 
-  const handleJobRequirement = (value:string) =>{
-    setFormData((prev)=>({...prev,jobRequirements:value}))
-  }
+  const handleJobRequirement = (value: string) => {
+    setFormData((prev) => ({ ...prev, jobRequirements: value }));
+  };
 
   useEffect(() => {
     fetchEmployers();
@@ -128,7 +132,7 @@ const Jobs = () => {
             duration: 5000,
             isClosable: true,
           });
-          navigate('/jobs')
+          navigate("/jobs");
         }
       } else {
         const response = await axios.post("/jobs", formData);
@@ -173,9 +177,9 @@ const Jobs = () => {
           <FormControl id="jobRequirements" isRequired>
             <FormLabel>Job Requirements</FormLabel>
             <Editor
-            value={formData.jobRequirements}
-            onChange={(e)=>handleJobRequirement(e.target.value)}
-            /> 
+              value={formData.jobRequirements}
+              onChange={(e) => handleJobRequirement(e.target.value)}
+            />
             {/* <Textarea
               name="jobRequirements"
               value={formData.jobRequirements}
@@ -209,7 +213,7 @@ const Jobs = () => {
           <FormControl>
             <FormLabel>Select Skills</FormLabel>
 
-            <CreatableSelect
+            <Select
               isClearable
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option._id}

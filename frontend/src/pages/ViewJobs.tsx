@@ -62,7 +62,7 @@ const ViewJobs = () => {
     }
   };
 
-  console.log({ isTableLoading });
+  console.log({ jobs });
 
   const handleEdit = (id: string) => {
     navigate(`/jobs/edit/${id}`);
@@ -92,9 +92,9 @@ const ViewJobs = () => {
   const columns = [
     { id: "title", name: "Title", renderCell: (row) => row.jobTitle },
     {
-      id: "jobRequirements",
-      name: "Requirements",
-      renderCell: (row) => row.jobRequirements,
+      id: "Employer",
+      name: "Employer",
+      renderCell: (row) =>  row?.employer?.companyName ?? 'Aseup',
     },
     { id: "budget", name: "Budget", renderCell: (row) => row.budget },
     {

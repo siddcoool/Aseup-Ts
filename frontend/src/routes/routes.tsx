@@ -15,12 +15,9 @@ import Jobs from "../pages/Jobs";
 import ViewJobs from "../pages/ViewJobs";
 import Skills from "../pages/Skills";
 import ViewApplication from "../pages/ViewApplication";
-<<<<<<< HEAD
 import Application from "../pages/Application";
-=======
 import Profile from "../pages/Profile";
 import SkillForm from "../pages/SkillForm";
->>>>>>> e3328dbcd975160dd94f8d7124057a37de684b7f
 
 interface Route {
   path: string;

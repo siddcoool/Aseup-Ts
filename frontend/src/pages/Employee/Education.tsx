@@ -163,6 +163,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
           );
         }}
       </LineItemRepeater>
+      <div className="flex justify-end">
       <Button
         colorScheme="teal"
         type="submit"
@@ -170,6 +171,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
       >
         Next
       </Button>
+      </div>
     </div>
   );
 };

@@ -34,39 +34,7 @@ const getApplications=async () => {
   return (
     //FormControl for Select Job
     <>
-      <FormControl>
-        <FormLabel>Select Job</FormLabel>
-        <CreatableSelect
-          getOptionLabel={(option) => option.name}
-          getOptionValue={(option) => option._id}
-          isClearable
-          isMulti
-          options={}
-          value={}
-        />
-      </FormControl>
-
-      {/* //Form control for Employee */}
-      <FormControl>
-        <FormLabel>Select Employee</FormLabel>
-        <CreatableSelect
-          getOptionLabel={(option) => option.name}
-          getOptionValue={(option) => option._id}
-          isClearable
-          isMulti
-          options={}
-          value={}
-        />
-      </FormControl>
-
-      {/* Clik on Submit Button */}
-      <Button
-        colorScheme="teal"
-        type="submit"
-        onClick={() => onSubmit(formData)}
-      >
-        Submit
-      </Button>
+    hello
     </>
   );
 };

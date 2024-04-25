@@ -31,7 +31,7 @@ const Page = () => {
   const handleFormSubmit = async (employeeFormData: EmployeeDocument) => {
     try {
       if (employeeId) {
-        await axios.put(
+      const {status} = await axios.put(
           `/employee/edit/${employeeId}`,
           employeeFormData
         );
@@ -48,7 +48,7 @@ const Page = () => {
           status: "success",
         });
       }
-      navigate('/thankyou')
+      navigate('/employee')
     } catch (error) {
       toast({
         title: (error as Error).message,
@@ -68,7 +68,7 @@ const Page = () => {
           employeeData={employeeFormData}
           onSubmit={(input: Partial<EmployeeDocument>) => {
             handlePartialParameters(input);
-            goToNext();
+            // goToNext();
           }}
         />
       ),

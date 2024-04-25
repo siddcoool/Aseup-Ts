@@ -147,6 +147,7 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
           );
         }}
       </LineItemRepeater>
+      <div className="flex justify-center">
       <Button
         colorScheme="teal"
         type="submit"
@@ -156,6 +157,7 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
       >
         Submit
       </Button>
+      </div>
     </div>
   );
 };
