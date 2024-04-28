@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -54,12 +54,13 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     phoneNumber: Yup.number().required(),
     DOB: Yup.date().required(),
     gender: Yup.string().required(),
-    skills: Yup.array().required(),
+    skills: Yup.array().min(1).required(),
     currentCTC: Yup.number().required(),
     expectedCTC: Yup.number().required(),
   });
   const validate = async () => {
     try {
+      setErrors(null)
       const value = await validationSchema.validate(formData, {
         abortEarly: false,
       });
@@ -101,16 +102,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
       [name]: value,
     }));
   };
-  const isEmailValid = (email: string): boolean => {
-    // Regular expression for email validation
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-  };
-  const isPhoneValid = (phoneNumber: string): boolean => {
-    //Regular expression for phone number validation
-    const phoneregex = /^([0-9])\d{9}$/;
-    return phoneregex.test(phoneNumber);
-  };
+ 
   const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
     if (actionMeta.action === "create-option") {
       const newSkill = selectedValues[selectedValues.length - 1];
@@ -137,9 +129,9 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    validate()
-    console.log({formData});
+  const handleSubmit = (e: ChangeEvent<HTMLInputElement>) => {
+    const a = validate()
+    console.log({formData,a});
   };
 
   const getSkills = async () => {
@@ -151,7 +143,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
       toast.error(error.message);
     }
   };
-  const calculateage = (DOB: string) => {
+  const calculateAge = (DOB: string) => {
     const birthdate = new Date(DOB);
     const today = new Date();
     let age = today.getFullYear() - birthdate.getFullYear();
@@ -218,12 +210,12 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
             <FormControl isRequired>
               <FormLabel>Phone Number</FormLabel>
               <Input
-                type="tel"
+                type="number"
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleChange}
               />
-              <ErrorText>{errors.phoneNumber.length && errors?.phoneNumber}</ErrorText>
+              <ErrorText>{ errors?.phoneNumber}</ErrorText>
 
               {/* <div className="text-red-500 font-bold">{phoneMessage}</div> */}
             </FormControl>
