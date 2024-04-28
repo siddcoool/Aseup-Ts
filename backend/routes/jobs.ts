@@ -58,6 +58,11 @@ jobRouter.get("/recommended-employee/:id", async (req, res) => {
 
     const recommendedEmployees = await Jobs.aggregate([
       {
+        $match: {
+          skills: { $exists: true, $ne: null } // Filter out documents where "skills" is null
+        }
+      },
+      {
         $lookup: {
           from: "employees",
           localField: "skills",
@@ -72,10 +77,15 @@ jobRouter.get("/recommended-employee/:id", async (req, res) => {
             $filter: {
               input: "$matchedEmployees",
               cond: {
-                $gte: [
-                  { $size: { $setIntersection: ["$skills", "$$this.skills"] } },
-                  3,
-                ],
+                $and: [
+                  { $isArray: "$$this.skills" }, // Check if "skills" array exists in matched employee
+                  {
+                    $gte: [
+                      { $size: { $setIntersection: ["$skills", "$$this.skills"] } },
+                      1,
+                    ],
+                  }
+                ]
               },
             },
           },

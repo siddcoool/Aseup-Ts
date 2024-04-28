@@ -19,9 +19,14 @@ import ErrorText from "../../components/ErrorText";
 interface IPersonalDetails {
   onSubmit: (input: Partial<EmployeeDocument>) => void;
   employeeData: EmployeeDocument;
+  employeeId?: string;
 }
 
-const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
+const PersonalDetails = ({
+  onSubmit,
+  employeeData,
+  employeeId,
+}: IPersonalDetails) => {
   const [formData, setFormData] = useState<Partial<EmployeeDocument>>({
     name: "",
     email: "",
@@ -34,7 +39,6 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
   });
   const [loading, setLoading] = useState(false);
   const [skillsOptions, setSkillsOptions] = useState<any[]>([]);
-  const [message, setMessage] = useState(" ");
   const [errors, setErrors] = useState({
     name: "",
     email: "",
@@ -45,8 +49,6 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     currentCTC: undefined,
     expectedCTC: undefined,
   });
-  const [phoneMessage, setPhoneMessage] = useState(" ");
-  const [ageError, setAgeError] = useState(" ");
 
   const validationSchema = Yup.object({
     name: Yup.string().required(),
@@ -60,20 +62,18 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
   });
   const validate = async () => {
     try {
-      setErrors(null)
-      const value = await validationSchema.validate(formData, {
+      setErrors(null);
+      await validationSchema.validate(formData, {
         abortEarly: false,
       });
-      console.log({ value });
+      return true;
     } catch (error) {
       error.inner.forEach((item) => {
         setErrors((prev) => ({ ...prev, [item.path]: item.message }));
       });
-      console.log({ error });
+      return false;
     }
   };
-
-  console.log({ errors, formData });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -102,7 +102,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
       [name]: value,
     }));
   };
- 
+
   const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
     if (actionMeta.action === "create-option") {
       const newSkill = selectedValues[selectedValues.length - 1];
@@ -129,33 +129,20 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     }
   };
 
-  const handleSubmit = (e: ChangeEvent<HTMLInputElement>) => {
-    const a = validate()
-    console.log({formData,a});
+  const handleSubmit = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (await validate()) {
+      onSubmit(formData);
+    }
   };
-
+  console.log({ formData, employeeData });
   const getSkills = async () => {
     try {
-      const { data: skills } = await axios.get("/skill");
-      setSkillsOptions(skills.listOfSkills);
-      console.log({ skills });
+      const { data } = await axios.get("/skill");
+      setSkillsOptions(data.listOfSkills);
+      console.log({ data });
     } catch (error: any) {
       toast.error(error.message);
     }
-  };
-  const calculateAge = (DOB: string) => {
-    const birthdate = new Date(DOB);
-    const today = new Date();
-    let age = today.getFullYear() - birthdate.getFullYear();
-    console.log(`before if ${age}`);
-
-    const month = today.getMonth() - birthdate.getMonth();
-    //need to ask to piyush
-    if (month < 0 || (month === 0 && today.getDay() < birthdate.getDay())) {
-      age--;
-    }
-
-    return age;
   };
 
   const EmployeeDataSetting = () => {
@@ -167,7 +154,9 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
   };
 
   useEffect(() => {
-    EmployeeDataSetting();
+    if (employeeId) {
+      EmployeeDataSetting();
+    }
   }, [employeeData]);
 
   useEffect(() => {
@@ -215,7 +204,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
                 value={formData.phoneNumber}
                 onChange={handleChange}
               />
-              <ErrorText>{ errors?.phoneNumber}</ErrorText>
+              <ErrorText>{errors?.phoneNumber}</ErrorText>
 
               {/* <div className="text-red-500 font-bold">{phoneMessage}</div> */}
             </FormControl>

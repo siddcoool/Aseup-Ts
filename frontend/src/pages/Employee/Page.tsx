@@ -66,9 +66,10 @@ const Page = () => {
       component: ({ goToNext }) => (
         <PersonalDetails
           employeeData={employeeFormData}
+          employeeId={employeeId}
           onSubmit={(input: Partial<EmployeeDocument>) => {
             handlePartialParameters(input);
-            // goToNext();
+            goToNext();
           }}
         />
       ),
