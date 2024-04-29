@@ -5,6 +5,13 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  Modal,
+  ModalFooter,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -17,7 +24,6 @@ import DataTable from "../common/component/table/DataTable";
 import TableHeader from "../common/component/header/tableHeader";
 import { Pagination } from "../components/Pagination";
 import { PAGE_LIMIT } from "../constant/app";
-import Modal from "../components/Modal";
 
 export interface IEmployers {
   companyName: string;
@@ -29,6 +35,8 @@ export interface IEmployers {
 
 const ViewJobs = () => {
   const [jobs, setJobs] = useState<IJobs[]>([]);
+  const [recommendedEmployees, setRecommendedEmployees] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
@@ -53,8 +61,10 @@ const ViewJobs = () => {
       const res = await axios.get(
         `/jobs?pageLimit=${PAGE_LIMIT}&pageNumber=${currentPage}`
       );
+      console.log({ res });
       setLoading(false);
       setJobs(res.data.jobs);
+      setRecommendedEmployees(res.data.recommendedEmployees)
       setTotalCount(Math.ceil(res.data.count / PAGE_LIMIT));
     } catch (error) {
       console.log(error);
@@ -64,7 +74,7 @@ const ViewJobs = () => {
     }
   };
 
-  console.log({ jobs });
+  console.log({ jobs, recommendedEmployees });
 
   const handleEdit = (id: string) => {
     navigate(`/jobs/edit/${id}`);
@@ -88,7 +98,7 @@ const ViewJobs = () => {
     }
   };
   const handleDeleteModalOpen = (row) => {
-    onOpen();
+    // onOpen();
     setSelectedRow(row);
   };
   const columns = [
@@ -96,9 +106,16 @@ const ViewJobs = () => {
     {
       id: "Employer",
       name: "Employer",
-      renderCell: (row) =>  row?.employer?.companyName ?? 'Aseup',
+      renderCell: (row) => row?.employer?.companyName ?? "Aseup",
     },
-    { id: "budget", name: "Budget", renderCell: (row) => row.budget },
+    {
+      id: "budget",
+      name: "Budget",
+      renderCell: (row) => {
+        row.budget;
+        console.log({ row });
+      },
+    },
     {
       id: "noticePeriod",
       name: "Notice Period",
@@ -116,7 +133,25 @@ const ViewJobs = () => {
             <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
           </div>
           <div>
-            <Button onClick={()=>{}}>Recommended</Button>
+            <>
+              <Button onClick={onOpen}>Open Modal</Button>
+
+              <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Recommended Employees</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody></ModalBody>
+
+                  <ModalFooter>
+                    <Button colorScheme="blue" mr={3} onClick={onClose}>
+                      Close
+                    </Button>
+                    <Button variant="ghost">Secondary Action</Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
+            </>
           </div>
         </div>
       ),
@@ -159,17 +194,15 @@ const ViewJobs = () => {
               setCurrentPage(selectedItem.selected)
             }
           />
-         
         </div>
         <DeleteAlert
           loading={deleteEmployeeLoading}
           title={selectedRow?.jobTitle ?? ""}
-          isOpen={isOpen}
+          isOpen={false} // change this later to isOpen
           onClose={onClose}
           onClick={() => selectedRow && handleDelete(selectedRow._id)}
           ref={cancelRef}
         />
-        
       </div>
     );
 };

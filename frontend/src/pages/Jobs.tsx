@@ -11,8 +11,7 @@ import axios from "axios";
 import CreatableSelect from "react-select/creatable";
 import Select from "react-select";
 import { IEmployers } from "./ViewEmployer";
-import Editor, {
-} from "react-simple-wysiwyg";
+import Editor from "react-simple-wysiwyg";
 import { useNavigate, useParams } from "react-router-dom";
 import { ISkills } from "./Skills";
 
@@ -25,8 +24,6 @@ export type IJobs = {
   skills?: ISkills[];
   _id?: string;
 };
-
-
 
 const Jobs = () => {
   const [skillsOptions, setSkillsOptions] = useState([]);
@@ -44,8 +41,6 @@ const Jobs = () => {
 
   const { id } = useParams();
 
-  console.log({ formData: formData.jobRequirements });
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -58,8 +53,6 @@ const Jobs = () => {
       [name]: value,
     }));
   };
-
-  console.log({ skillsOptions, formData });
 
   const handleEmployeeDropdown = (selectedValues: any) => {
     console.log({ selectedValues });
@@ -120,8 +113,7 @@ const Jobs = () => {
     }
   }, []);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     try {
       if (id) {
         const response = await axios.put(`/jobs/${id}`, formData);
@@ -157,7 +149,7 @@ const Jobs = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-8 flex justify-center ">
+    <div className="p-8 flex justify-center ">
       <div className="w-[60%]">
         <div className="font-bold text-3xl text-center m-4">
           {id ? "Edit" : "Create"} a Job
@@ -246,12 +238,12 @@ const Jobs = () => {
             />
           </FormControl>
 
-          <Button type="submit" colorScheme="blue">
+          <Button type="submit" onClick={handleSubmit} colorScheme="blue">
             Submit
           </Button>
         </VStack>
       </div>
-    </form>
+    </div>
   );
 };
 

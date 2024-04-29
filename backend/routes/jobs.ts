@@ -16,7 +16,61 @@ jobRouter.get("/", async (req: Request, res: Response) => {
       .limit(parsedPageLimit)
       .skip(parsedPageLimit * parsedSkip).populate('employer');
 
-    res.send({jobs,count});
+      const recommendedEmployees = await Jobs.aggregate([
+        {
+          $match: {
+            skills: { $exists: true, $ne: null } // Filter out documents where "skills" is null
+          }
+        },
+        {
+          $lookup: {
+            from: "employees",
+            localField: "skills",
+            foreignField: "skills",
+            as: "matchedEmployees",
+          },
+        },
+        {
+          $project: {
+            title: 1,
+            matchedEmployees: {
+              $filter: {
+                input: "$matchedEmployees",
+                cond: {
+                  $and: [
+                    { $isArray: "$$this.skills" }, // Check if "skills" array exists in matched employee
+                    {
+                      $gte: [
+                        { $size: { $setIntersection: ["$skills", "$$this.skills"] } },
+                        1,
+                      ],
+                    }
+                  ]
+                },
+              },
+            },
+          },
+        },
+        {
+          $addFields: {
+            matchedEmployees: {
+              $map: {
+                input: "$matchedEmployees",
+                as: "employee",
+                in: {
+                  $mergeObjects: [
+                    "$$employee",
+                    { _id: "$_id" } // Set the _id field of the employee to the jobid
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]);
+      
+
+    res.send({jobs,count,recommendedEmployees});
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
@@ -40,7 +94,7 @@ jobRouter.get("/:id", async (req: Request, res: Response) => {
     if (job) {
       res.send(job);
     } else {
-      res.send(404).json({ message: "job not found" });
+      res.status(404).json({ message: "job not found" });
     }
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
@@ -91,13 +145,25 @@ jobRouter.get("/recommended-employee/:id", async (req, res) => {
           },
         },
       },
+      {
+        $addFields: {
+          matchedEmployees: {
+            $map: {
+              input: "$matchedEmployees",
+              as: "employee",
+              in: {
+                $mergeObjects: [
+                  "$$employee",
+                  { _id: "$_id" } // Set the _id field of the employee to the jobid
+                ]
+              }
+            }
+          }
+        }
+      }
     ]);
+    
 
-    // Correcting the filtering logic for recommended employees
-    // const recommendedEmployee = employees.filter(
-    //   (employee) =>
-    //     employee.skills.filter((skill) => job.skills.includes(skill)).length > 3
-    // );
     res
       .status(200)
       .json({ message: "Recommended Employees", recommendedEmployees });
@@ -108,12 +174,7 @@ jobRouter.get("/recommended-employee/:id", async (req, res) => {
 
 jobRouter.post("/", async (req: Request, res: Response) => {
   try {
-    const { employer, skills } = req.body;
-    const employerId = employer.value;
-    let newSkills = [];
-    newSkills = skills.map((oneSkill: any) => oneSkill.value);
-    const newJob = { ...req.body, employer: employerId, skills: newSkills };
-    const createdJob = await Jobs.create(newJob);
+    const createdJob = await Jobs.create(req.body);
     res.status(201).json({ message: "new job created", createdJob });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
