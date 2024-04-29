@@ -4,6 +4,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Button,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -16,6 +17,7 @@ import DataTable from "../common/component/table/DataTable";
 import TableHeader from "../common/component/header/tableHeader";
 import { Pagination } from "../components/Pagination";
 import { PAGE_LIMIT } from "../constant/app";
+import Modal from "../components/Modal";
 
 export interface IEmployers {
   companyName: string;
@@ -113,6 +115,9 @@ const ViewJobs = () => {
           <div>
             <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
           </div>
+          <div>
+            <Button onClick={()=>{}}>Recommended</Button>
+          </div>
         </div>
       ),
     },
@@ -154,6 +159,7 @@ const ViewJobs = () => {
               setCurrentPage(selectedItem.selected)
             }
           />
+         
         </div>
         <DeleteAlert
           loading={deleteEmployeeLoading}
@@ -163,6 +169,7 @@ const ViewJobs = () => {
           onClick={() => selectedRow && handleDelete(selectedRow._id)}
           ref={cancelRef}
         />
+        
       </div>
     );
 };

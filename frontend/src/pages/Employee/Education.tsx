@@ -12,6 +12,7 @@ import { Education, EmployeeDocument } from "../../types/employee";
 import dayjs from "dayjs";
 import { LineItemRepeater } from "../../components/LineItemRepeater";
 import { getIndexAndKey } from "../../utils/stringOperation";
+import ErrorText from "../../components/ErrorText";
 
 interface IEducationForm {
   onSubmit: (input: Partial<EmployeeDocument>) => void;
@@ -44,7 +45,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
             Yup.ref("startYear"),
             "End Year should be greater than Start Year"
           ),
-        grade: Yup.string()
+        grade: Yup.string().oneOf(["A",'B','C','D','E','F'],'Should be a valid grade.')
           .min(1, "Grade is required")
           .required("Grade is required"),
       })
@@ -62,22 +63,16 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
       console.log({ error });
       if (error.inner) {
         let prevErrors = [];
-        
-        error.inner.forEach((err) => {
-          const {index, key, match} = getIndexAndKey(err.path)
-          const parts = err.path.split(".");
-          const title = parts[1];
 
+        error.inner.forEach((err) => {
+          const { index, key, match } = getIndexAndKey(err.path);
           prevErrors[index] = { ...prevErrors[index], [key]: err.message };
-          console.log({ prevErrors, index, key, match });
         });
-        console.log({ prevErrors });
         setErrors([...prevErrors]);
       }
       return false;
     }
   };
-  console.log({ errors });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -140,7 +135,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       value={formData[index]?.title}
                       onChange={(e) => handleChange(e, index)}
                     />
-                    {/* {errors[index].title} */}
+                    <ErrorText>{errors[index]?.title} </ErrorText>
                   </FormControl>
 
                   <FormControl isRequired>
@@ -151,7 +146,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       value={formData[index]?.field}
                       onChange={(e) => handleChange(e, index)}
                     />
-                    {errors[index]?.field}
+                    <ErrorText>{errors[index]?.field} </ErrorText>
                   </FormControl>
 
                   <FormControl isRequired>
@@ -162,6 +157,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       value={formData[index]?.institute}
                       onChange={(e) => handleChange(e, index)}
                     />
+                    <ErrorText>{errors[index]?.institute} </ErrorText>
                   </FormControl>
 
                   <FormControl isRequired>
@@ -174,6 +170,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       )}
                       onChange={(e) => handleChange(e, index)}
                     />
+                    <ErrorText>{errors[index]?.startYear} </ErrorText>
                   </FormControl>
 
                   <FormControl isRequired>
@@ -186,7 +183,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       )}
                       onChange={(e) => handleChange(e, index)}
                     />
-                    <div className="text-red-500 font-bold">{yearError}</div>
+                    <ErrorText>{errors[index]?.endYear} </ErrorText>
                   </FormControl>
 
                   <FormControl isRequired>
@@ -204,6 +201,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       <option value="E">E</option>
                       <option value="F">F</option>
                     </Select>
+                    <ErrorText>{errors[index]?.grade} </ErrorText>
                   </FormControl>
                 </VStack>
               </div>
