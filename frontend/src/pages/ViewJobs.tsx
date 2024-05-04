@@ -106,7 +106,7 @@ const ViewJobs = () => {
     }
   };
   const handleDeleteModalOpen = (row) => {
-    // onOpen();
+    onOpen();
     setSelectedRow(row);
   };
   const columns = [

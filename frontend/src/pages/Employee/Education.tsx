@@ -79,16 +79,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
     index: number
   ) => {
     const { name, value } = e.target;
-    if (name === "endYear") {
-      const startYear = formData[index]?.startYear;
-
-      if (startYear && value <= startYear) {
-        console.log(startYear, value);
-        setYearError("End year should be greater than start Date");
-      } else {
-        setYearError("");
-      }
-    }
+   
     setFormData((prevData) => {
       const updatedFormData = [...prevData];
       updatedFormData[index] = {

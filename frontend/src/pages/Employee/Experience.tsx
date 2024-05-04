@@ -85,14 +85,7 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
     index: number
   ) => {
     const { name, value } = e.target;
-    if (name === "endDate") {
-      const startdate = formData[index]?.startDate;
-      if (startdate && value <= startdate) {
-        setExpError("End year should be greater than start Date");
-      } else {
-        setExpError("");
-      }
-    }
+   
     setFormData((prevData) => {
       const updatedFormData = [...prevData];
       updatedFormData[index] = {
