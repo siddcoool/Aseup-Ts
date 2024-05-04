@@ -14,7 +14,7 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
@@ -61,7 +61,6 @@ const ViewJobs = () => {
       const res = await axios.get(
         `/jobs?pageLimit=${PAGE_LIMIT}&pageNumber=${currentPage}`
       );
-      console.log({ res });
       setLoading(false);
       setJobs(res.data.jobs);
       setRecommendedEmployees(res.data.recommendedEmployees);
@@ -74,13 +73,19 @@ const ViewJobs = () => {
     }
   };
 
-  let a = recommendedEmployees.filter(
-    (item) => "6623a94b893d0e146fcabfa9" === item._id
-  );
   console.log({ jobs, recommendedEmployees });
 
   const handleEdit = (id: string) => {
     navigate(`/jobs/edit/${id}`);
+  };
+
+  const getRecommendedEmployee = async (jobId: string) => {
+    try {
+      const { data } = await axios.get(`jobs/recommended-employee/${jobId}`);
+      setRecommendedEmployees(data.recommendedEmployees[0].matchedEmployees);
+    } catch (error) {
+      console.log({ error });
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -116,7 +121,6 @@ const ViewJobs = () => {
       name: "Budget",
       renderCell: (row) => {
         row.budget;
-        console.log({ row });
       },
     },
     {
@@ -137,21 +141,28 @@ const ViewJobs = () => {
           </div>
           <div>
             <>
-              <Button onClick={onOpen}>Open Modal</Button>
+              <Button
+                onClick={() => {
+                  getRecommendedEmployee(row._id);
+                  onOpen();
+                }}
+                colorScheme='whatsapp'
+                rightIcon={<ViewIcon/>}
+              >
+                View
+              </Button>
 
               <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                   <ModalHeader>Recommended Employees</ModalHeader>
                   <ModalCloseButton />
-                  <ModalBody>
-                    {recommendedEmployees
-                      .filter((item) => row._id === item._id)
-                      .map((employee) => {
-                        console.log("Employee:", employee); // Adding console log
-                        return <div>{employee?.matchedEmployees?.length}</div>;
-                      })}
-                  </ModalBody>
+                  <ModalBody>{recommendedEmployees && recommendedEmployees.map((item)=>{
+                    return <div key={item._id} className="flex justify-between">
+                      <div>{item.name}</div>
+                      <div>{item.email}</div>
+                    </div>
+                  })}</ModalBody>
 
                   <ModalFooter>
                     <Button colorScheme="blue" mr={3} onClick={onClose}>

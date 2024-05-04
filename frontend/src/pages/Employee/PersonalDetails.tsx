@@ -129,7 +129,7 @@ const PersonalDetails = ({
     }
   };
 
-  const handleSubmit = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleSubmit = async () => {
     if (await validate()) {
       onSubmit(formData);
     }

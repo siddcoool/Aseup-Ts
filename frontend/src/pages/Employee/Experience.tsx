@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import { LineItemRepeater } from "../../components/LineItemRepeater";
 import { getIndexAndKey } from "../../utils/stringOperation";
 import ErrorText from "../../components/ErrorText";
+import { error } from "console";
 
 interface IExperienceForm {
   employeeData: EmployeeDocument;
@@ -78,6 +79,7 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
       return false;
     }
   };
+  console.log({errors})
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
