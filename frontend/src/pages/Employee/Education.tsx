@@ -20,7 +20,7 @@ interface IEducationForm {
 }
 
 const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
-  const [yearError, setYearError] = useState("");
+  const [/*yearError*/, setYearError] = useState("");
   const [formData, setFormData] = useState<Education[]>([
     {
       title: "",
@@ -65,7 +65,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
         let prevErrors = [];
 
         error.inner.forEach((err) => {
-          const { index, key, match } = getIndexAndKey(err.path);
+          const { index, key } = getIndexAndKey(err.path);
           prevErrors[index] = { ...prevErrors[index], [key]: err.message };
         });
         setErrors([...prevErrors]);
@@ -100,7 +100,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
   };
 
   const handleDelete = (index: number) => {
-    const newData = formData.filter((item, idx) => index != idx);
+    const newData = formData.filter((_, idx) => index != idx);
     setFormData(newData);
   };
 

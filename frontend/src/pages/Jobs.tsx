@@ -125,7 +125,7 @@ const Jobs = () => {
       });
     }
   };
-  const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
+  const handleSkillsChange = (selectedValues: any) => {
     setFormData((prevData) => ({
       ...prevData,
       skills: selectedValues,

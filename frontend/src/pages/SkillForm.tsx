@@ -14,11 +14,11 @@ import ErrorText from "../components/ErrorText";
 
 type ISkill = {
   name: string;
-  _id: string;
+  _id?: string;
 };
 
 const SkillForm = () => {
-  const [skillName, setSkillName] = useState({
+  const [skillName, setSkillName] = useState<ISkill>({
     name: "",
   });
   const navigate = useNavigate();

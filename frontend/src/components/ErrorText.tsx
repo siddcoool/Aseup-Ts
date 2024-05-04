@@ -1,4 +1,3 @@
-import React from 'react'
 
 const ErrorText = ({children}:{children:string | string[]}) => {
   return (

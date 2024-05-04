@@ -1,6 +1,6 @@
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { Button, Input, Progress } from "@chakra-ui/react";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import  { ChangeEvent, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import WithCondition from "./WithCondition";
 type IPagination = {
@@ -13,7 +13,6 @@ type IPagination = {
 export const NativePagination = ({
   currentPage,
   totalPages,
-  onPageChange,
 }: any) => {
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {

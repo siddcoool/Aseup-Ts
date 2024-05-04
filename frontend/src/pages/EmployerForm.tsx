@@ -5,7 +5,6 @@ import {
   Input,
   Button,
   VStack,
-  Text,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
@@ -13,9 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LineItemRepeater } from "../components/LineItemRepeater";
 import * as Yup from "yup";
 import ErrorText from "../components/ErrorText";
-import { error } from "console";
 import {
-  getIndexAndKey,
   getIndexAndKeyForContact,
 } from "../utils/stringOperation";
 
@@ -131,7 +128,7 @@ const EmployerForm = () => {
   };
 
   const handleDelete = (index: number) => {
-    const newData = formData.contact.filter((item, idx) => index != idx);
+    const newData = formData.contact.filter((_, idx) => index != idx);
     setFormData((prev) => ({ ...prev, contact: newData }));
   };
 

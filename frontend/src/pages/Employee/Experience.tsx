@@ -13,7 +13,6 @@ import * as Yup from "yup";
 import { LineItemRepeater } from "../../components/LineItemRepeater";
 import { getIndexAndKey } from "../../utils/stringOperation";
 import ErrorText from "../../components/ErrorText";
-import { error } from "console";
 
 interface IExperienceForm {
   employeeData: EmployeeDocument;
@@ -105,7 +104,7 @@ const ExperienceForm = ({ employeeData, onSubmit }: IExperienceForm) => {
   };
 
   const handleDelete = (index: number) => {
-    const newData = formData.filter((item, idx) => index != idx);
+    const newData = formData.filter((_, idx) => index != idx);
     setFormData(newData);
   };
 

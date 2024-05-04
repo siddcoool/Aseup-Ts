@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import  { ReactNode, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 interface SidebarLinkGroupProps {
@@ -51,7 +51,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
 
-  const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(
+  const [sidebarExpanded, /* setSidebarExpanded */] = useState<boolean>(
     localStorage.getItem("sidebar-expanded") === "true"
   );
   const [selectedSidebar, setSelectedSidebar] = useState(SIDEBAR_ITEMS[3]);
@@ -125,7 +125,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <div>
             <ul className=" flex flex-col gap-1.5">
               <SidebarLinkGroup activeCondition={true}>
-                {(handleClick, open) => {
+                {() => {
                   return (
                     <>
                       {/* <Link
