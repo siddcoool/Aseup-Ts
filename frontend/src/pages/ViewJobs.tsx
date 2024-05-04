@@ -64,7 +64,7 @@ const ViewJobs = () => {
       console.log({ res });
       setLoading(false);
       setJobs(res.data.jobs);
-      setRecommendedEmployees(res.data.recommendedEmployees)
+      setRecommendedEmployees(res.data.recommendedEmployees);
       setTotalCount(Math.ceil(res.data.count / PAGE_LIMIT));
     } catch (error) {
       console.log(error);
@@ -74,6 +74,9 @@ const ViewJobs = () => {
     }
   };
 
+  let a = recommendedEmployees.filter(
+    (item) => "6623a94b893d0e146fcabfa9" === item._id
+  );
   console.log({ jobs, recommendedEmployees });
 
   const handleEdit = (id: string) => {
@@ -141,7 +144,14 @@ const ViewJobs = () => {
                 <ModalContent>
                   <ModalHeader>Recommended Employees</ModalHeader>
                   <ModalCloseButton />
-                  <ModalBody></ModalBody>
+                  <ModalBody>
+                    {recommendedEmployees
+                      .filter((item) => row._id === item._id)
+                      .map((employee) => {
+                        console.log("Employee:", employee); // Adding console log
+                        return <div>{employee?.matchedEmployees?.length}</div>;
+                      })}
+                  </ModalBody>
 
                   <ModalFooter>
                     <Button colorScheme="blue" mr={3} onClick={onClose}>
