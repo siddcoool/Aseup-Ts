@@ -79,24 +79,6 @@ const PersonalDetails = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    // if (name === "email" && !isEmailValid(value)) {
-    //   setMessage("Invalid Email Address");
-    // } else {
-    //   setMessage("");
-    // }
-    // if (name === "phoneNumber" && !isPhoneValid(value)) {
-    //   setPhoneMessage("Phone number not valid");
-    // } else {
-    //   setPhoneMessage(" ");
-    // }
-    // if (name === "DOB") {
-    //   const age = calculateage(value);
-    //   if (age < 18) {
-    //     setAgeError("Age should be greater that 18");
-    //   } else {
-    //     setAgeError("");
-    //   }
-    // }
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,

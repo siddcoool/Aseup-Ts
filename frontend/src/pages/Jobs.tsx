@@ -14,6 +14,8 @@ import { IEmployers } from "./ViewEmployer";
 import Editor from "react-simple-wysiwyg";
 import { useNavigate, useParams } from "react-router-dom";
 import { ISkills } from "./Skills";
+import * as Yup from "yup";
+import ErrorText from "../components/ErrorText";
 
 export type IJobs = {
   jobTitle: string;
@@ -32,7 +34,7 @@ const Jobs = () => {
     jobRequirements: "",
     employer: [],
     budget: "",
-    noticePeriod: undefined || 0,
+    noticePeriod: undefined,
     skills: [],
   });
   const [employerOptions, setEmployerOptions] = useState([]);
@@ -40,6 +42,38 @@ const Jobs = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
+
+  const [errors, setErrors] = useState({
+    jobTitle: "",
+    jobRequirements: "",
+    employer: "",
+    budget: "",
+    noticePeriod: "",
+    skills: "",
+  });
+
+  const validationSchema = Yup.object({
+    jobTitle: Yup.string().required(),
+    jobRequirements: Yup.string().email().required(),
+    employer: Yup.array().min(1).required(),
+    budget: Yup.number().required(),
+    noticePeriod: Yup.number().required(),
+    skills: Yup.array().min(1).required(),
+  });
+  const validate = async () => {
+    try {
+      setErrors(null);
+      await validationSchema.validate(formData, {
+        abortEarly: false,
+      });
+      return true;
+    } catch (error) {
+      error.inner.forEach((item) => {
+        setErrors((prev) => ({ ...prev, [item.path]: item.message }));
+      });
+      return false;
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -102,6 +136,42 @@ const Jobs = () => {
     setFormData((prev) => ({ ...prev, jobRequirements: value }));
   };
 
+  const handleSubmit = async () => {
+    if (await validate()) {
+      try {
+        if (id) {
+          const response = await axios.put(`/jobs/${id}`, formData);
+          if (response.status === 200) {
+            toast({
+              title: "Form Updated successfully",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+            });
+            navigate("/jobs");
+          }
+        } else {
+          const response = await axios.post("/jobs", formData);
+          if (response.status === 200) {
+            toast({
+              title: "Form Submitted",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+            });
+          }
+          navigate("/jobs");
+        }
+      } catch (error) {
+        toast({
+          title: (error as Error).message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }
+  };
   useEffect(() => {
     fetchEmployers();
     getSkills();
@@ -112,42 +182,6 @@ const Jobs = () => {
       getJobs(id);
     }
   }, []);
-
-  const handleSubmit = async () => {
-    try {
-      if (id) {
-        const response = await axios.put(`/jobs/${id}`, formData);
-        if (response.status === 200) {
-          toast({
-            title: "Form Updated successfully",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-          });
-          navigate("/jobs");
-        }
-      } else {
-        const response = await axios.post("/jobs", formData);
-        if (response.status === 200) {
-          toast({
-            title: "Form Submitted",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-          });
-        }
-        navigate("/jobs");
-      }
-    } catch (error) {
-      toast({
-        title: (error as Error).message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
-
   return (
     <div className="p-8 flex justify-center ">
       <div className="w-[60%]">
@@ -164,6 +198,7 @@ const Jobs = () => {
               onChange={handleChange}
               placeholder="Enter job title"
             />
+            <ErrorText>{errors?.jobTitle}</ErrorText>
           </FormControl>
 
           <FormControl id="jobRequirements" isRequired>
@@ -172,26 +207,11 @@ const Jobs = () => {
               value={formData.jobRequirements}
               onChange={(e) => handleJobRequirement(e.target.value)}
             />
-            {/* <Textarea
-              name="jobRequirements"
-              value={formData.jobRequirements}
-              onChange={handleChange}
-              placeholder="Enter job requirements"
-            /> */}
+            <ErrorText>{errors?.jobRequirements}</ErrorText>
           </FormControl>
           <FormControl id="employer" isRequired>
             <FormLabel>Employer</FormLabel>
-            {/* <Select
-              name="employer"
-              // value={employerOptions.find(
-              //   (option) => option.value === formData.employer?.value
-              // )}
-              value={formData.employer}
-              onChange={(option) =>
-                setFormData((prevData) => ({ ...prevData, employer: option }))
-              }
-              options={employerOptions}
-            /> */}
+
             <CreatableSelect
               getOptionLabel={(option) => option.companyName}
               getOptionValue={(option) => option._id}
@@ -200,6 +220,7 @@ const Jobs = () => {
               value={formData.employer}
               onChange={handleEmployeeDropdown}
             />
+            <ErrorText>{errors?.employer}</ErrorText>
           </FormControl>
 
           <FormControl>
@@ -214,6 +235,7 @@ const Jobs = () => {
               value={formData.skills}
               onChange={handleSkillsChange}
             />
+            <ErrorText>{errors?.skills}</ErrorText>
           </FormControl>
 
           <FormControl id="budget" isRequired>
@@ -225,6 +247,7 @@ const Jobs = () => {
               onChange={handleChange}
               placeholder="Enter budget"
             />
+            <ErrorText>{errors?.budget}</ErrorText>
           </FormControl>
 
           <FormControl id="noticePeriod" isRequired>
@@ -236,6 +259,7 @@ const Jobs = () => {
               onChange={handleChange}
               placeholder="Enter Notice period in days"
             />
+            <ErrorText>{errors?.noticePeriod}</ErrorText>
           </FormControl>
 
           <Button type="submit" onClick={handleSubmit} colorScheme="blue">
