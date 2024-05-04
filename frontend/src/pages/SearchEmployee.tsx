@@ -83,7 +83,7 @@
 
 const SearchEmployee = () => {
   return (
-    <div>SearchEmployee</div>
+    <div>SearchEmployee2</div>
   )
 }
 
