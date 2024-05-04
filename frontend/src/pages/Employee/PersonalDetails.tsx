@@ -112,11 +112,10 @@ const PersonalDetails = ({
   };
 
   const handleSubmit = async () => {
-    if (await validate()) {
+    if (await validate()) { 
       onSubmit(formData);
     }
   };
-  console.log({ formData, employeeData });
   const getSkills = async () => {
     try {
       const { data } = await axios.get("/skill");
