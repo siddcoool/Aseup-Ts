@@ -25,9 +25,10 @@ export type IJobs = {
   skills?: ISkills[];
   _id?: string;
 };
-
-
-
+export interface Jobs{
+  jobTitle: string;
+  _id: string;
+}
 const Jobs = () => {
   const [skillsOptions, setSkillsOptions] = useState([]);
   const [formData, setFormData] = useState<IJobs>({

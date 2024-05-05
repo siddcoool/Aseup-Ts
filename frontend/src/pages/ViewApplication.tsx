@@ -40,22 +40,21 @@ const ViewApplication = () => {
       });
     }
   };
-  console.log({ viewapplication: applications });
 
   const handleEdit = (id: string) => {
     navigate(`/application/edit/${id}`);
   };
 
-  // const rowData = () => {
-  //   if (applications) {
-  //     const rows = applications.map((item, idx) => {
-  //       item.job.map((item) => {
-  //         return item.jobTitle;
-  //       });
-  //     });
-  //     setRows(rows);
-  //   }
-  // };
+  const rowData = () => {
+    if (applications) {
+      const rows = applications.map((item, idx) => {
+        item.jobs.map((item) => {
+          return item.jobTitle;
+        });
+      });
+      setRows(rows);
+    }
+  };
 
   const handleDelete = async (id: string) => {
     try {
@@ -75,15 +74,18 @@ const ViewApplication = () => {
     }
   };
   const handleDeleteModalOpen = (row) => {
+    console.log(row);
     onOpen();
     setSelectedRow(row);
   };
   const columns = [
-    { id: "job", name: "JOB", renderCell: (row) => row.job.jobTitle },
+    { id: "job", name: "JOB", renderCell: (row) => row?.jobs?.jobTitle
+     },
     {
       id: "employee",
       name: "Employee",
-      renderCell: (row) => { return row.employee.name},
+      renderCell: (row) => row?.employee?.name
+    
     },
     {
       id: "action",
@@ -124,7 +126,7 @@ const ViewApplication = () => {
         </div>
         <DeleteAlert
           loading={deleteApplicationLoading}
-          title={selectedRow?.job ?? ""}
+          title={selectedRow?.jobs.jobTitle ?? ""}
           isOpen={isOpen}
           onClose={onClose}
           onClick={() => selectedRow && handleDelete(selectedRow._id)}

@@ -10,7 +10,6 @@ import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
-import { IJobs } from "./Jobs";
 import DeleteAlert from "../common/component/alerts/deleteAlerts";
 import DataTable from "../common/component/table/DataTable";
 import TableHeader from "../common/component/header/tableHeader";
@@ -23,6 +22,10 @@ export interface IEmployers {
   industry: string;
   location: string;
   _id: string;
+}
+
+export interface IJobs{
+  jobTitle:string;
 }
 
 const ViewJobs = () => {

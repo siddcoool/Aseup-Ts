@@ -5,7 +5,7 @@ const applicationRouter = Router();
 
 applicationRouter.get("/", async (req, res) => {
   try {
-    const applications = await Application.find().populate(['job','employee']);
+    const applications = await Application.find().populate(['jobs','employee']);
 
     res.status(200).send(applications);
   } catch (error) {
@@ -15,12 +15,22 @@ applicationRouter.get("/", async (req, res) => {
 applicationRouter.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const application = await Application.findById(id);
+    const application = await Application.findById(id).populate(["jobs","employee"]);
     res.status(200).send(application);
   } catch (error) {
     res.status(500).send((error as Error).message);
   }
 });
+applicationRouter.put("/:id",async(req,res)=>{
+  try {
+    const id=req.params.id;
+    
+    const application=await Application.findByIdAndUpdate(id,req.body)
+    res.status(200).send(application)
+  } catch (error) {
+    res.status(500).send((error as Error).message)
+  }
+})
 applicationRouter.post("/", async (req, res) => {
   try {
     const application = await Application.create(req.body);
@@ -32,9 +42,10 @@ applicationRouter.post("/", async (req, res) => {
 applicationRouter.delete("/:id",async(req,res)=>{
   try {
     const id=req.params.id
-    const deletejob=await Application.findById(id)
+    const deletejob=await Application.findByIdAndDelete(id)
+    res.status(200).send({});
   } catch (error) {
-    
+    res.status(500).send((error as Error).message);
   }
 })
 
