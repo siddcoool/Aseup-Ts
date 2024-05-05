@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import StepperContainer, { IStep } from "./StepperContainer";
 import PersonalDetails from "./PersonalDetails";
 import EducationForm from "./Education";
@@ -31,7 +31,7 @@ const Page = () => {
   const handleFormSubmit = async (employeeFormData: EmployeeDocument) => {
     try {
       if (employeeId) {
-      const {status} = await axios.put(
+      await axios.put(
           `/employee/edit/${employeeId}`,
           employeeFormData
         );
@@ -66,9 +66,10 @@ const Page = () => {
       component: ({ goToNext }) => (
         <PersonalDetails
           employeeData={employeeFormData}
+          employeeId={employeeId}
           onSubmit={(input: Partial<EmployeeDocument>) => {
             handlePartialParameters(input);
-            // goToNext();
+            goToNext();
           }}
         />
       ),

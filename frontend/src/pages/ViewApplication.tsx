@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import TableHeader from "../common/component/header/tableHeader";
 import DataTable from "../common/component/table/DataTable";
-import Application, { IApplication } from "./Application";
 import DeleteAlert from "../common/component/alerts/deleteAlerts";
 import axios from "axios";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -9,9 +8,13 @@ import Loader from "../common/component/loader/Loader";
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
+type IApplication ={
+  job:string,
+  _id:string
+}
+
 const ViewApplication = () => {
   const [applications, setApplications] = useState<IApplication[]>([]);
-  const [rows, setRows] = useState();
 
   const [loading, setLoading] = useState(false);
   const toast = useToast();

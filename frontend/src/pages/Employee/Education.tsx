@@ -7,9 +7,12 @@ import {
   VStack,
   Select,
 } from "@chakra-ui/react";
+import * as Yup from "yup";
 import { Education, EmployeeDocument } from "../../types/employee";
 import dayjs from "dayjs";
 import { LineItemRepeater } from "../../components/LineItemRepeater";
+import { getIndexAndKey } from "../../utils/stringOperation";
+import ErrorText from "../../components/ErrorText";
 
 interface IEducationForm {
   onSubmit: (input: Partial<EmployeeDocument>) => void;
@@ -17,7 +20,6 @@ interface IEducationForm {
 }
 
 const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
-  const [yearError, setYearError] = useState("");
   const [formData, setFormData] = useState<Education[]>([
     {
       title: "",
@@ -28,20 +30,60 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
       grade: "",
     },
   ]);
+  const [errors, setErrors] = useState([]);
+  const validationSchema = Yup.object().shape({
+    educations: Yup.array().of(
+      Yup.object().shape({
+        title: Yup.string().required("Title is required"),
+        field: Yup.string().required("Field is required"),
+        institute: Yup.string().required("Institute is required"),
+        startYear: Yup.date()
+          .typeError("Must be a valid date")
+          .required("Start Year is required"),
+        endYear: Yup.date()
+          .typeError("Must be a valid date")
+          .required("End Year is required")
+          .min(
+            Yup.ref("startYear"),
+            "End Year should be greater than or equal to Start Year"
+          ),
+        grade: Yup.string()
+          .oneOf(["A", "B", "C", "D", "E", "F"], "Should be a valid grade.")
+          .min(1, "Grade is required")
+          .required("Grade is required"),
+      })
+    ),
+  });
 
-  const handleChange = ( e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, index: number) => {
-    const { name, value } = e.target;
-    if (name === "endYear") {
-      const startYear = formData[index]?.startYear;
-      
-      
-      if (startYear && value <= startYear) {
-        console.log(startYear,value);
-        setYearError("End year should be greater than start Date");
-      } else {
-        setYearError("");
+  const validate = async () => {
+    try {
+      setErrors([]);
+      await validationSchema.validate(
+        { educations: formData },
+        { abortEarly: false }
+      );
+      return true;
+    } catch (error) {
+      console.log({ error });
+      if (error.inner) {
+        let prevErrors = [];
+
+        error.inner.forEach((err) => {
+          const { index, key } = getIndexAndKey(err.path);
+          prevErrors[index] = { ...prevErrors[index], [key]: err.message };
+        });
+        setErrors([...prevErrors]);
       }
+      return false;
     }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    index: number
+  ) => {
+    const { name, value } = e.target;
+
     setFormData((prevData) => {
       const updatedFormData = [...prevData];
       updatedFormData[index] = {
@@ -52,26 +94,17 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
     });
   };
 
-  
   const handleDelete = (index: number) => {
-    const newData = formData.filter((item, idx) => index != idx);
+    const newData = formData.filter((_, idx) => index != idx);
     setFormData(newData);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(formData); // Handle form submission
+  const handleSubmit = async () => {
+    if (await validate()) {
+      onSubmit({ educations: formData });
+    }
   };
-  // const calculatediff = (endYear: string, startYear: string) => {
-  //   const startyear = new Date(startYear);
-  //   const endyear = new Date(endYear);
-  //   console.log(`startyear,${startyear},endyear=${endyear}`);
-    
-  //   const diff = endyear.getFullYear() - startyear.getFullYear();
-  //   console.log(diff,endyear.getFullYear(),startyear.getFullYear());
-    
-  // return diff;
-  // };
+  console.log({ errors });
   useEffect(() => {
     if (employeeData && Array.isArray(employeeData.educations)) {
       setFormData([...employeeData.educations]);
@@ -80,11 +113,14 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
 
   return (
     <div>
-      <LineItemRepeater size={employeeData?.educations?.length} onDelete={handleDelete}>
+      <LineItemRepeater
+        size={employeeData?.educations?.length}
+        onDelete={handleDelete}
+      >
         {(index) => {
           return (
             <div className="p-8 w-[70%] m-auto" key={index}>
-              <form onSubmit={handleSubmit}>
+              <div>
                 <VStack spacing={4}>
                   <FormControl isRequired>
                     <FormLabel>Title</FormLabel>
@@ -94,6 +130,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       value={formData[index]?.title}
                       onChange={(e) => handleChange(e, index)}
                     />
+                    <ErrorText>{errors[index]?.title} </ErrorText>
                   </FormControl>
 
                   <FormControl isRequired>
@@ -104,6 +141,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       value={formData[index]?.field}
                       onChange={(e) => handleChange(e, index)}
                     />
+                    <ErrorText>{errors[index]?.field} </ErrorText>
                   </FormControl>
 
                   <FormControl isRequired>
@@ -114,6 +152,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       value={formData[index]?.institute}
                       onChange={(e) => handleChange(e, index)}
                     />
+                    <ErrorText>{errors[index]?.institute} </ErrorText>
                   </FormControl>
 
                   <FormControl isRequired>
@@ -126,6 +165,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       )}
                       onChange={(e) => handleChange(e, index)}
                     />
+                    <ErrorText>{errors[index]?.startYear} </ErrorText>
                   </FormControl>
 
                   <FormControl isRequired>
@@ -138,7 +178,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       )}
                       onChange={(e) => handleChange(e, index)}
                     />
-                    <div className="text-red-500 font-bold">{yearError}</div>
+                    <ErrorText>{errors[index]?.endYear} </ErrorText>
                   </FormControl>
 
                   <FormControl isRequired>
@@ -147,8 +187,8 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       name="grade"
                       value={formData[index]?.grade}
                       onChange={(e) => handleChange(e, index)}
-                    > 
-                    ,<option value="select"></option>
+                    >
+                      ,<option value="select"></option>
                       <option value="A">A</option>
                       <option value="B">B</option>
                       <option value="C">C</option>
@@ -156,21 +196,18 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
                       <option value="E">E</option>
                       <option value="F">F</option>
                     </Select>
+                    <ErrorText>{errors[index]?.grade} </ErrorText>
                   </FormControl>
                 </VStack>
-              </form>
+              </div>
             </div>
           );
         }}
       </LineItemRepeater>
       <div className="flex justify-end">
-      <Button
-        colorScheme="teal"
-        type="submit"
-        onClick={() => onSubmit({ educations: formData })}
-      >
-        Next
-      </Button>
+        <Button colorScheme="teal" type="submit" onClick={handleSubmit}>
+          Next
+        </Button>
       </div>
     </div>
   );

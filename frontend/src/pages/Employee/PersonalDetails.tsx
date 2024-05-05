@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -19,9 +19,14 @@ import ErrorText from "../../components/ErrorText";
 interface IPersonalDetails {
   onSubmit: (input: Partial<EmployeeDocument>) => void;
   employeeData: EmployeeDocument;
+  employeeId?: string;
 }
 
-const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
+const PersonalDetails = ({
+  onSubmit,
+  employeeData,
+  employeeId,
+}: IPersonalDetails) => {
   const [formData, setFormData] = useState<Partial<EmployeeDocument>>({
     name: "",
     email: "",
@@ -29,12 +34,11 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     DOB: "",
     gender: "",
     skills: [],
-    currentCTC: undefined,
-    expectedCTC: undefined,
+    currentCTC: null,
+    expectedCTC: null,
   });
   const [loading, setLoading] = useState(false);
   const [skillsOptions, setSkillsOptions] = useState<any[]>([]);
-  const [message, setMessage] = useState(" ");
   const [errors, setErrors] = useState({
     name: "",
     email: "",
@@ -45,69 +49,53 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     currentCTC: undefined,
     expectedCTC: undefined,
   });
-  const [phoneMessage, setPhoneMessage] = useState(" ");
-  const [ageError, setAgeError] = useState(" ");
 
   const validationSchema = Yup.object({
-    name: Yup.string().required(),
-    email: Yup.string().email().required(),
-    phoneNumber: Yup.number().required(),
-    DOB: Yup.date().required(),
-    gender: Yup.string().required(),
-    skills: Yup.array().min(1).required(),
-    currentCTC: Yup.number().required(),
-    expectedCTC: Yup.number().required(),
+    name: Yup.string().required('Name is required'),
+    email: Yup.string().email().required('Email is required'),
+    phoneNumber: Yup.string()
+      .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
+      .required('Phone number is required'),
+    DOB: Yup.date()
+      .typeError('Date of Birth must be a valid date')
+      .required('Date of Birth is required'),
+    gender: Yup.string().required('Gender is required'),
+    skills: Yup.array().min(1, 'At least one skill is required').required('Skills are required'),
+    currentCTC: Yup.number().required('Current CTC is required'),
+    expectedCTC: Yup.number().required('Expected CTC is required'),
   });
+  
+  
   const validate = async () => {
     try {
-      setErrors(null)
-      const value = await validationSchema.validate(formData, {
+      setErrors(null);
+      await validationSchema.validate(formData, {
         abortEarly: false,
       });
-      console.log({ value });
+      return true;
     } catch (error) {
       error.inner.forEach((item) => {
         setErrors((prev) => ({ ...prev, [item.path]: item.message }));
       });
-      console.log({ error });
+      return false;
     }
   };
-
-  console.log({ errors, formData });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    // if (name === "email" && !isEmailValid(value)) {
-    //   setMessage("Invalid Email Address");
-    // } else {
-    //   setMessage("");
-    // }
-    // if (name === "phoneNumber" && !isPhoneValid(value)) {
-    //   setPhoneMessage("Phone number not valid");
-    // } else {
-    //   setPhoneMessage(" ");
-    // }
-    // if (name === "DOB") {
-    //   const age = calculateage(value);
-    //   if (age < 18) {
-    //     setAgeError("Age should be greater that 18");
-    //   } else {
-    //     setAgeError("");
-    //   }
-    // }
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
- 
-  const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
+
+  const handleSkillsChange = async (selectedValues: any, actionMeta: any) => {
     if (actionMeta.action === "create-option") {
       const newSkill = selectedValues[selectedValues.length - 1];
 
-      addSkillToDatabase(newSkill).then(() => {
+      await addSkillToDatabase(newSkill).then(() => {
         getSkills();
       });
     } else {
@@ -129,33 +117,19 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
     }
   };
 
-  const handleSubmit = (e: ChangeEvent<HTMLInputElement>) => {
-    const a = validate()
-    console.log({formData,a});
+  const handleSubmit = async () => {
+    if (await validate()) {
+      onSubmit(formData);
+    }
   };
-
   const getSkills = async () => {
     try {
-      const { data: skills } = await axios.get("/skill");
-      setSkillsOptions(skills.listOfSkills);
-      console.log({ skills });
+      const { data } = await axios.get("/skill");
+      setSkillsOptions(data.listOfSkills);
+      console.log({ data });
     } catch (error: any) {
       toast.error(error.message);
     }
-  };
-  const calculateAge = (DOB: string) => {
-    const birthdate = new Date(DOB);
-    const today = new Date();
-    let age = today.getFullYear() - birthdate.getFullYear();
-    console.log(`before if ${age}`);
-
-    const month = today.getMonth() - birthdate.getMonth();
-    //need to ask to piyush
-    if (month < 0 || (month === 0 && today.getDay() < birthdate.getDay())) {
-      age--;
-    }
-
-    return age;
   };
 
   const EmployeeDataSetting = () => {
@@ -167,7 +141,9 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
   };
 
   useEffect(() => {
-    EmployeeDataSetting();
+    if (employeeId) {
+      EmployeeDataSetting();
+    }
   }, [employeeData]);
 
   useEffect(() => {
@@ -215,7 +191,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
                 value={formData.phoneNumber}
                 onChange={handleChange}
               />
-              <ErrorText>{ errors?.phoneNumber}</ErrorText>
+              <ErrorText>{errors?.phoneNumber}</ErrorText>
 
               {/* <div className="text-red-500 font-bold">{phoneMessage}</div> */}
             </FormControl>
@@ -251,7 +227,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
               <FormLabel>Select Skills</FormLabel>
 
               <CreatableSelect
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option.name ? option.name : option.label}
                 getOptionValue={(option) => option._id}
                 isClearable
                 isMulti
@@ -263,7 +239,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
             </FormControl>
 
             <FormControl isRequired>
-              <FormLabel>Current CTC</FormLabel>
+              <FormLabel>Current CTC (in Lakhs)</FormLabel>
               <Input
                 type="number"
                 name="currentCTC"
@@ -273,7 +249,7 @@ const PersonalDetails = ({ onSubmit, employeeData }: IPersonalDetails) => {
               <ErrorText>{errors?.currentCTC}</ErrorText>
             </FormControl>
             <FormControl isRequired>
-              <FormLabel>Expected CTC</FormLabel>
+              <FormLabel>Expected CTC (in Lakhs)</FormLabel>
               <Input
                 type="number"
                 name="expectedCTC"

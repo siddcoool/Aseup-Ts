@@ -1,5 +1,4 @@
 
-import { Avatar, Breadcrumb, Button, Input, useToast } from "@chakra-ui/react";
 // import useUser from "@/hooks/useUser";
 
 const Profile = () => {

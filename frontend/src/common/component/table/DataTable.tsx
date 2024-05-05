@@ -20,6 +20,11 @@ const DataTable = <T,>({ rows, columns, showCheckbox }: Props<T>) => {
     setSelectedOption(e.target.value);
   };
   console.log({rows,columns})
+  if(!rows.length){
+    return <div>
+      <img src='./no-data-found.jpg'/>
+    </div>
+  }
   
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -37,7 +42,7 @@ const DataTable = <T,>({ rows, columns, showCheckbox }: Props<T>) => {
           {/* Dropdown menu */}
           <div id="dropdownRadio" className="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top" style={{ position: "absolute", inset: "auto auto 0px 0px", margin: "0px", transform: "translate3d(522.5px, 3847.5px, 0px)" }}>
             <ul className="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRadioButton">
-              {rows.map((row, index) => (
+              {rows.map((_, index) => (
                 <li key={index}>
                   <div className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                     <input id={`filter-radio-example-${index}`} type="radio" name="filter-radio" onChange={handleOptionChange} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />

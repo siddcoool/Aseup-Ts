@@ -4,9 +4,17 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Button,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  Modal,
+  ModalFooter,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
@@ -30,6 +38,9 @@ export interface IJobs{
 
 const ViewJobs = () => {
   const [jobs, setJobs] = useState<IJobs[]>([]);
+  const [recommendedEmployees, setRecommendedEmployees] = useState([]);
+  const [openRecommendedEmployeesModel, setOpenRecommendedEmployeesModel] =
+    useState(false);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
@@ -56,6 +67,7 @@ const ViewJobs = () => {
       );
       setLoading(false);
       setJobs(res.data.jobs);
+      setRecommendedEmployees(res.data.recommendedEmployees);
       setTotalCount(Math.ceil(res.data.count / PAGE_LIMIT));
     } catch (error) {
       console.log(error);
@@ -65,10 +77,17 @@ const ViewJobs = () => {
     }
   };
 
-  console.log({ jobs });
-
   const handleEdit = (id: string) => {
     navigate(`/jobs/edit/${id}`);
+  };
+
+  const getRecommendedEmployee = async (jobId: string) => {
+    try {
+      const { data } = await axios.get(`jobs/recommended-employee/${jobId}`);
+      setRecommendedEmployees(data.recommendedEmployees[0].matchedEmployees);
+    } catch (error) {
+      console.log({ error });
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -92,14 +111,24 @@ const ViewJobs = () => {
     onOpen();
     setSelectedRow(row);
   };
+
+  const handleRecommendedModelOpen = () => {
+    setOpenRecommendedEmployeesModel(true);
+  };
   const columns = [
     { id: "title", name: "Title", renderCell: (row) => row.jobTitle },
     {
       id: "Employer",
       name: "Employer",
-      renderCell: (row) =>  row?.employer?.companyName ?? 'Aseup',
+      renderCell: (row) => row?.employer?.companyName ?? "Aseup",
     },
-    { id: "budget", name: "Budget", renderCell: (row) => row.budget },
+    {
+      id: "budget",
+      name: "Budget",
+      renderCell: (row) => {
+        return row.budget;
+      },
+    },
     {
       id: "noticePeriod",
       name: "Notice Period",
@@ -111,10 +140,53 @@ const ViewJobs = () => {
       renderCell: (row) => (
         <div className="flex gap-x-2">
           <div onClick={() => handleEdit(row._id)}>
-            <EditIcon />
+            <EditIcon className="cursor-pointer" />
           </div>
           <div>
-            <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
+            <DeleteIcon className="cursor-pointer" onClick={() => handleDeleteModalOpen(row)} />
+          </div>
+          <div>
+            <>
+              <ViewIcon
+                onClick={() => {
+                  getRecommendedEmployee(row._id);
+                  handleRecommendedModelOpen();
+                }}
+                className="cursor-pointer"
+              />
+
+              <Modal
+                isOpen={openRecommendedEmployeesModel}
+                onClose={() => setOpenRecommendedEmployeesModel(false)}
+              >
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Recommended Employees</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    {recommendedEmployees &&
+                      recommendedEmployees.map((item) => {
+                        return (
+                          <div key={item._id} className="flex justify-between">
+                            <div>{item.name}</div>
+                            <div>{item.email}</div>
+                          </div>
+                        );
+                      })}
+                  </ModalBody>
+
+                  <ModalFooter>
+                    <Button
+                      colorScheme="blue"
+                      mr={3}
+                      onClick={() => setOpenRecommendedEmployeesModel(false)}
+                    >
+                      Close
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
+            </>
           </div>
         </div>
       ),
@@ -161,7 +233,7 @@ const ViewJobs = () => {
         <DeleteAlert
           loading={deleteEmployeeLoading}
           title={selectedRow?.jobTitle ?? ""}
-          isOpen={isOpen}
+          isOpen={isOpen} // change this later to isOpen
           onClose={onClose}
           onClick={() => selectedRow && handleDelete(selectedRow._id)}
           ref={cancelRef}

@@ -8,7 +8,7 @@ type ILineFormRepeater = {
   responsive?: boolean;
 };
 
-const LineFormRepeater = ({ children, responsive }: ILineFormRepeater) => {
+const LineFormRepeater = ({ children }: ILineFormRepeater) => {
   const [fields, setFields] = useState([0]); // Initial field
 
   const addField = () => {

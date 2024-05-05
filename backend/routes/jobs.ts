@@ -14,9 +14,9 @@ jobRouter.get("/", async (req: Request, res: Response) => {
     const jobs = await Jobs.find({ isDeleted: false })
       .sort({ updatedAt: -1 })
       .limit(parsedPageLimit)
-      .skip(parsedPageLimit * parsedSkip).populate('employer');
-
-    res.send({jobs,count});
+      .skip(parsedPageLimit * parsedSkip)
+      .populate("employer");
+    res.send({ jobs, count });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
@@ -40,17 +40,18 @@ jobRouter.get("/:id", async (req: Request, res: Response) => {
     if (job) {
       res.send(job);
     } else {
-      res.send(404).json({ message: "job not found" });
+      res.status(404).json({ message: "job not found" });
     }
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
 });
 
-jobRouter.get("/recommended-employee/:id", async (req, res) => {
+jobRouter.get("/recommended-employee/:jobId", async (req, res) => {
   try {
-    const { id } = req.params;
-    const job = await Jobs.findById(id);
+    const { jobId } = req.params;
+
+    const job = await Jobs.findById(jobId);
 
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
@@ -58,36 +59,70 @@ jobRouter.get("/recommended-employee/:id", async (req, res) => {
 
     const recommendedEmployees = await Jobs.aggregate([
       {
-        $lookup: {
-          from: "employees",
-          localField: "skills",
-          foreignField: "skills",
-          as: "matchedEmployees",
-        },
+        $match: {
+          _id: new mongoose.Types.ObjectId(jobId) // Filter by the specific job ID
+        }
       },
       {
-        $project: {
-          title: 1,
-          matchedEmployees: {
-            $filter: {
-              input: "$matchedEmployees",
-              cond: {
-                $gte: [
-                  { $size: { $setIntersection: ["$skills", "$$this.skills"] } },
-                  3,
-                ],
-              },
-            },
-          },
-        },
+        $unwind: '$skills' // Flatten the skills array
       },
+      {
+        $lookup: {
+          from: "employees",
+          let: { jobSkills: "$skills" }, // Use a $let variable to store the job's skill IDs
+          pipeline: [
+            {
+              $unwind: "$skills" // Flatten the skills array for employees
+            },
+            {
+              $match: {
+                $expr: { $in: ["$skills", ["$$jobSkills"]] } // Wrap $$jobSkills in an array
+              }
+            },
+            {
+              $group: {
+                _id: "$_id", // Group by employee ID
+                // You may include other fields from the employee document here
+              }
+            }
+          ],
+          as: "matchedEmployees"
+        }
+      },
+      {
+        $unwind: "$matchedEmployees" // Unwind the matchedEmployees array
+      },
+      {
+        $group: {
+          _id: "$_id", // Group by job ID
+          title: { $first: "$jobTitle" }, // Get the job title
+          matchedEmployees: { $push: "$matchedEmployees" } // Collect the matched employees
+        }
+      },
+      {
+        $lookup: {
+          from: "employees",
+          localField: "matchedEmployees._id",
+          foreignField: "_id",
+          as: "matchedEmployees"
+        }
+      },
+      {
+        $addFields: {
+          matchedEmployees: {
+            $map: {
+              input: "$matchedEmployees",
+              as: "employee",
+              in: "$$employee"
+            }
+          }
+        }
+      }
     ]);
-
-    // Correcting the filtering logic for recommended employees
-    // const recommendedEmployee = employees.filter(
-    //   (employee) =>
-    //     employee.skills.filter((skill) => job.skills.includes(skill)).length > 3
-    // );
+    
+    // Now, recommendedEmployees will contain the populated matchedEmployees array with employee details
+    
+    
     res
       .status(200)
       .json({ message: "Recommended Employees", recommendedEmployees });
@@ -98,12 +133,7 @@ jobRouter.get("/recommended-employee/:id", async (req, res) => {
 
 jobRouter.post("/", async (req: Request, res: Response) => {
   try {
-    const { employer, skills } = req.body;
-    const employerId = employer.value;
-    let newSkills = [];
-    newSkills = skills.map((oneSkill: any) => oneSkill.value);
-    const newJob = { ...req.body, employer: employerId, skills: newSkills };
-    const createdJob = await Jobs.create(newJob);
+    const createdJob = await Jobs.create(req.body);
     res.status(201).json({ message: "new job created", createdJob });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
@@ -113,7 +143,7 @@ jobRouter.post("/", async (req: Request, res: Response) => {
 jobRouter.put("/:id", async (req: Request, res: Response) => {
   try {
     const updatedJob = await Jobs.findByIdAndUpdate(req.params.id, req.body);
-    res.send(updatedJob);
+    res.status(201).json({ message: "new job created", updatedJob });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
