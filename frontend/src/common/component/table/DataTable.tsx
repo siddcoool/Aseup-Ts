@@ -20,6 +20,11 @@ const DataTable = <T,>({ rows, columns, showCheckbox }: Props<T>) => {
     setSelectedOption(e.target.value);
   };
   console.log({rows,columns})
+  if(!rows.length){
+    return <div>
+      <img src='./no-data-found.jpg'/>
+    </div>
+  }
   
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

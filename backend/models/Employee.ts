@@ -17,7 +17,7 @@ const ExperienceSchema = new Schema({
   roleDescription: String,
   startDate: { type: Date, default: dayjs().toISOString() }, // Start date of employment in format yyyy-mm
   endDate: { type: Date, default: dayjs().toISOString() },
-  employmentType: { enum: ["Contract", "Full-Time", "Part-Time"] }, // End date of employment or null if current employee
+  employmentType: String // End date of employment or null if current employee
 });
 
 const EmployeeSchema = new Schema(

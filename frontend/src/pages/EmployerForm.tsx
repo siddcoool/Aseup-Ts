@@ -12,9 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LineItemRepeater } from "../components/LineItemRepeater";
 import * as Yup from "yup";
 import ErrorText from "../components/ErrorText";
-import {
-  getIndexAndKeyForContact,
-} from "../utils/stringOperation";
+import { getIndexAndKeyForContact } from "../utils/stringOperation";
 
 type IContact = {
   contactName?: string;
@@ -54,24 +52,30 @@ const EmployerForm = () => {
   const toast = useToast(); // Move useToast here\
   const navigate = useNavigate();
   const { id } = useParams();
-
+  console.log({ errors });
   const validationSchema = Yup.object({
-    companyName: Yup.string().required('Company name is required'),
-    industry: Yup.string().required('Industry is required'),
-    location: Yup.string().required('Location is required'),
-    employees: Yup.number().typeError('Number of employees must be a number').required('Employees is required'),
+    companyName: Yup.string().required("Company name is required"),
+    industry: Yup.string().required("Industry is required"),
+    location: Yup.string().required("Location is required"),
+    employees: Yup.number()
+      .typeError("Number of employees must be a number")
+      .required("Employees is required"),
     contact: Yup.array()
       .of(
         Yup.object().shape({
-          contactName: Yup.string().required('Contact name is required'),
-          contactNumber: Yup.number().typeError('contact number must be a number').required('Contact number is required'),
-          contactEmail: Yup.string().email('Contact email must be a valid email').required('Contact email is required'),
+          contactName: Yup.string().required("Contact name is required"),
+          contactNumber: Yup.number()
+            .typeError("contact number must be a number")
+            .required("Contact number is required"),
+          contactEmail: Yup.string()
+            .email("Contact email must be a valid email")
+            .required("Contact email is required"),
         })
       )
-      .min(1, 'At least one contact is required')
-      .required('Contact information is required'),
+      .min(1, "At least one contact is required")
+      .required("Contact information is required"),
   });
-  
+
   const validate = async () => {
     try {
       setErrors(null);
@@ -80,14 +84,14 @@ const EmployerForm = () => {
       });
       return true;
     } catch (error) {
-      console.log({ error });
+      console.log({ catch:error });
       error.inner.forEach((item) => {
         const { index, key } = getIndexAndKeyForContact(item.path);
         const splitStr = item.path.split("[")[0];
         if (splitStr === "contact") {
           // Ensure contact array is initialized
           setErrors((prevErrors) => {
-            const contactErrors = prevErrors.contact || []; // Initialize contact array if undefined
+            const contactErrors = prevErrors?.contact || []; // Initialize contact array if undefined
             if (!contactErrors[index]) {
               contactErrors[index] = {}; // Initialize index if undefined
             }
@@ -105,7 +109,7 @@ const EmployerForm = () => {
           }));
         }
       });
-      
+
       return false;
     }
   };
@@ -266,7 +270,9 @@ const EmployerForm = () => {
                         )
                       }
                     />
-                    <ErrorText>{ errors?.contact[index]?.contactNumber}</ErrorText>
+                    <ErrorText>
+                      {errors?.contact[index]?.contactNumber}
+                    </ErrorText>
                   </FormControl>
                   <FormControl>
                     <FormLabel>Contact Person Email</FormLabel>
