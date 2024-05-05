@@ -20,7 +20,6 @@ interface IEducationForm {
 }
 
 const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
-  const [/*yearError*/, setYearError] = useState("");
   const [formData, setFormData] = useState<Education[]>([
     {
       title: "",
@@ -38,19 +37,24 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
         title: Yup.string().required("Title is required"),
         field: Yup.string().required("Field is required"),
         institute: Yup.string().required("Institute is required"),
-        startYear: Yup.date().required("Start Year is required"),
+        startYear: Yup.date()
+          .typeError("Must be a valid date")
+          .required("Start Year is required"),
         endYear: Yup.date()
+          .typeError("Must be a valid date")
           .required("End Year is required")
           .min(
             Yup.ref("startYear"),
-            "End Year should be greater than Start Year"
+            "End Year should be greater than or equal to Start Year"
           ),
-        grade: Yup.string().oneOf(["A",'B','C','D','E','F'],'Should be a valid grade.')
+        grade: Yup.string()
+          .oneOf(["A", "B", "C", "D", "E", "F"], "Should be a valid grade.")
           .min(1, "Grade is required")
           .required("Grade is required"),
       })
     ),
   });
+
   const validate = async () => {
     try {
       setErrors([]);
@@ -79,7 +83,7 @@ const EducationForm = ({ onSubmit, employeeData }: IEducationForm) => {
     index: number
   ) => {
     const { name, value } = e.target;
-   
+
     setFormData((prevData) => {
       const updatedFormData = [...prevData];
       updatedFormData[index] = {

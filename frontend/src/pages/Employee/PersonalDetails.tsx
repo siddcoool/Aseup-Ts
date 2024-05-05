@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -51,15 +51,21 @@ const PersonalDetails = ({
   });
 
   const validationSchema = Yup.object({
-    name: Yup.string().required(),
-    email: Yup.string().email().required(),
-    phoneNumber: Yup.number().required(),
-    DOB: Yup.date().required(),
-    gender: Yup.string().required(),
-    skills: Yup.array().min(1).required(),
-    currentCTC: Yup.number().required(),
-    expectedCTC: Yup.number().required(),
+    name: Yup.string().required('Name is required'),
+    email: Yup.string().email().required('Email is required'),
+    phoneNumber: Yup.string()
+      .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
+      .required('Phone number is required'),
+    DOB: Yup.date()
+      .typeError('Date of Birth must be a valid date')
+      .required('Date of Birth is required'),
+    gender: Yup.string().required('Gender is required'),
+    skills: Yup.array().min(1, 'At least one skill is required').required('Skills are required'),
+    currentCTC: Yup.number().required('Current CTC is required'),
+    expectedCTC: Yup.number().required('Expected CTC is required'),
   });
+  
+  
   const validate = async () => {
     try {
       setErrors(null);
@@ -85,11 +91,11 @@ const PersonalDetails = ({
     }));
   };
 
-  const handleSkillsChange = (selectedValues: any, actionMeta: any) => {
+  const handleSkillsChange = async (selectedValues: any, actionMeta: any) => {
     if (actionMeta.action === "create-option") {
       const newSkill = selectedValues[selectedValues.length - 1];
 
-      addSkillToDatabase(newSkill).then(() => {
+      await addSkillToDatabase(newSkill).then(() => {
         getSkills();
       });
     } else {
@@ -112,7 +118,7 @@ const PersonalDetails = ({
   };
 
   const handleSubmit = async () => {
-    if (await validate()) { 
+    if (await validate()) {
       onSubmit(formData);
     }
   };
@@ -221,7 +227,7 @@ const PersonalDetails = ({
               <FormLabel>Select Skills</FormLabel>
 
               <CreatableSelect
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option.name ? option.name : option.label}
                 getOptionValue={(option) => option._id}
                 isClearable
                 isMulti
@@ -233,7 +239,7 @@ const PersonalDetails = ({
             </FormControl>
 
             <FormControl isRequired>
-              <FormLabel>Current CTC</FormLabel>
+              <FormLabel>Current CTC (in Lakhs)</FormLabel>
               <Input
                 type="number"
                 name="currentCTC"
@@ -243,7 +249,7 @@ const PersonalDetails = ({
               <ErrorText>{errors?.currentCTC}</ErrorText>
             </FormControl>
             <FormControl isRequired>
-              <FormLabel>Expected CTC</FormLabel>
+              <FormLabel>Expected CTC (in Lakhs)</FormLabel>
               <Input
                 type="number"
                 name="expectedCTC"

@@ -153,10 +153,10 @@ const ViewEmployeeDetails = () => {
       name: "Action",
       renderCell: (row) => (
         <div className="flex gap-x-2">
-          <div onClick={() => navigate(`/employeeForm/${row._id}`)}>
+          <div onClick={() => navigate(`/employeeForm/${row._id}`)} className="cursor-pointer">
             <EditIcon />
           </div>
-          <div>
+          <div className="cursor-pointer">
             <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
           </div>
         </div>

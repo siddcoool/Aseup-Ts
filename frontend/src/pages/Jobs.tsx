@@ -53,13 +53,35 @@ const Jobs = () => {
   });
 
   const validationSchema = Yup.object({
-    jobTitle: Yup.string().required(),
-    jobRequirements: Yup.string().email().required(),
-    employer: Yup.array().min(1).required(),
-    budget: Yup.number().required(),
-    noticePeriod: Yup.number().required(),
-    skills: Yup.array().min(1).required(),
+    jobTitle: Yup.string().required('Job title is required'),
+    jobRequirements: Yup.string().required('Job requirements are required'),
+    employer: Yup.object().shape({
+      _id: Yup.string().required('Employer ID is required'),
+      companyName: Yup.string().required('Company name is required'),
+      industry: Yup.string().required('Industry is required'),
+      location: Yup.string().required('Location is required'),
+      employees: Yup.string().required('Number of employees is required'),
+      isDeleted: Yup.boolean().required('isDeleted is required'),
+      contact: Yup.array()
+        .of(
+          Yup.object().shape({
+            contactName: Yup.string().required('Contact name is required'),
+            contactNumber: Yup.string().required('Contact number is required'),
+            contactEmail: Yup.string().email('Contact email must be a valid email').required('Contact email is required'),
+          })
+        )
+        .min(1, 'At least one contact is required'),
+      createdAt: Yup.date().required('Creation date is required'),
+      updatedAt: Yup.date().required('Update date is required'),
+      __v: Yup.number().required('__v is required'),
+    }).typeError('must be a valid employee').required('Employer information is required'),
+    
+    budget: Yup.number().typeError('Budget must be a number').required('Budget is required'),
+    noticePeriod: Yup.number().typeError('Notice period must be a number').required('Notice period is required'),
+    skills: Yup.array().min(1, 'At least one skill is required').required('Skills are required'),
   });
+  
+  
   const validate = async () => {
     try {
       setErrors(null);

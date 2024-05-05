@@ -6,11 +6,8 @@ import {
   BreadcrumbLink,
 } from "@chakra-ui/react";
 import axios from "axios";
-import {
-  EditIcon,
-  DeleteIcon,
-} from "@chakra-ui/icons";
-import  { useEffect, useRef, useState } from "react";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../common/component/Loader";
 import DeleteAlert from "../common/component/alerts/deleteAlerts";
@@ -45,25 +42,25 @@ const ViewEmployer = () => {
   const refresh = () => setRefetch((v) => v + 1);
 
   const getEmployer = async () => {
-   try {
-    if(loading) return
-    if(!employers.length){
-      setLoading(true);
+    try {
+      if (loading) return;
+      if (!employers.length) {
+        setLoading(true);
+      }
+      setIsTableLoading(true);
+      const res = await axios.get(
+        `/employer?pageLimit=${PAGE_LIMIT}&pageNumber=${currentPage}`
+      );
+      setLoading(false);
+      setEmployers(res.data.employer);
+      setTotalCount(Math.ceil(res.data.count / PAGE_LIMIT));
+    } catch (error) {
+    } finally {
+      setLoading(false);
+      setIsTableLoading(false);
     }
-    setIsTableLoading(true)
-    const res = await axios.get(`/employer?pageLimit=${PAGE_LIMIT}&pageNumber=${currentPage}`);
-    setLoading(false);
-    setEmployers(res.data.employer);
-    setTotalCount(Math.ceil(res.data.count / PAGE_LIMIT));
-   } catch (error) {
-    
-   }finally{
-    setLoading(false)
-    setIsTableLoading(false)
-   }
-
   };
-  console.log({totalCount})
+  console.log({ totalCount });
 
   const handleEdit = (id: string) => {
     navigate(`/employer/edit/${id}`);
@@ -71,9 +68,9 @@ const ViewEmployer = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      setDeleteEmployeeLoading(true)
+      setDeleteEmployeeLoading(true);
       await axios.delete(`/employer/${id}`);
-      refresh()
+      refresh();
       toast({
         title: "Employer deleted.",
         description: "We've deleted selected Employer ",
@@ -90,7 +87,7 @@ const ViewEmployer = () => {
       });
     } finally {
       onClose();
-      setDeleteEmployeeLoading(false)
+      setDeleteEmployeeLoading(false);
     }
   };
 
@@ -101,51 +98,60 @@ const ViewEmployer = () => {
 
   useEffect(() => {
     getEmployer();
-  }, [refetch,currentPage]);
+  }, [refetch, currentPage]);
 
   const columns = [
     {
-      name: 'Company Name',
-      id: 'companyName',
+      name: "Company Name",
+      id: "companyName",
       renderCell: (row) => {
-        return row.companyName
-      }
-    }, {
-      name: 'Total Employees',
-      id: 'employees',
-      renderCell: (row) => {
-        return row.employees
-      }
-    }, {
-      name: 'Industry',
-      id: 'industry',
-      renderCell: (row) => {
-        return row.industry
-      }
-    }, {
-      name: 'Location',
-      id: 'location',
-      renderCell: (row) => {
-        return row.location
-      }
-    }, {
-      name: 'Action',
-      id: 'action',
-      renderCell: (skill) => {
-        return <div className="flex gap-x-2">
-          <div onClick={() => handleEdit(skill._id)}>
-            <EditIcon />
-          </div>
-          <div
-            onClick={() => handleDeleteModalOpen(skill)}
-          >
-            <DeleteIcon />
-          </div>
-        </div>
-      }
+        return row.companyName;
+      },
     },
-  ]
-
+    {
+      name: "Total Employees",
+      id: "employees",
+      renderCell: (row) => {
+        return row.employees;
+      },
+    },
+    {
+      name: "Industry",
+      id: "industry",
+      renderCell: (row) => {
+        return row.industry;
+      },
+    },
+    {
+      name: "Location",
+      id: "location",
+      renderCell: (row) => {
+        return row.location;
+      },
+    },
+    {
+      name: "Action",
+      id: "action",
+      renderCell: (skill) => {
+        return (
+          <div className="flex gap-x-2">
+            <div
+              onClick={() => handleEdit(skill._id)}
+              className="cursor-pointer"
+            >
+              <EditIcon />
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => handleDeleteModalOpen(skill)}
+            >
+              <DeleteIcon />
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
 
   if (loading)
     return (
@@ -163,10 +169,11 @@ const ViewEmployer = () => {
           <BreadcrumbItem isCurrentPage>
             <BreadcrumbLink href="#">Employer</BreadcrumbLink>
           </BreadcrumbItem>
-          </Breadcrumb>
-        <TableHeader title='Employer Details'
+        </Breadcrumb>
+        <TableHeader
+          title="Employer Details"
           onClick={() => navigate("/employer/add")}
-          buttonLabel='Create Employer'
+          buttonLabel="Create Employer"
         />
         <div className="px-12 my-4">
           <DataTable rows={employers} columns={columns} />

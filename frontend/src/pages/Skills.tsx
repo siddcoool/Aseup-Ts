@@ -19,6 +19,7 @@ import { Pagination } from "../components/Pagination";
 export type ISkills = {
   name: string;
   _id: string;
+  label?:string
 };
 
 const Skills = () => {

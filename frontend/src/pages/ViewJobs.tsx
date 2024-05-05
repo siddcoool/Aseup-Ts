@@ -36,7 +36,7 @@ export interface IEmployers {
 const ViewJobs = () => {
   const [jobs, setJobs] = useState<IJobs[]>([]);
   const [recommendedEmployees, setRecommendedEmployees] = useState([]);
-
+const [openRecommendedEmployeesModel, setOpenRecommendedEmployeesModel] = useState(false)
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
@@ -73,8 +73,6 @@ const ViewJobs = () => {
     }
   };
 
-  console.log({ jobs, recommendedEmployees });
-
   const handleEdit = (id: string) => {
     navigate(`/jobs/edit/${id}`);
   };
@@ -109,6 +107,10 @@ const ViewJobs = () => {
     onOpen();
     setSelectedRow(row);
   };
+
+  const handleRecommendedModelOpen = () => {
+    setOpenRecommendedEmployeesModel(true)
+  }
   const columns = [
     { id: "title", name: "Title", renderCell: (row) => row.jobTitle },
     {
@@ -144,7 +146,7 @@ const ViewJobs = () => {
               <Button
                 onClick={() => {
                   getRecommendedEmployee(row._id);
-                  onOpen();
+                  handleRecommendedModelOpen()
                 }}
                 colorScheme='whatsapp'
                 rightIcon={<ViewIcon/>}
@@ -152,7 +154,7 @@ const ViewJobs = () => {
                 View
               </Button>
 
-              <Modal isOpen={isOpen} onClose={onClose}>
+              <Modal isOpen={openRecommendedEmployeesModel} onClose={()=>setOpenRecommendedEmployeesModel(false)}>
                 <ModalOverlay />
                 <ModalContent>
                   <ModalHeader>Recommended Employees</ModalHeader>
@@ -165,10 +167,9 @@ const ViewJobs = () => {
                   })}</ModalBody>
 
                   <ModalFooter>
-                    <Button colorScheme="blue" mr={3} onClick={onClose}>
+                    <Button colorScheme="blue" mr={3} onClick={()=>setOpenRecommendedEmployeesModel(false)}>
                       Close
                     </Button>
-                    <Button variant="ghost">Secondary Action</Button>
                   </ModalFooter>
                 </ModalContent>
               </Modal>
@@ -219,7 +220,7 @@ const ViewJobs = () => {
         <DeleteAlert
           loading={deleteEmployeeLoading}
           title={selectedRow?.jobTitle ?? ""}
-          isOpen={false} // change this later to isOpen
+          isOpen={isOpen} // change this later to isOpen
           onClose={onClose}
           onClick={() => selectedRow && handleDelete(selectedRow._id)}
           ref={cancelRef}

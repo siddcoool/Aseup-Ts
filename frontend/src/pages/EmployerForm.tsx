@@ -56,21 +56,22 @@ const EmployerForm = () => {
   const { id } = useParams();
 
   const validationSchema = Yup.object({
-    companyName: Yup.string().required(),
-    industry: Yup.string().email().required(),
-    location: Yup.number().required(),
-    employees: Yup.date().required(),
+    companyName: Yup.string().required('Company name is required'),
+    industry: Yup.string().required('Industry is required'),
+    location: Yup.string().required('Location is required'),
+    employees: Yup.number().typeError('Number of employees must be a number').required('Employees is required'),
     contact: Yup.array()
       .of(
         Yup.object().shape({
-          contactName: Yup.string().required('contactName is required'),
-          contactNumber: Yup.string().required('contactNumber is required'),
-          contactEmail: Yup.string().email().required('contactEmail is required'),
+          contactName: Yup.string().required('Contact name is required'),
+          contactNumber: Yup.number().typeError('contact number must be a number').required('Contact number is required'),
+          contactEmail: Yup.string().email('Contact email must be a valid email').required('Contact email is required'),
         })
       )
-      .min(1)
-      .required(),
+      .min(1, 'At least one contact is required')
+      .required('Contact information is required'),
   });
+  
   const validate = async () => {
     try {
       setErrors(null);
@@ -154,6 +155,7 @@ const EmployerForm = () => {
             duration: 5000,
             isClosable: true,
           });
+          navigate("/employer/view");
         }
       } catch (error) {
         console.error("Error:", error);
