@@ -143,7 +143,7 @@ jobRouter.post("/", async (req: Request, res: Response) => {
 jobRouter.put("/:id", async (req: Request, res: Response) => {
   try {
     const updatedJob = await Jobs.findByIdAndUpdate(req.params.id, req.body);
-    res.send(updatedJob);
+    res.status(201).json({ message: "new job created", updatedJob });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }

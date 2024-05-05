@@ -163,7 +163,7 @@ const Jobs = () => {
       try {
         if (id) {
           const response = await axios.put(`/jobs/${id}`, formData);
-          if (response.status === 200) {
+          if (response.status === 201) {
             toast({
               title: "Form Updated successfully",
               status: "success",
@@ -174,7 +174,7 @@ const Jobs = () => {
           }
         } else {
           const response = await axios.post("/jobs", formData);
-          if (response.status === 200) {
+          if (response.status === 201) {
             toast({
               title: "Form Submitted",
               status: "success",
