@@ -34,8 +34,8 @@ const PersonalDetails = ({
     DOB: "",
     gender: "",
     skills: [],
-    currentCTC: undefined,
-    expectedCTC: undefined,
+    currentCTC: null,
+    expectedCTC: null,
   });
   const [loading, setLoading] = useState(false);
   const [skillsOptions, setSkillsOptions] = useState<any[]>([]);

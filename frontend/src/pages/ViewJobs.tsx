@@ -36,7 +36,8 @@ export interface IEmployers {
 const ViewJobs = () => {
   const [jobs, setJobs] = useState<IJobs[]>([]);
   const [recommendedEmployees, setRecommendedEmployees] = useState([]);
-const [openRecommendedEmployeesModel, setOpenRecommendedEmployeesModel] = useState(false)
+  const [openRecommendedEmployeesModel, setOpenRecommendedEmployeesModel] =
+    useState(false);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
@@ -109,8 +110,8 @@ const [openRecommendedEmployeesModel, setOpenRecommendedEmployeesModel] = useSta
   };
 
   const handleRecommendedModelOpen = () => {
-    setOpenRecommendedEmployeesModel(true)
-  }
+    setOpenRecommendedEmployeesModel(true);
+  };
   const columns = [
     { id: "title", name: "Title", renderCell: (row) => row.jobTitle },
     {
@@ -122,7 +123,7 @@ const [openRecommendedEmployeesModel, setOpenRecommendedEmployeesModel] = useSta
       id: "budget",
       name: "Budget",
       renderCell: (row) => {
-        row.budget;
+        return row.budget;
       },
     },
     {
@@ -136,38 +137,47 @@ const [openRecommendedEmployeesModel, setOpenRecommendedEmployeesModel] = useSta
       renderCell: (row) => (
         <div className="flex gap-x-2">
           <div onClick={() => handleEdit(row._id)}>
-            <EditIcon />
+            <EditIcon className="cursor-pointer" />
           </div>
           <div>
-            <DeleteIcon onClick={() => handleDeleteModalOpen(row)} />
+            <DeleteIcon className="cursor-pointer" onClick={() => handleDeleteModalOpen(row)} />
           </div>
           <div>
             <>
-              <Button
+              <ViewIcon
                 onClick={() => {
                   getRecommendedEmployee(row._id);
-                  handleRecommendedModelOpen()
+                  handleRecommendedModelOpen();
                 }}
-                colorScheme='whatsapp'
-                rightIcon={<ViewIcon/>}
-              >
-                View
-              </Button>
+                className="cursor-pointer"
+              />
 
-              <Modal isOpen={openRecommendedEmployeesModel} onClose={()=>setOpenRecommendedEmployeesModel(false)}>
+              <Modal
+                isOpen={openRecommendedEmployeesModel}
+                onClose={() => setOpenRecommendedEmployeesModel(false)}
+              >
                 <ModalOverlay />
                 <ModalContent>
                   <ModalHeader>Recommended Employees</ModalHeader>
                   <ModalCloseButton />
-                  <ModalBody>{recommendedEmployees && recommendedEmployees.map((item)=>{
-                    return <div key={item._id} className="flex justify-between">
-                      <div>{item.name}</div>
-                      <div>{item.email}</div>
-                    </div>
-                  })}</ModalBody>
+                  <ModalBody>
+                    {recommendedEmployees &&
+                      recommendedEmployees.map((item) => {
+                        return (
+                          <div key={item._id} className="flex justify-between">
+                            <div>{item.name}</div>
+                            <div>{item.email}</div>
+                          </div>
+                        );
+                      })}
+                  </ModalBody>
 
                   <ModalFooter>
-                    <Button colorScheme="blue" mr={3} onClick={()=>setOpenRecommendedEmployeesModel(false)}>
+                    <Button
+                      colorScheme="blue"
+                      mr={3}
+                      onClick={() => setOpenRecommendedEmployeesModel(false)}
+                    >
                       Close
                     </Button>
                   </ModalFooter>

@@ -34,7 +34,7 @@ const Jobs = () => {
     jobRequirements: "",
     employer: [],
     budget: "",
-    noticePeriod: undefined,
+    noticePeriod: null,
     skills: [],
   });
   const [employerOptions, setEmployerOptions] = useState([]);
