@@ -7,9 +7,10 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import Loader from "../common/component/loader/Loader";
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { IJobs } from "./Jobs";
 
 type IApplication ={
-  job:string,
+  jobs:IJobs,
   _id:string
 }
 
@@ -47,19 +48,7 @@ const ViewApplication = () => {
   const handleEdit = (id: string) => {
     navigate(`/application/edit/${id}`);
   };
-
-  const rowData = () => {
-    if (applications) {
-      const rows = applications.map((item, idx) => {
-        item.jobs.map((item) => {
-          return item.jobTitle;
-        });
-      });
-      setRows(rows);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
+const handleDelete = async (id: string) => {
     try {
       setDeleteApllicationLoading(true);
       await axios.delete(`/application/${id}`);

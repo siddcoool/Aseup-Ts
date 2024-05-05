@@ -23,6 +23,7 @@ import DataTable from "../common/component/table/DataTable";
 import TableHeader from "../common/component/header/tableHeader";
 import { Pagination } from "../components/Pagination";
 import { PAGE_LIMIT } from "../constant/app";
+import { IJobs } from "./Jobs";
 
 export interface IEmployers {
   companyName: string;
@@ -32,9 +33,6 @@ export interface IEmployers {
   _id: string;
 }
 
-export interface IJobs{
-  jobTitle:string;
-}
 
 const ViewJobs = () => {
   const [jobs, setJobs] = useState<IJobs[]>([]);

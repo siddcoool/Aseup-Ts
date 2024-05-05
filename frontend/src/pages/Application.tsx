@@ -2,12 +2,11 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Select,
   VStack,
   useToast,
 } from "@chakra-ui/react";
 import CreatableSelect from "react-select/creatable";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Employee } from "./ViewEmployee";
 import { Jobs } from "./Jobs";
@@ -25,57 +24,18 @@ const Application = () => {
   const [employeeOption, setEmployeeOption] = useState();
   const [jobOption, setJobOption] = useState();
   const [formData, setFormData] = useState<IApplication>({});
-  // const [error,setError]=useState({
-  //   job:"",
-  //   employee:"",
-  // });
-  // const validationSchema=Yup.object({
-  //   job:Yup.array().min(1).required(),
-  //   employee:Yup.array().min(1).required(),
-
-  // })
-  // const validate = async () => {
-  //   try {
-  //     setError(null)
-  //     const value = await validationSchema.validate(formData, {
-  //       abortEarly: false,
-  //     });
-  //     console.log({ value });
-  //   } catch (error) {
-  //     error.inner.forEach((item) => {
-  //       setError((prev) => ({ ...prev, [item.path]: item.message }));
-  //     });
-  //     console.log({ error });
-  //   }
-  // };
   const toast = useToast();
   const { id } = useParams();
   const navigate = useNavigate();
+ console.log({ formData });
 
-  // const handlechange = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  // };
-  const handlechange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    console.log({ name, value });
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-  console.log({ formData });
-
-  const handleEmployee = (selectedItem: Employee) => {
+  const handleEmployee = (selectedItem: any) => {
     setFormData((prevData) => ({
       ...prevData,
       employee: selectedItem,
     }));
   };
-  const handleJobs = (selectedItem1: Jobs) => {
+  const handleJobs = (selectedItem1: any) => {
     setFormData((prevData) => ({
       ...prevData,
       jobs: selectedItem1,
@@ -102,8 +62,7 @@ const Application = () => {
       });
     }
   };
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     try {
       if (id) {
         const response = await axios.put(`/application/${id}`, formData);
@@ -142,8 +101,6 @@ const Application = () => {
       const { data } = await axios.get(`/application/${id}`);
       console.log("data",{ data });
       setFormData(data)
-      // setEmployeeOption(data.employee.name)
-      // setJobOption(data.jobs.jobTitle)
     } catch (error) {}
   };
   console.log({jobOption,employeeOption,formData,id});

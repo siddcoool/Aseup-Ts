@@ -17,6 +17,7 @@ import Skills from "../pages/Skills";
 import ViewApplication from "../pages/ViewApplication";
 import Profile from "../pages/Profile";
 import SkillForm from "../pages/SkillForm";
+import Application from "../pages/Application";
 
 interface Route {
   path: string;
