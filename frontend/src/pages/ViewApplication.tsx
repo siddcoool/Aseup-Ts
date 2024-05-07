@@ -1,4 +1,4 @@
-import  { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TableHeader from "../common/component/header/tableHeader";
 import DataTable from "../common/component/table/DataTable";
 import DeleteAlert from "../common/component/alerts/deleteAlerts";
@@ -9,10 +9,10 @@ import { useDisclosure, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { IJobs } from "./Jobs";
 
-type IApplication ={
-  jobs:IJobs,
-  _id:string
-}
+type IApplication = {
+  jobs: IJobs;
+  _id: string;
+};
 
 const ViewApplication = () => {
   const [applications, setApplications] = useState<IApplication[]>([]);
@@ -23,7 +23,7 @@ const ViewApplication = () => {
 
   const [selectedRow, setSelectedRow] = useState<IApplication | null>(null);
   const [refetch, setRefetch] = useState(0);
-  const [deleteApplicationLoading, setDeleteApllicationLoading] =
+  const [deleteApplicationLoading, setDeleteApplicationLoading] =
     useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
@@ -48,9 +48,9 @@ const ViewApplication = () => {
   const handleEdit = (id: string) => {
     navigate(`/application/edit/${id}`);
   };
-const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => {
     try {
-      setDeleteApllicationLoading(true);
+      setDeleteApplicationLoading(true);
       await axios.delete(`/application/${id}`);
       refresh();
     } catch (error) {
@@ -62,7 +62,7 @@ const handleDelete = async (id: string) => {
       });
     } finally {
       onClose();
-      setDeleteApllicationLoading(false);
+      setDeleteApplicationLoading(false);
     }
   };
   const handleDeleteModalOpen = (row) => {
@@ -71,13 +71,11 @@ const handleDelete = async (id: string) => {
     setSelectedRow(row);
   };
   const columns = [
-    { id: "job", name: "JOB", renderCell: (row) => row?.jobs?.jobTitle
-     },
+    { id: "job", name: "JOB", renderCell: (row) => row?.jobs?.jobTitle },
     {
       id: "employee",
       name: "Employee",
-      renderCell: (row) => row?.employee?.name
-    
+      renderCell: (row) => row?.employee?.name,
     },
     {
       id: "action",

@@ -119,10 +119,6 @@ const routes: Route[] = [
     path:'/application/edit/:id',
     component:Application,
     layout:VerticalLayout
-  },{
-    path:'/application/update/:id',
-    component:Application,
-    layout:VerticalLayout
   },
 ];
 export const createRoutes = () => {

@@ -42,7 +42,7 @@ applicationRouter.post("/", async (req, res) => {
 applicationRouter.delete("/:id",async(req,res)=>{
   try {
     const id=req.params.id
-    const deletejob=await Application.findByIdAndDelete(id)
+    await Application.findByIdAndDelete(id)
     res.status(200).send({});
   } catch (error) {
     res.status(500).send((error as Error).message);
